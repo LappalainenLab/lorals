@@ -1,0 +1,17 @@
+# Ignore Python byte code
+#########################
+__pycache__/
+*.pyc
+
+# Ignore system files and directories
+#####################################
+.vscode
+.DS_Store
+
+# Ignore build directories
+##########################
+bin/
+build/
+lib/
+*.egg-info/
+dist/
