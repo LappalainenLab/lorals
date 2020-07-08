@@ -1,4 +1,4 @@
-Laurels
+LoRALS
 =======
 
 A Python package for allele-specific analyses in long-read data. Written by Dafni Glinos
