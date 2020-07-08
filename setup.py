@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Install laurels"""
+"""Install LoRALS"""
 
 import os
 import sys
@@ -17,7 +17,7 @@ else:
     from string import maketrans
 
 
-builtins.__LAURELS_SETUP__ = True # type: bool
+builtins.__LORALS_SETUP__ = True # type: bool
 
 #   Get stuff from setuptools
 from setuptools import setup
@@ -25,7 +25,7 @@ from setuptools import find_packages
 from setuptools.command.install import install
 
 #   Some basic information
-NAME = "laurels" # type: str
+NAME = "LoRALS" # type: str
 AUTHOR = "Dafni Glinos" # type: str
 AUTHOR_EMAIL = "dglinos@nygenome.org" # type: str
 LICENSE = "" # type: str
@@ -83,9 +83,9 @@ INSTALL_REQUIRES = [ # type: List[str, ...]
 ]
 
 #   Command-line scripts included in this module
-import laurels.scripts as scripts
+import lorals.scripts as scripts
 SCRIPTS = (script for script in dir(scripts) if isinstance(eval('scripts.' + script), types.FunctionType)) # type: Generator[str, ...]
-SCRIPTS = (script for script in SCRIPTS if eval('scripts.%s.__module__' % script) == 'laurels.scripts') # type: Generator[str, ...]
+SCRIPTS = (script for script in SCRIPTS if eval('scripts.%s.__module__' % script) == 'lorals.scripts') # type: Generator[str, ...]
 SCRIPTS = (script for script in SCRIPTS if not script.startswith('_')) # type: Generator[str, ...]
 SCRIPTS = ['%(script)s = %(pkg)s.scripts:%(script)s' % {'script': script, 'pkg': NAME} for script in SCRIPTS] # type: List[str, ...]
 

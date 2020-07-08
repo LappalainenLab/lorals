@@ -18,7 +18,7 @@ import tempfile
 if sys.version_info.major == 2:
     from utils import find_open
 else:
-    from laurels.utils import find_open
+    from lorals.utils import find_open
 
 import pybedtools
 

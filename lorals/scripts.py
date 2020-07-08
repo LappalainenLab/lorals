@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Command-line scripts included in laurels"""
+"""Command-line scripts included in LoRALS"""
 
 from __future__ import division
 from __future__ import print_function
@@ -17,7 +17,7 @@ import subprocess
 import pkg_resources
 
 try:
-    __LAURELS_SETUP__
+    __LORALS_SETUP__
 except NameError:
     import pandas
     import pybedtools
@@ -25,8 +25,8 @@ except NameError:
         from . import asts
         from . import fancy_logging
     else:
-        from laurels import asts
-        from laurels import fancy_logging
+        from lorals import asts
+        from lorals import fancy_logging
 
 
 VERSION = ''

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 try:
-    __LAURELS_SETUP__
+    __LORALS_SETUP__
 except NameError:
     from . import asts
     from . import utils
