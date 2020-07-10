@@ -15,3 +15,8 @@ build/
 lib/
 *.egg-info/
 dist/
+
+# Ignore data files in the top-level directory
+##############################################
+/*.bam*
+/*.vcf*
