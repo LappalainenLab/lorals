@@ -87,7 +87,7 @@ import lorals.scripts as scripts
 SCRIPTS = (script for script in dir(scripts) if isinstance(eval('scripts.' + script), types.FunctionType)) # type: Generator[str, ...]
 SCRIPTS = (script for script in SCRIPTS if eval('scripts.%s.__module__' % script) == 'lorals.scripts') # type: Generator[str, ...]
 SCRIPTS = (script for script in SCRIPTS if not script.startswith('_')) # type: Generator[str, ...]
-SCRIPTS = ['%(script)s = %(pkg)s.scripts:%(script)s' % {'script': script, 'pkg': NAME} for script in SCRIPTS] # type: List[str, ...]
+SCRIPTS = ['%(script)s = %(pkg)s.scripts:%(script)s' % {'script': script, 'pkg': NAME.lower()} for script in SCRIPTS] # type: List[str, ...]
 
 ENTRY_POINTS = { # type: Dict[str, List[str, ...]]
     'console_scripts': SCRIPTS
