@@ -5,11 +5,15 @@
 __all__ = [ # type: List[str, ...]
     "dictsearch",
     "find_open",
-    "unpack"
+    "fullpath",
+    "unpack",
+    "where",
 ]
 
 import os
 import gzip
+import operator
+import itertools
 
 from collections import Counter
 
@@ -49,11 +53,27 @@ def dictsearch(d, query): # type: (Dict[str, Iterable[Any]], Any) -> str
 
 
 def find_open(filename): # type: (str) -> function
-    """Figure out which version of open (open vs gzip.open) to use"""
+    """Figure out which version of open (open vs gzip.open) to use
+
+    Standard open cannot handle gzipped files easily. To get around this, this
+    function will return either the `gzip.open` function if the filename ends in
+    ".gz" or the `open` function otherwise
+
+    Arguments:
+        filename (str): A file to find the correct open for
+
+    Returns:
+        function: An function capable of opening the file described by `filename`
+    """
     extension = os.path.splitext(filename)[-1]
     if extension == '.gz':
         return gzip.open
     return open
+
+
+def fullpath(path): # type: (str) -> str
+    """Find the full path to a file or directory"""
+    return os.path.realpath(os.path.expanduser(path))
 
 
 def get_count_m(tuples, position, window): # type: (Iterable[], int) -> Counter
@@ -78,3 +98,24 @@ def unpack(collection): # type: (Iterable[Any]) -> Tuple[Any]
         else:
             result.append(item)
     return tuple(result)
+
+
+def where(name, flags=os.X_OK): # type: (str, int) -> str
+    """Find an executable"""
+    extensions = os.path.splitext(name)[1]
+    if extensions:
+        extensions = tuple([extensions]) # type: Tuple[str]
+        name = os.path.splitext(name)[0] # type: str
+    else:
+        extensions = os.environ.get('PATHEXT', '').split(os.pathsep) # type: List[Optional[str], ...]
+        extensions = ('',) + tuple(filter(None, extensions)) # type: Tuple[Optional[str], ...]
+    names = itertools.product([name], extensions)
+    names = tuple(map(lambda x: operator.add(*x), names))
+    paths = [os.getcwd()] + os.environ.get('PATH', '').split(os.pathsep) # type: List[str, ...]
+    paths = tuple(filter(None, paths)) # type: Tuple[str, ...]
+    for path in paths: # type: str
+        for exe in (os.path.join(path, e) for e in names): # type: str
+            if os.access(exe, flags):
+                return exe
+    else:
+        raise ValueError("Cannot find %s" % name)
