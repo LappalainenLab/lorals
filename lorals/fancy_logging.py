@@ -7,11 +7,13 @@ from __future__ import print_function
 
 __all__ = [ # type: List[str, ...]
     'StrippedFormatter',
-    'ColoredFormatter'
+    'ColoredFormatter',
+    'fmttime'
 ]
 
 import os
 import sys
+import time
 import logging
 import warnings
 
@@ -97,3 +99,8 @@ def configure_logging(level='info', logstream=True, logfile=None): # type: (str,
         filehandler = logging.FileHandler(filename=logfile, mode='w') # type: logging.FileHandler
         filehandler.setFormatter(StrippedFormatter(fmt=LOG_FORMAT, datefmt=DATE_FORMAT))
         logging.getLogger().addHandler(filehandler)
+    logging.debug("Log level set to '%s'", level)
+
+
+def fmttime(start, n=3): # type: (float, int) -> float
+    return round(time.time() - start, 3)
