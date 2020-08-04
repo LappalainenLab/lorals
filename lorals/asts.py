@@ -68,7 +68,6 @@ def bed_intersect(afile, bfile, ofile=None): # type: (str, str, Optional[str]) -
         ofile = utils.fullpath(path=ofile) # type: str
         logging.info("Saving resulting BED file as %s", ofile)
         ifh = ifh.moveto(ofile) # type: pybedtools.bedtool.BedTool
-    logging.info("Number of regions in afile: %s", len(afh))
     logging.info("Number of interesected regions: %s", len(ifh))
     logging.debug("Intersection took %s seconds", fmttime(start=intersect_start))
     if clean:
