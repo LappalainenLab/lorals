@@ -3,11 +3,13 @@
 """Some utility functions"""
 
 __all__ = [ # type: List[str, ...]
+    "nan",
     "dictsearch",
     "find_open",
     "fullpath",
     "unpack",
     "where",
+    "window",
 ]
 
 import os
@@ -16,6 +18,8 @@ import operator
 import itertools
 
 from collections import Counter
+
+nan = float('nan') # type: float
 
 def cigar_parse(tuples):
     """
@@ -119,3 +123,7 @@ def where(name, flags=os.X_OK): # type: (str, int) -> str
                 return exe
     else:
         raise ValueError("Cannot find %s" % name)
+
+def window(position, size): # type (int, int) -> slice
+    """Make a window slice"""
+    return slice(position - (size + 1), position + size)

@@ -6,6 +6,13 @@ __all__ = [ # type: List[str]
 ]
 
 import re
+import sys
+
+if sys.version_info.major == 2:
+    from .ase import AllelicStat
+else:
+    from lorals.ase import AllelicStat
+
 
 class Feature(object):
 
@@ -94,6 +101,18 @@ class Bpileup(Feature):
             ref=interval.fields[4],
             alt=interval.fields[5],
             name=interval.fields[3]
+        )
+
+    @classmethod
+    def fromstat(cls, stat): # type: (ase.AllelicStat) -> Bpileup
+        """Create a Bpileup from an AllelicStat"""
+        return cls(
+            chrom=stat.contig,
+            start=stat.position - 1,
+            end=stat.position,
+            ref=stat.refAllele,
+            alt=stat.altAllele,
+            name=stat.variantID
         )
 
     def __init__(self, chrom, start, end, ref, alt, name=None,): # type: (str, int, int, str, str, Optional[str]) -> None

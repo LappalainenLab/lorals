@@ -107,8 +107,8 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     """Calculate ASTS"""
     # parser = _common_parser() # type: argparse.ArgumentParser
     parser = argparse.ArgumentParser(add_help=False)
-    input_opts = parser.add_argument_group(title="input options") # type: argparse._ArgumentGroup
-    input_opts.add_argument( # BAM file
+    io_opts = parser.add_argument_group(title="input/output options") # type: argparse._ArgumentGroup
+    io_opts.add_argument( # BAM file
         '-b',
         '--bam',
         dest='bam',
@@ -117,7 +117,7 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
         metavar='in.bam',
         help="BAM file containing RNA-seq reads"
     )
-    input_opts.add_argument( # VCF file
+    io_opts.add_argument( # VCF file
         '-f',
         '--vcf',
         dest='vcf',
@@ -125,6 +125,16 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
         required=True,
         metavar='in.vcf',
         help="Genotype VCF for sample"
+    )
+    io_opts.add_argument(
+        '-o',
+        '--output',
+        dest='output',
+        type=str,
+        required=False,
+        default=os.path.join(os.getcwd(), 'lorals_out', 'asts'),
+        metavar='/path/to/output',
+        help="Directory and prefix of output files; defaults to %(default)s"
     )
     filter_opts = parser.add_argument_group(title="filter options") # type: argparse._ArgumentGroup
     filter_opts.add_argument( # Minimum coverage
@@ -167,19 +177,33 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     _greeter()
     args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
     args['bam'] = utils.fullpath(path=args['bam']) # type: str
+    args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
+    if not os.path.isdir(os.path.dirname(args['out'])):
+        os.makedirs(os.path.dirname(args['out']))
     #   Create a BED-like pilup from VCF
     bpileup = asts.vcf_bpileup(vcffile=args['vcf']) # type: str
     ifh = asts.bed_intersect(afile=bpileup, bfile=args['bam']) # type: pybedtools.bedtool.BedTool
     os.remove(bpileup)
     bpileup = asts.deduplicate_bpileup(bpileup=ifh.fn) # type: pandas.core.frame.DataFrame
     #   Calculate ASE
-    ase_stats = pandas.DataFrame(columns=getattr(ase.AllelicStat, '_fields')) # type: pandas.core.frame.DataFrame
-    for var in features.iter_var(df=bpileup): # type: features.Bpileup
-        ase_stats = pandas.concat((
-            ase_stats,
-            ase.allelic_stats(var=var, bamfile=args['bam'])
-        ))
-    import code; code.interact(local=locals()); sys.exit()
+    ase_stats = {ase.allelic_stats(var=var, bamfile=args['bam']) for var in features.iter_var(df=bpileup)} # type: Set[ase.AllelicStat, ...]
+    ase_stats = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.contig, x.position))) # type: Tuple[ase.AllelicStat, ...]
+    with open('%s_ase_raw.tsv' % args['out'], 'w') as ofile: # type: file
+        logging.info("Saving raw ASE results to %s", ofile.name)
+        raw_start = time.time() # type: float
+        ofile.write('\t'.join(getattr(ase.AllelicStat, '_fields')))
+        ofile.write('\n')
+        ofile.flush()
+        for stat in ase_stats: # type: ase.AllelicStat
+            ofile.write('\t'.join(map(str, stat)))
+            ofile.write('\n')
+            ofile.flush()
+    logging.debug("Writing raw ASE results took %s seconds", round(time.time() - raw_start, 3))
+    ase_stats = ase.filter_stats( # type: Tuple[ase.AllelicStat, ...]
+        stats=ase_stats,
+        total_coverage=args['coverage'],
+        allelic_coverage=args['allelic']
+    )
 
 
 def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None

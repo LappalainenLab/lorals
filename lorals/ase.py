@@ -6,7 +6,9 @@ from __future__ import division
 from __future__ import print_function
 
 __all__ = [ # type: List[str, ...]
+    'AllelicStat',
     'allelic_stats',
+    'filter_stats',
 ]
 
 import sys
@@ -24,9 +26,9 @@ else:
 
 
 import pysam
-import pandas
+# import pandas
 
-AllelicStat = namedtuple(
+AllelicStat = namedtuple( # type: type
     'AllelicStat',
     (
         'contig',
@@ -40,11 +42,11 @@ AllelicStat = namedtuple(
         'refIndelCount',
         'altIndelCount',
         'otherBases',
-        'rawDepth'
+        'rawDepth',
     )
 )
 
-def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.Bpileup, str, int, int) -> pandas.core.frame.DataFrame
+def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.Bpileup, str, int, int) -> Optional[AllelicStat]
     """..."""
     logging.info("Getting allelic reads for %s", str(var))
     ase_start = time.time()
@@ -60,7 +62,7 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
                 continue
             logging.info("Processing read %s", pile_read.alignment.query_name)
             reads_completed.add(pile_read.alignment.query_name)
-            pile_window = slice(pile_read.query_position - (window + 1), pile_read.query_position + window) # type: slice
+            pile_window = utils.window(position=pile_read.query_position, size=window) # type: slice
             count_m = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M') # type: int
             if pile_read.alignment.query_sequence[pile_read.query_position] == var.ref:
                 key = 'keep_ref' if count_m >= match_threshold else 'indel_ref' # type: str
@@ -73,7 +75,7 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
     logging.info("Finished getting allelic reads for %s", str(var))
     logging.debug("Getting allelic reads took %s seconds", round(time.time() - ase_start, 3))
     if stats['keep_ref'] or stats['keep_alt']:
-        return pandas.DataFrame([AllelicStat(
+        return AllelicStat(
             contig=var.chrom,
             position=var.end,
             variantID=var.name,
@@ -86,7 +88,20 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
             altIndelCount=stats['indel_alt'],
             otherBases=stats['other'],
             rawDepth=stats['keep_ref'] + stats['keep_alt'] + stats['other']
-        )])
+        )
     else:
         logging.warning("No allelic reads for %s", str(var))
-        return pandas.DataFrame(columns=getattr(AllelicStat, '_fields'))
+        return None
+
+
+def filter_stats(stats, total_coverage=10, allelic_coverage=5, proportion=0.8): # type: (Iterable[AllelicStat], int, int, float) -> Tuple[AllelicStat, ...]
+    """Filter ase stats"""
+    logging.info("Filtering ASE results")
+    filter_start = time.time()
+    stats = tuple(stats) # type: Tuple[AllelicStat, ...]
+    stats = filter(lambda x: x.totalCount >= total_coverage, stats) # type: Tuple[AllelicStat, ...]
+    stats = filter(lambda x: x.refCount >= allelic_coverage, stats) # type: Tuple[AllelicStat, ...]
+    stats = filter(lambda x: x.altCount >= allelic_coverage, stats) # type: Tuple[AllelicStat, ...]
+    stats = filter(lambda x: x.totalCount / x.rawDepth >= proportion, stats) # type: Tuple[AllelicStat, ...]
+    logging.debug("Filtering ASE results took %s seconds", round(time.time() - filter_start, 3))
+    return stats
