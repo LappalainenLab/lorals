@@ -79,7 +79,9 @@ PLATFORMS = ['Linux', 'Mac OS-X', 'UNIX'] # type: List[str, ...]
 #   Dependencies
 INSTALL_REQUIRES = [ # type: List[str, ...]
     "pandas",
-    "pybedtools"
+    "pybedtools",
+    "pysam",
+    "scipy",
 ]
 
 #   Command-line scripts included in this module

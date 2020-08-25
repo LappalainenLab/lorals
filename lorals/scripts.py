@@ -27,14 +27,12 @@ except NameError:
         from . import utils
         from . import features
         from . import fancy_logging
-        from .fancy_logging import fmttime
     else:
         from lorals import ase
         from lorals import asts
         from lorals import utils
         from lorals import features
         from lorals import fancy_logging
-        from lorals.fancy_logging import fmttime
 
 
 VERSION = ''
@@ -129,12 +127,55 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     io_opts.add_argument(
         '-o',
         '--output',
-        dest='output',
+        dest='out',
         type=str,
         required=False,
         default=os.path.join(os.getcwd(), 'lorals_out', 'asts'),
         metavar='/path/to/output',
         help="Directory and prefix of output files; defaults to %(default)s"
+    )
+    asts_opts = parser.add_argument_group(title="asts options") # type: argparse._ArgumentGroup
+    asts_opts.add_argument( # ASTS mode
+        '-m',
+        '--mode',
+        dest='mode',
+        type=str,
+        required=False,
+        default='length',
+        choices=('length', 'quant'),
+        metavar='mode',
+        # help="ASTS mode, choose from %(choices)s; defaults to %(default)s"
+        help=argparse.SUPPRESS
+    )
+    asts_opts.add_argument( # Transcriptome-aligned BAM files
+        '-x',
+        '--transcripts',
+        dest='flair',
+        type=str,
+        required=False,
+        metavar='transcripts.bam',
+        # help="BAM file aligned to transcriptome; used when 'mode' is set to 'quant'"
+        help=argparse.SUPPRESS
+    )
+    asts_opts.add_argument( # Match window
+        '-w',
+        '--window',
+        dest='window',
+        type=int,
+        required=False,
+        default=5,
+        metavar='window',
+        help="Window around a variant to calculate number of matches; defaults to %(default)s"
+    )
+    asts_opts.add_argument( # Minimum match threshold
+        '-t',
+        '--threshold',
+        dest='threshold',
+        type=int,
+        required=False,
+        default=8,
+        metavar="threhsold",
+        help="Minimum number of matches in window around the variant; defaults to %(default)s"
     )
     filter_opts = parser.add_argument_group(title="filter options") # type: argparse._ArgumentGroup
     filter_opts.add_argument( # Minimum coverage
@@ -167,7 +208,6 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
         metavar='mapping quality',
         help="Minimum mapping quality; defaults to %(default)s"
     )
-    # filter_opts.add_argument
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
         sys.exit(parser.print_help())
@@ -175,6 +215,8 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     fancy_logging.configure_logging(level=args['verbosity'])
     _ = utils.where('bedtools') # type: _
     _greeter()
+    if args['mode'] == 'quant' and not args['flair']:
+        parser.error("'-t|--transcripts' must be supplied when 'mode' is 'quant'")
     args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
     args['bam'] = utils.fullpath(path=args['bam']) # type: str
     args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
@@ -186,11 +228,10 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     os.remove(bpileup)
     bpileup = asts.deduplicate_bpileup(bpileup=ifh.fn) # type: pandas.core.frame.DataFrame
     #   Calculate ASE
-    ase_stats = {ase.allelic_stats(var=var, bamfile=args['bam']) for var in features.iter_var(df=bpileup)} # type: Set[ase.AllelicStat, ...]
+    ase_stats = {ase.allelic_stats(var=var, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for var in features.iter_var(df=bpileup)} # type: Set[ase.AllelicStat, ...]
     ase_stats = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.contig, x.position))) # type: Tuple[ase.AllelicStat, ...]
-    with open('%s_ase_raw.tsv' % args['out'], 'w') as ofile: # type: file
+    with open('%s_ase.tsv' % args['out'], 'w') as ofile: # type: file
         logging.info("Saving raw ASE results to %s", ofile.name)
-        raw_start = time.time() # type: float
         ofile.write('\t'.join(getattr(ase.AllelicStat, '_fields')))
         ofile.write('\n')
         ofile.flush()
@@ -198,12 +239,30 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
             ofile.write('\t'.join(map(str, stat)))
             ofile.write('\n')
             ofile.flush()
-    logging.debug("Writing raw ASE results took %s seconds", round(time.time() - raw_start, 3))
     ase_stats = ase.filter_stats( # type: Tuple[ase.AllelicStat, ...]
         stats=ase_stats,
         total_coverage=args['coverage'],
         allelic_coverage=args['allelic']
     )
+    #   Calculate ASTS
+    logging.info("Calculating ASTS")
+    if args['mode'] == 'length':
+        header = header = getattr(asts.LengthStat, '_fields') # type: Tuple[str, ...]
+        asts_stats = tuple((asts.asts_length(var=features.Bpileup.fromstat(stat=stat), bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for stat in ase_stats)) # type: Tuple[asts.LengthStat, ...]
+    else:
+        msg = "Unknown mode: %s" % args['mode']
+        logging.critical(msg)
+        raise ValueError(msg)
+    with open("%(out)s_asts_%(mode)s.tsv" % {'out': args['out'], 'mode': args['mode']}, 'w') as ofile: # type: file
+        logging.info("Saving ASTS results to %s", ofile.name)
+        ofile.write('\t'.join(header))
+        ofile.write('\n')
+        ofile.flush()
+        for stat in asts_stats: # type: Union[asts.LengthStat]
+            ofile.write('\t'.join(map(str, stat)))
+            ofile.write('\n')
+            ofile.flush()
+    logging.info("Done")
 
 
 def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None

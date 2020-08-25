@@ -18,16 +18,84 @@ import time
 import logging
 import tempfile
 
+from collections import namedtuple, defaultdict
+
 if sys.version_info.major == 2:
+    import cigar
     import utils
     from .fancy_logging import fmttime
 else:
+    from lorals import cigar
     from lorals import utils
     from lorals.fancy_logging import fmttime
 
 
+import pysam
 import pandas
 import pybedtools
+
+from scipy import stats
+
+LengthStat = namedtuple( # type: type
+    "LengthStat",
+    (
+        "D",
+        "pvalue",
+        "contig",
+        "position",
+        "refAllele",
+        "altAllele",
+    )
+)
+
+NullResult = stats.stats.KstestResult(statistic=utils.nan, pvalue=utils.nan) # type: scipy.stats.stats.KstestResult
+
+def asts_length(var, bamfile, window=5, match_threshold=8): # type: (features.Bpileup, str, int, int) -> LengthStat
+    """Calculate read length based on SNP"""
+    logging.info("Getting read lengths for %s", str(var))
+    lengths_start = time.time() # type: float
+    reads_completed = set() # type: Set[str, ...]
+    lengths = defaultdict(list) # type: Mapping[str, List[int, ...]]
+    bamfile = utils.fullpath(path=bamfile) # type: str
+    bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalcalignment.AlignmentFile
+    for pile in bamfh.pileup(region=var.chrom, start=var.start, end=var.end): # type: pysam.libcalignedsegment.PileupColumn
+        if pile.pos != var.start:
+            continue
+        for pile_read in pile.pileups: # type: pysam.libcalignedsegment.PileupRead
+            if pile_read.alignment.query_name in reads_completed or not pile_read.query_position:
+                continue
+            logging.info("Processing read %s", pile_read.alignment.query_name)
+            reads_completed.add(pile_read.alignment.query_name)
+            pile_window = utils.window(position=pile_read.query_position, size=window) # type: slice
+            count_m = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M') # type: int
+            if count_m < match_threshold:
+                logging.warning("Skipping read %s", pile_read.alignment.query_name)
+                continue
+            if pile_read.alignment.query_sequence[pile_read.query_position] == var.ref:
+                lengths['ref'].append(len(pile_read.alignment.query_sequence))
+            elif pile_read.alignment.query_sequence[pile_read.query_position] in var.alt:
+                lengths['alt'].append(len(pile_read.alignment.query_sequence))
+    if len(lengths['ref']) >= 20 and len(lengths['alt']) >= 20:
+        logging.info("Running KS test")
+        ks = stats.ks_2samp(lengths['ref'], lengths['alt']) # type: scipy.stats.stats.KstestResult
+    else:
+        logging.warning("Too few hits for KS test")
+        ks = NullResult # type: scipy.stats.stats.KstestResult
+    logging.info("Finished getting lengths for %s", str(var))
+    logging.debug("Getting read lengths took %s seconds", fmttime(start=lengths_start))
+    return LengthStat(
+        D=ks.statistic,
+        pvalue=ks.pvalue,
+        contig=var.chrom,
+        position=var.end,
+        refAllele=var.ref,
+        altAllele=','.join(var.alt)
+    )
+
+
+def asts_quant():
+    """..."""
+    pass
 
 
 def bam_to_bed(bamfile, save=False): # type: (str, bool) -> pybedtools.bedtool.BedTool
