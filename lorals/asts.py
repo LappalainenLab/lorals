@@ -50,7 +50,7 @@ LengthStat = namedtuple( # type: type
 
 NullResult = stats.stats.KstestResult(statistic=utils.nan, pvalue=utils.nan) # type: scipy.stats.stats.KstestResult
 
-def asts_length(var, bamfile, window=5, match_threshold=8): # type: (features.Bpileup, str, int, int) -> LengthStat
+def asts_length(var, bamfile, window=5, match_threshold=8, min_reads=20): # type: (features.Bpileup, str, int, int) -> LengthStat
     """Calculate read length based on SNP"""
     logging.info("Getting read lengths for %s", str(var))
     lengths_start = time.time() # type: float
@@ -75,7 +75,7 @@ def asts_length(var, bamfile, window=5, match_threshold=8): # type: (features.Bp
                 lengths['ref'].append(len(pile_read.alignment.query_sequence))
             elif pile_read.alignment.query_sequence[pile_read.query_position] in var.alt:
                 lengths['alt'].append(len(pile_read.alignment.query_sequence))
-    if len(lengths['ref']) >= 20 and len(lengths['alt']) >= 20:
+    if len(lengths['ref']) >= min_reads and len(lengths['alt']) >= min_reads:
         logging.info("Running KS test")
         ks = stats.ks_2samp(lengths['ref'], lengths['alt']) # type: scipy.stats.stats.KstestResult
     else:
