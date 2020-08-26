@@ -52,14 +52,14 @@ NullResult = stats.stats.KstestResult(statistic=utils.nan, pvalue=utils.nan) # t
 
 def asts_length(var, bamfile, window=5, match_threshold=8, min_reads=20): # type: (features.Bpileup, str, int, int) -> LengthStat
     """Calculate read length based on SNP"""
-    logging.info("Getting read lengths for %s", str(var))
+    logging.info("Getting read lengths for %s", var.name)
     lengths_start = time.time() # type: float
     reads_completed = set() # type: Set[str, ...]
     lengths = defaultdict(list) # type: Mapping[str, List[int, ...]]
     bamfile = utils.fullpath(path=bamfile) # type: str
     bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalcalignment.AlignmentFile
-    for pile in bamfh.pileup(region=var.chrom, start=var.start, end=var.end): # type: pysam.libcalignedsegment.PileupColumn
-        if pile.pos != var.start:
+    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position): # type: pysam.libcalignedsegment.PileupColumn
+        if pile.pos != var.dummy:
             continue
         for pile_read in pile.pileups: # type: pysam.libcalignedsegment.PileupRead
             if pile_read.alignment.query_name in reads_completed or not pile_read.query_position:
@@ -87,7 +87,7 @@ def asts_length(var, bamfile, window=5, match_threshold=8, min_reads=20): # type
         D=ks.statistic,
         pvalue=ks.pvalue,
         contig=var.chrom,
-        position=var.end,
+        position=var.position,
         refAllele=var.ref,
         altAllele=','.join(var.alt)
     )

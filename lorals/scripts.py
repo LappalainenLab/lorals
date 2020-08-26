@@ -229,14 +229,14 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     bpileup = asts.deduplicate_bpileup(bpileup=ifh.fn) # type: pandas.core.frame.DataFrame
     #   Calculate ASE
     ase_stats = {ase.allelic_stats(var=var, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for var in features.iter_var(df=bpileup)} # type: Set[ase.AllelicStat, ...]
-    ase_stats = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.contig, x.position))) # type: Tuple[ase.AllelicStat, ...]
+    ase_stats = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.chrom, x.position))) # type: Tuple[ase.AllelicStat, ...]
     with open('%s_ase.tsv' % args['out'], 'w') as ofile: # type: file
         logging.info("Saving raw ASE results to %s", ofile.name)
-        ofile.write('\t'.join(getattr(ase.AllelicStat, '_fields')))
+        ofile.write('\t'.join(ase.AllelicStat.HEADER))
         ofile.write('\n')
         ofile.flush()
         for stat in ase_stats: # type: ase.AllelicStat
-            ofile.write('\t'.join(map(str, stat)))
+            ofile.write(str(stat))
             ofile.write('\n')
             ofile.flush()
     ase_stats = ase.filter_stats( # type: Tuple[ase.AllelicStat, ...]
@@ -248,7 +248,8 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     logging.info("Calculating ASTS")
     if args['mode'] == 'length':
         header = header = getattr(asts.LengthStat, '_fields') # type: Tuple[str, ...]
-        asts_stats = tuple((asts.asts_length(var=features.Bpileup.fromstat(stat=stat), bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for stat in ase_stats)) # type: Tuple[asts.LengthStat, ...]
+        # asts_stats = tuple((asts.asts_length(var=features.Bpileup.fromstat(stat=stat), bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for stat in ase_stats)) # type: Tuple[asts.LengthStat, ...]
+        asts_stats = tuple((asts.asts_length(var=stat, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for stat in ase_stats)) # type: Tuple[asts.LengthStat, ...]
     else:
         msg = "Unknown mode: %s" % args['mode']
         logging.critical(msg)
@@ -267,7 +268,33 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
 
 def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
     """Annotate ASE"""
-    pass
+    parser = argparse.ArgumentParser(add_help=False) # type: argparse.ArgumentParser
+    io_opts = parser.add_argument_group(title="input/output options") # type: argparse._ArgumentGroup
+    io_opts.add_argument( # Input ASE file
+        '-i',
+        '--input',
+        dest='input',
+        type=str,
+        required=True,
+        metavar='in_ase.tsv',
+        help="Input ASE table"
+    )
+    io_opts.add_argument( # Output file
+        '-o',
+        '--output',
+        dest='output',
+        type=str,
+        required=False,
+        default='ase_annotated.tsv',
+        metavar='ase_annotated.tsv',
+        help="Name of output ASE file; defaults to %(default)s"
+    )
+    _common_opts(parser=parser, group='utility options', version=VERSION)
+    if not sys.argv[1:]:
+        sys.exit(parser.print_help())
+    args = vars(parser.parse_args(*args)) # type: Dict[str, Any]
+    fancy_logging.configure_logging(level=args['verbosity'])
+    _greeter()
 
 
 def fetch_haplotype(*args): # type: (Optional[List[str, ...]]) -> None
