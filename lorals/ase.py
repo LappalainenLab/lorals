@@ -15,8 +15,6 @@ import sys
 import time
 import logging
 
-from collections import namedtuple
-
 if sys.version_info.major == 2:
     from . import cigar
     from . import utils
@@ -28,6 +26,7 @@ else:
 
 
 import pysam
+
 class AllelicStat(Bpileup):
 
     HEADER = ( # type: Tuple[str, ...]
@@ -46,8 +45,23 @@ class AllelicStat(Bpileup):
     )
 
     @classmethod
-    def fromstring(cls, string): # type: (str) -> AllelicStat
-        pass
+    def fromstring(cls, string, sep='\t'): # type: (str) -> AllelicStat
+        string = string.strip().split(sep) # type: List[str]
+        if len(string) != len(AllelicStat.HEADER):
+            raise ValueError("Incorrect number of columns")
+        #   totalCount and rawDepth are calculated by AllelicStat
+        return cls(
+            chrom=string[0],
+            position=string[1],
+            name=string[2],
+            ref=string[3],
+            alt=string[4],
+            ref_count=string[5],
+            alt_count=string[6],
+            ref_indel=string[8],
+            alt_indel=string[9],
+            other_count=string[10]
+        )
 
     @classmethod
     def frombpileup(
@@ -130,7 +144,7 @@ class AllelicStat(Bpileup):
 
 def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.Bpileup, str, int, int) -> Optional[AllelicStat]
     """..."""
-    logging.info("Getting allelic reads for %s", str(var))
+    logging.info("Getting allelic reads for %s", repr(var))
     ase_start = time.time()
     reads_completed = set() # type: Set[str, ...]
     stats = dict.fromkeys(('keep_ref', 'keep_alt', 'indel_ref', 'indel_alt', 'other'), 0) # type: Dict[str, int]
@@ -155,7 +169,7 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
                 key = 'other' # type: str
             stats[key] += 1
         break
-    logging.info("Finished getting allelic reads for %s", str(var))
+    logging.info("Finished getting allelic reads for %s", repr(var))
     logging.debug("Getting allelic reads took %s seconds", round(time.time() - ase_start, 3))
     if stats['keep_ref'] or stats['keep_alt']:
         return AllelicStat.frombpileup(
@@ -167,7 +181,7 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
             alt_indel=stats['indel_alt']
         )
     else:
-        logging.warning("No allelic reads for %s", str(var))
+        logging.warning("No allelic reads for %s", repr(var))
         return None
 
 

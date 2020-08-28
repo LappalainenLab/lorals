@@ -66,13 +66,20 @@ class Bpileup(object):
             self._id = self._default_id() # type: str
 
     def __str__(self): # type: (None) -> str
-        return '%(chr)s:%(start)s-%(end)s_%(ref)s_%(alt)s' % {
-            'chr': self.chrom,
-            'start': self.dummy,
-            'end': self.position,
-            'ref': self.ref,
-            'alt': self.alts
-        }
+        out = ( # type: Tuple[Union[int, str], ...]
+            self.chrom,
+            self.dummy,
+            self.position,
+            self.name
+        )
+        return '\t'.join(map(str, out))
+        # return '%(chr)s:%(start)s-%(end)s_%(ref)s_%(alt)s' % {
+        #     'chr': self.chrom,
+        #     'start': self.dummy,
+        #     'end': self.position,
+        #     'ref': self.ref,
+        #     'alt': self.alts
+        # }
 
     def __repr__(self): # type: (None) -> str
         return self.name
