@@ -175,7 +175,7 @@ def bias_stats(method, coverage): # type(...) -> ...
     pass
 
 
-def filter_stats(stats, total_coverage=10, allelic_coverage=5, proportion=0.8): # type: (Iterable[AllelicStat], int, int, float) -> Tuple[AllelicStat, ...]
+def filter_stats(stats, total_coverage=10, allelic_coverage=5, proportion_match=0.8, proportion_indel=0.8): # type: (Iterable[AllelicStat], int, int, float) -> Tuple[AllelicStat, ...]
     """Filter ase stats"""
     logging.info("Filtering ASE results")
     filter_start = time.time()
@@ -183,6 +183,7 @@ def filter_stats(stats, total_coverage=10, allelic_coverage=5, proportion=0.8): 
     stats = filter(lambda x: x.total_count >= total_coverage, stats) # type: Tuple[AllelicStat, ...]
     stats = filter(lambda x: x.ref_count >= allelic_coverage, stats) # type: Tuple[AllelicStat, ...]
     stats = filter(lambda x: x.alt_count >= allelic_coverage, stats) # type: Tuple[AllelicStat, ...]
-    stats = filter(lambda x: x.total_count / x.depth >= proportion, stats) # type: Tuple[AllelicStat, ...]
+    stats = filter(lambda x: x.total_count / x.depth >= proportion_match, stats) # type: Tuple[AllelicStat, ...]
+    stats = filter(lambda x: x.total_count / (x.total_count + x.ref_indel + x.alt_indel) >= proportion_indel, stats) # type: Tuple[AllelicStat, ...]
     logging.debug("Filtering ASE results took %s seconds", round(time.time() - filter_start, 3))
     return stats
