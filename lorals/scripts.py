@@ -25,12 +25,14 @@ except NameError:
         from . import ase
         from . import asts
         from . import utils
+        from . import annotate
         from . import features
         from . import fancy_logging
     else:
         from lorals import ase
         from lorals import asts
         from lorals import utils
+        from lorals import annotate
         from lorals import features
         from lorals import fancy_logging
 
@@ -124,7 +126,7 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
         metavar='in.vcf',
         help="Genotype VCF for sample"
     )
-    io_opts.add_argument(
+    io_opts.add_argument( # Output prefix
         '-o',
         '--output',
         dest='out',
@@ -279,6 +281,32 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
         metavar='in_ase.tsv',
         help="Input ASE table"
     )
+    io_opts.add_argument( # BED file
+        '-b',
+        '--bed',
+        dest='bed',
+        type=str,
+        required=True,
+        metavar='ref.bed',
+        help="Reference BED file"
+    )
+    io_opts.add_argument( # VCF file
+        '-f',
+        '--vcf',
+        dest='vcf',
+        type=str,
+        required=False,
+        metavar='in.vcf',
+        help="Genotype VCF for sample"
+    )
+    io_opts.add_argument(
+        '--blacklist',
+        dest='blacklist',
+        type=str,
+        required=False,
+        metavar='blacklist.bed',
+        help="Blacklist"
+    )
     io_opts.add_argument( # Output file
         '-o',
         '--output',
@@ -289,12 +317,47 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
         metavar='ase_annotated.tsv',
         help="Name of output ASE file; defaults to %(default)s"
     )
+    blacklist_opts = parser.add_argument_group(title='blacklist options') # type: argparse._ArgumentGroup
+    blacklist_opts.add_argument(
+        '--low-mapping',
+        dest='low_map',
+        type=str,
+        required=False,
+        default='',
+        metavar='low_map.bed',
+        help="BED file with low-mapping regions; defaults to %(default)s"
+    )
+    blacklist_opts.add_argument(
+        '--mapping-bias',
+        dest='map_bias'
+    )
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
         sys.exit(parser.print_help())
     args = vars(parser.parse_args(*args)) # type: Dict[str, Any]
     fancy_logging.configure_logging(level=args['verbosity'])
+    _ = utils.where("bedtools") # type: _
     _greeter()
+    args['input'] = utils.fullpath(path=args['input'])
+    if not os.path.exists(args['input']):
+        msg = "Cannot find input file %s" % args['input'] # type: str
+        logging.critical(msg)
+        raise ValueError(msg)
+    my_open = utils.find_open(filename=args['input']) # type: function
+    ase_stats = list() # type: List[annotate.AnnotatedStat]
+    with my_open(args['input'], 'rt') as ifile:
+        logging.info("Reading in input ASE from %s", args['input'])
+        read_start = time.time() # type: float
+        for line in ifile: # type: str
+            if line.startswith('#') or line.startswith(ase.AllelicStat.HEADER[0]):
+                continue
+            ase_stats.append(annotate.AnnotatedStat.fromstring(string=line))
+    ase_stats = tuple(ase_stats) # type: Tuple[annotate.AnnotatedStats, ...]
+    logging.debug("Reading input ASE took %s seconds", fancy_logging.fmttime(start=read_start))
+    if args['vcf']:
+        ase_stats = annotate.annotate_genotypes(stats=ase_stats, vcffile=args['vcf']) # type: Tuple[annotate.AnnotatedStat]
+    ase_stats = annotate.annotate_genes(stats=ase_stats, bedfile=args['bed']) # type: Tuple[annotate.AnnotatedStat]
+
 
 
 def fetch_haplotype(*args): # type: (Optional[List[str, ...]]) -> None
