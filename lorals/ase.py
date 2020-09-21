@@ -130,6 +130,10 @@ class AllelicStat(Bpileup):
         )
         return '\t'.join(map(str, out))
 
+    def print_bpileup(self): # type: (None) -> str
+        """Print this AllelicStat as if it was a Bpileup"""
+        return super(AllelicStat, self).__str__()
+
     ref_count = property(fget=lambda self: self._rc, doc="Counts for reference allele")
     alt_count = property(fget=lambda self: self._ac, doc="Counts for alternate allele")
     other_count = property(fget=lambda self: self._oc, doc="Counts for other alleles")
