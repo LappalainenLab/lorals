@@ -112,7 +112,7 @@ def bam_to_bed(bamfile, save=False): # type: (str, bool) -> pybedtools.bedtool.B
     return bedfh
 
 
-def bed_intersect(afile, bfile, ofile=None): # type: (str, str, Optional[str]) -> pybedtools.bedtool.BedTool
+def bed_intersect(afile, bfile, ofile=None, **kwargs): # type: (str, str, Optional[str], Optional[Mapping]) -> pybedtools.bedtool.BedTool
     """Intersect two bedfiles"""
     afile = utils.fullpath(path=afile) # type: str
     bfile = utils.fullpath(path=bfile) # type: str
@@ -131,7 +131,7 @@ def bed_intersect(afile, bfile, ofile=None): # type: (str, str, Optional[str]) -
         bfh = pybedtools.bedtool.BedTool(bfile) # type: pybedtools.bedtool.BedTool
     logging.info("Intersecting two files")
     intersect_start = time.time()
-    ifh = afh.intersect(bfh) # type: pybedtools.bedtool.BedTool
+    ifh = afh.intersect(bfh, **kwargs) # type: pybedtools.bedtool.BedTool
     if isinstance(ofile, str):
         ofile = utils.fullpath(path=ofile) # type: str
         logging.info("Saving resulting BED file as %s", ofile)
