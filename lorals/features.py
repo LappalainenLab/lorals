@@ -3,10 +3,18 @@
 __all__ = [ # type: List[str]
     'Bpileup',
     'iter_var',
+    'write_bed',
 ]
 
 import re
 import sys
+import tempfile
+
+if sys.version_info.major == 2:
+    from . import utils
+else:
+    from lorals import utils
+
 
 class Bpileup(object):
 
@@ -90,6 +98,8 @@ class Bpileup(object):
     def __eq__(self, other): # type:(Any) -> bool
         if isinstance(other, Bpileup):
             return hash(self) == hash(other)
+        elif isinstance(other, str):
+            return self.name == other or self._default_id() == other
         return NotImplemented
 
     def _default_id(self): # type: (None) -> str
@@ -100,6 +110,15 @@ class Bpileup(object):
             alt=self.alts
         )
 
+    def bed(self, default=False): # type(bool) -> str
+        """Format this Bpileup to a bed4 format"""
+        return "%(chr)s\t%(start)s\t%(end)s\t%(name)s" % {
+            'chr': self.chrom,
+            'start': self.dummy,
+            'end': self.position,
+            'name': self._default_id() if default else self.name
+        }
+
     chrom = property(fget=lambda self: self._chrom, doc="Chromsome of this variant")
     position = property(fget=lambda self: self._pos, doc="Position of this variant")
     dummy = property(fget=lambda self: self.position - 1, doc="Dummy starting position")
@@ -107,6 +126,58 @@ class Bpileup(object):
     alt = property(fget=lambda self: self._alt, doc="Alternate variant(s)")
     alts = property(fget=lambda self: ','.join(self.alt), doc="Alternate variant(s) as a string")
     name = property(fget=lambda self: self._id, doc="Variant name/ID")
+    default = property(fget=lambda self: self._default_id(), doc="Standardized default ID")
+
+
+class GenoVar(Bpileup):
+
+    @staticmethod
+    def _valid_genotype(genotype): # type: (str) -> None
+        if genotype:
+            genos = genotype.split(',') # type: List[str]
+            for gt in genos: # type: str
+                if not re.match(r'[01][/|][01]', gt):
+                    raise ValueError("invalid genotypes")
+        return None
+
+    @classmethod
+    def fromvcf(cls, vcf): # type: (str) -> Bpileup
+        vcf = vcf.strip().split('\t') # type: List[str]
+        gt_index = vcf[8].split(':').index('GT') # type: int
+        gt = tuple(x.split(':')[gt_index] for x in vcf[9:]) # type: Tuple[str, ...]
+        return cls(
+            chrom=vcf[0],
+            position=vcf[1],
+            ref=vcf[3],
+            alt=vcf[4],
+            geno=','.join(gt),
+            name=vcf[2]
+        )
+
+    def __init__(
+        self,
+        chrom, # type: str
+        position, # type: int
+        ref, # type: str
+        alt, # type: str
+        geno=None, # type: Optional[str]
+        name=None # type: Optional[str]
+    ): # type: (...) -> None
+        super(GenoVar, self).__init__(chrom=chrom, position=position, ref=ref, alt=alt, name=name)
+        geno = str(geno) if geno is not None else "" # type: str
+        self._valid_genotype(genotype=geno)
+        self._geno = tuple(geno.split(',')) # type Tuple[str, ...]
+
+    @property
+    def geno(self): # type: (None) -> Tuple[str, ...]
+        return self._geno
+
+    @geno.setter
+    def geno(self, value): # type: (str) -> None
+        self._valid_genotype(genotype=value)
+        self._geno = tuple(value.split(',')) # type: Tuple[str, ...]
+
+    genos = property(fget=lambda self: ','.join(self.geno), doc='')
 
 
 def iter_var(df): # type: (pandas.core.frame.DataFrame) -> Iterator(Bpileup)
@@ -121,3 +192,16 @@ def iter_var(df): # type: (pandas.core.frame.DataFrame) -> Iterator(Bpileup)
             alt=x.altAllele,
             name=x.variantID
         )
+
+
+def write_bed(bpileups, default=False, ofile=None): # type: (Iterable[Bpileup], bool, Optional[str]) -> str
+    if ofile:
+        ofh = utils.find_open(filename=ofile)(ofile, 'w+b')
+    else:
+        ofh = tempfile.NamedTemporaryFile(delete=False)
+    for bp in bpileups: # type: Bpileup
+        ofh.write(bp.bed(default=default))
+        ofh.write('\n')
+        ofh.flush()
+    ofh.close()
+    return ofh.name
