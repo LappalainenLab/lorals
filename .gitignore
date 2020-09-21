@@ -21,3 +21,8 @@ dist/
 /*.bam*
 /*.vcf*
 /*.out
+/*.sh
+
+# Ignore results
+################
+*.tsv
