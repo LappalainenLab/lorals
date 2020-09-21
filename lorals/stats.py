@@ -3,10 +3,52 @@
 from __future__ import division
 from __future__ import print_function
 
+import math
 import time
 import logging
 
 from operator import itemgetter
+
+def median(x): # type: (Iterable[Union[int, float]]) -> Union[int, float]
+    """Calculate the median
+    >>> median([1, 2, 3])
+    2
+    >>> median([4, 3, 4, 1, 2])
+    3
+    """
+    if isinstance(x, (int, float)):
+        return x
+    x_sorted = tuple(sorted(x)) # type: Tuple[Union[int, float]]
+    midpoint = int(len(x_sorted) / 2) # type: int
+    if len(x_sorted) % 2:
+        return x_sorted[midpoint]
+    elif len(x_sorted) == 2:
+        lower, upper = x_sorted # type: Union[int, float], Union[int, float]
+    else:
+        lower, upper = x_sorted[midpoint:(midpoint + 2)] # type: Union[int, float], Union[int, float]
+    return upper - ((upper - lower) / 2)
+
+
+def percentile(x, probs): # type: (Iterable[Union[int, float]], Union[Tuple[Union[int, float]], int, float]) -> Union[int, float]
+    """Calculate a percentile
+    >>> percentile(x = (15, 20, 35, 40, 50), probs = 40)
+    29.0
+    >>> percentile(x = (15, 20, 35, 40, 50), probs = (5, 40, 95))
+    (16.0, 29.0, 48.0)
+    """
+    if isinstance(probs, (int, float)):
+        probs = (probs,) # type: Tuple[Union[int, float]]
+    pcheck = (0 <= p <= 100 for p in probs) # type: Generator(bool)
+    if not all(pcheck):
+        raise ValueError("All percentile values must be between 0 and 100, inclusive")
+    xs = tuple(sorted(x)) # type: Tuple[Union[int, float]]
+    ranks = tuple(p / 100 * (len(xs) - 1) + 1 for p in probs) # type: Tuple[float]
+    indexes = tuple(int(math.floor(r)) for r in ranks) # type: Tuple[int]
+    percs = tuple(xs[i - 1] + ((r % 1) * (xs[i] - xs[i - 1])) for r, i in zip(ranks, indexes))
+    if len(percs) == 1:
+        return percs[0]
+    return percs
+
 
 def pvalue_adjust(pvalues): # type: (Iterable[float]) -> Iterable[float]
     """Adjust p-values using the Benjamin-Hochberg method
