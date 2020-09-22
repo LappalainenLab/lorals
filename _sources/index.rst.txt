@@ -9,6 +9,14 @@ Long Read Allele Specific analysis
 LoRALS is a package and collection of tools for conducting allele-specific analyses
 in Oxford Nanopore-generated long read data
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   :glob:
+
+   cmds/*
+
+
 Installation
 ------------
 
@@ -26,14 +34,6 @@ LoRALS provides the following command-line tools
 
 - :code:`calc_asts`: Calculate allele specific transcript structure (asts) and allele-specific expression (ase)
 - :code:`annotate_ase`: Annotate an ase matrix with gene IDs, genotype information, and blacklist and other warnings
-
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-
 
 Indices and tables
 ==================
