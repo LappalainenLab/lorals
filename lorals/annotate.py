@@ -27,7 +27,7 @@ else:
 
 class AnnotatedStat(ase.AllelicStat, features.GenoVar):
 
-    HEADER = tuple( # type: Tuple[str, ...]
+    HEADER = ( # type: Tuple[str, ...]
         'CHR',
         'POS',
         'rsID',
@@ -98,7 +98,7 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
             self.alt_indel,
             self.other_count,
             self.depth,
-            self.genos,
+            self.genos if self.genos else float("nan"),
             self.gene,
             int(self.warning),
             int(self.blacklisted),
@@ -236,6 +236,7 @@ def annotate_genotypes(stats, vcffile): # type: (Iterable[AnnotatedStat], str) -
 
 
 def bias_stats(stats, method, coverage): # type(...) -> ...
+    logging.info("Calculating bias stats")
     upper_percentile = maths.percentile( # type: float
         x=tuple(x.total_count for x in filter(lambda x: x.total_count >= coverage, stats)),
         probs=75
@@ -263,6 +264,7 @@ def bias_stats(stats, method, coverage): # type(...) -> ...
     bias_out['genomeWide'] = ref_cuml / total_cuml # type: float
     if method == 'global':
         all_ratios = tuple(x.ref_ratio for x in stats) # type: Tuple[float]
+    logging.info("Determining bias")
     for key in bias_stats:
         if bias_stats[key][2] >= 100:
             if method == 'mean':

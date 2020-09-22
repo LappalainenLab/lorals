@@ -431,6 +431,7 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
             method=args['method'],
             coverage=args['coverage']
         )
+        logging.info("Determining null ratios")
         for i, stat in enumerate(ase_stats): # type: int, annotate.AnnotatedStat
             ase_stats[i].null_ratio = bias_stats.get(stat.ref + stat.alts, float('nan'))
     else:
@@ -443,7 +444,7 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
     #   Calculate q-values
     logging.info("Adjusting p-values")
     stats_cov = tuple(filter(
-        lambda x: not x.multi_mapping and not x.blacklisted and not x.other_waring and not x.indel_warning and not x.warning and x.total_count >= args['coverage'] and x.chrom not in ('chrX', 'chrY'),
+        lambda x: not x.multi_mapping and not x.blacklisted and not x.other_warning and not x.indel_warning and not x.warning and x.total_count >= args['coverage'] and x.chrom not in ('chrX', 'chrY'),
         ase_stats
     ))
     qvalues = maths.pvalue_adjust(tuple(x.pvalue for x in ase_stats)) # type: Tuple[float, ...]

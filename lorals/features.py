@@ -47,7 +47,7 @@ class Bpileup(object):
         """Create a Bpileup from an Interval"""
         if interval.file_type != 'bed':
             raise TypeError("Must be a BED interval")
-        elif len(interval.fields) is not 6:
+        elif len(interval.fields) != 6:
             raise ValueError("wrong number of fields")
         return cls(
             chrom=interval.chrom,
@@ -198,7 +198,7 @@ def write_bed(bpileups, default=False, ofile=None): # type: (Iterable[Bpileup], 
     if ofile:
         ofh = utils.find_open(filename=ofile)(ofile, 'w+b')
     else:
-        ofh = tempfile.NamedTemporaryFile(delete=False)
+        ofh = tempfile.NamedTemporaryFile(mode='w', delete=False)
     for bp in bpileups: # type: Bpileup
         ofh.write(bp.bed(default=default))
         ofh.write('\n')
