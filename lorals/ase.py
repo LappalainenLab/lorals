@@ -189,10 +189,6 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
         return None
 
 
-def bias_stats(method, coverage): # type(...) -> ...
-    pass
-
-
 def filter_stats(stats, total_coverage=10, allelic_coverage=5, proportion_match=0.8, proportion_indel=0.8): # type: (Iterable[AllelicStat], int, int, float) -> Tuple[AllelicStat, ...]
     """Filter ase stats"""
     logging.info("Filtering ASE results")
