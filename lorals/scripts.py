@@ -467,7 +467,6 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
             ofile.flush()
 
 
-
 def fetch_haplotype(*args): # type: (Optional[List[str, ...]]) -> None
     """..."""
     pass

@@ -170,9 +170,9 @@ def vcf_bpileup(vcffile, pileup=None): # type: (str, Optional[str]) -> str
     vcffile = utils.fullpath(path=vcffile) # type: str
     if pileup:
         pileup = utils.fullpath(path=pileup) # type: str
-        pfile = utils.find_open(filename=pileup)(pileup, 'w+b')
+        pfile = utils.find_open(filename=pileup)(pileup, 'w')
     else:
-        pfile = tempfile.NamedTemporaryFile(delete=False)
+        pfile = tempfile.NamedTemporaryFile(mode='w', delete=False)
     my_open = utils.find_open(filename=vcffile) # type: function
     with my_open(vcffile, 'rt') as vfile:
         logging.info("Reading in VCF file %s", vcffile)
