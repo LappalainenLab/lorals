@@ -506,12 +506,12 @@ def fetch_haplotype(*args): # type: (Optional[List[str]]) -> None
         type=str,
         required=True,
         metavar='snps.tsv',
-        help="Tab-delimited file of SNPs fot be used for plotting; should contain the following columns: chrom, position, reference allele, alternate allele(s). Any header should start with a '#'
+        help="Tab-delimited file of SNPs fot be used for plotting; should contain the following columns: chrom, position, reference allele, alternate allele(s). Any header should start with a '#'"
     )
     io_opts.add_argument( # Outdir
         '-o',
         '--outdir',
-        dest='outdir'
+        dest='outdir',
         type=str,
         required=False,
         default=os.path.join(os.getcwd(), 'lorals_haplo_bams'),
@@ -551,7 +551,7 @@ def fetch_haplotype(*args): # type: (Optional[List[str]]) -> None
     for k in ('bam', 'trans', 'snps', 'outdir'): # type: str
         args[k] = utils.fullpath(path=args[k]) # type: str
     if not os.path.exists(args['outdir']):
-        os.makedirs(args['outdir'], exist_ok=True)
+        os.makedirs(args['outdir'])
     my_open = utils.find_open(args['snps']) # type: Callable
     with my_open(args['snps'], 'rt') as sfile:
         #   TODO support multiple SNPs at once
@@ -567,7 +567,7 @@ def fetch_haplotype(*args): # type: (Optional[List[str]]) -> None
         )
     with pysam.AlignmentFile(args['trans']) as flairfh:
         logging.info("Reading transcripts from %s", args['trans'])
-        flair_reads = {read.query_name, read.reference_name for read in flairfh} # type: Dict[str, str]
+        flair_reads = {read.query_name: read.reference_name for read in flairfh} # type: Dict[str, str]
     logging.info("getting qnames")
     qnames = asts.qnames( # type: Tuple[asts.Qname, ...]
         var=var,

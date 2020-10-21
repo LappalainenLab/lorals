@@ -98,11 +98,7 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
             self.alt_indel,
             self.other_count,
             self.depth,
-<<<<<<< HEAD
-            self.genos,
-=======
             self.genos if self.genos else float("nan"),
->>>>>>> f1f4f3d13ee7cc05bf564c1c6c440fc4e531df1e
             self.gene,
             int(self.warning),
             int(self.blacklisted),
@@ -240,10 +236,7 @@ def annotate_genotypes(stats, vcffile): # type: (Iterable[AnnotatedStat], str) -
 
 
 def bias_stats(stats, method, coverage): # type(...) -> ...
-<<<<<<< HEAD
-=======
     logging.info("Calculating bias stats")
->>>>>>> f1f4f3d13ee7cc05bf564c1c6c440fc4e531df1e
     upper_percentile = maths.percentile( # type: float
         x=tuple(x.total_count for x in filter(lambda x: x.total_count >= coverage, stats)),
         probs=75
@@ -271,10 +264,7 @@ def bias_stats(stats, method, coverage): # type(...) -> ...
     bias_out['genomeWide'] = ref_cuml / total_cuml # type: float
     if method == 'global':
         all_ratios = tuple(x.ref_ratio for x in stats) # type: Tuple[float]
-<<<<<<< HEAD
-=======
     logging.info("Determining bias")
->>>>>>> f1f4f3d13ee7cc05bf564c1c6c440fc4e531df1e
     for key in bias_stats:
         if bias_stats[key][2] >= 100:
             if method == 'mean':
