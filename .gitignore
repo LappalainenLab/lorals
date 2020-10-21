@@ -16,6 +16,9 @@ lib/
 *.egg-info/
 dist/
 
+# Ignore documentation website
+docs/build/html
+
 # Ignore data files in the top-level directory
 ##############################################
 /*.bam*

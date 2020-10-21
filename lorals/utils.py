@@ -124,6 +124,7 @@ def where(name, flags=os.X_OK): # type: (str, int) -> str
     else:
         raise ValueError("Cannot find %s" % name)
 
+
 def window(position, size): # type (int, int) -> slice
     """Make a window slice"""
     return slice(position - (size + 1), position + size)

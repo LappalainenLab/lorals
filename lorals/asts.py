@@ -48,6 +48,8 @@ LengthStat = namedtuple( # type: type
     )
 )
 
+Qname = namedtuple('Qname', ('flairs', 'query', 'vartype'))
+
 NullResult = stats.stats.KstestResult(statistic=utils.nan, pvalue=utils.nan) # type: scipy.stats.stats.KstestResult
 
 def asts_length(var, bamfile, window=5, match_threshold=8, min_reads=20): # type: (features.Bpileup, str, int, int) -> LengthStat
@@ -165,14 +167,53 @@ def deduplicate_bpileup(bpileup): # type: (str) -> pandas.core.frame.DataFrame
     return bed
 
 
+def qnames(var, bamfile, trans_reads, window=5, min_matches=8): # type: (features.Bpileup, str, Dict[str, str], int, int) -> Tuple[Qname, ...]
+    reads_completed = set() # type: Set[str]
+    flair_reads = list() # type: List[Qname]
+    bamfile = utils.fullpath(path=bamfile) # type: str
+    bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalcalignment.AlignmentFile
+    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position): # type: pysam.libcalignedsegment.PileupColumn
+        if pile.pos != var.dummy:
+            continue
+        for pile_read in pile.pileups: # type: pysam.libcalignedsegment.PileupRead
+            qname = pile_read.alignment.query_name # type: str
+            if qname in reads_completed or not pile_read.query_position:
+                continue
+            reads_completed.add(qname)
+            pine_window = utils.window(position=pile_read.query_position, size=window) # type: slice
+            count_m = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M') # type: int
+            flairs = tuple(ref for query, ref in trans_reads.items() if query == qname) # type: Tuple[str, ...]
+            if not flairs:
+                logging.warning("no flairs")
+            if pile_read.alignment.query_sequence[pile_read.query_position] == var.ref:
+                vartype = 'REF' if count_m >= min_matches else 'REF_INDEL' # type: str
+            elif pile_read.alignment.query_sequence[pile_read.query_position] in var.alt:
+                vartype = 'ALT' if count_m >= min_matches else 'ALT_INDEL' # type: str
+            else:
+                vartype = 'OTHER' # type: str
+            flair_reads.append(Qname(flairs=''.join(flairs), query=qname, vartype=vartype))
+    return tuple(filter(lambda x: x.vartype != 'OTHER', flair_reads))
+
+
+def split_qnames(qnames): # type: (Tuple[Qname, ...]) -> Dict[str, Dict[str, Tuple[str, ...]]]
+    qsplit = dict.fromkeys({q.vartype for q in qnames}, ()) # type: Dict[str, Tuple[str, ...]]
+    for k in qsplit: # type: str
+        qsplit[k] = defaultdict(list)
+    for q in qnames: # type: Qname
+        qsplit[q.vartype][q.flairs].append(q.query)
+    for k in qsplit: # type: str
+        qsplit[k] = {f: tuple(q) for f, q, in qsplit[k].items()}
+    return qsplit
+
+
 def vcf_bpileup(vcffile, pileup=None): # type: (str, Optional[str]) -> str
     """Create a BED-like pileup from a VCF file"""
     vcffile = utils.fullpath(path=vcffile) # type: str
     if pileup:
         pileup = utils.fullpath(path=pileup) # type: str
-        pfile = utils.find_open(filename=pileup)(pileup, 'w+b')
+        pfile = utils.find_open(filename=pileup)(pileup, 'w')
     else:
-        pfile = tempfile.NamedTemporaryFile(delete=False)
+        pfile = tempfile.NamedTemporaryFile(mode='w', delete=False)
     my_open = utils.find_open(filename=vcffile) # type: function
     with my_open(vcffile, 'rt') as vfile:
         logging.info("Reading in VCF file %s", vcffile)

@@ -14,16 +14,21 @@ import logging
 import argparse
 import subprocess
 
+from collections import defaultdict
+
 import pkg_resources
 
 try:
     __LORALS_SETUP__
 except NameError:
+    import pysam
     import pandas
     import pybedtools
+    from scipy.stats import binom_test
     if sys.version_info.major == 2:
         from . import ase
         from . import asts
+        from . import maths
         from . import utils
         from . import annotate
         from . import features
@@ -31,6 +36,7 @@ except NameError:
     else:
         from lorals import ase
         from lorals import asts
+        from lorals import maths
         from lorals import utils
         from lorals import annotate
         from lorals import features
@@ -103,7 +109,7 @@ def _greeter(): # type: (None) -> None
     logging.info("Author: Dafni Glinos (dglinos@nygenome.org)")
 
 
-def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
+def calc_asts(*args): # type: (Optional[List[str]]) -> None
     """Calculate ASTS"""
     # parser = _common_parser() # type: argparse.ArgumentParser
     parser = argparse.ArgumentParser(add_help=False)
@@ -212,7 +218,8 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     )
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
-        sys.exit(parser.print_help())
+        parser.print_help(file=sys.stderr)
+        raise SystemExit(1)
     args = vars(parser.parse_args(*args)) # type: Dict[str, Any]
     fancy_logging.configure_logging(level=args['verbosity'])
     _ = utils.where('bedtools') # type: _
@@ -268,9 +275,12 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     logging.info("Done")
 
 
-def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
+def annotate_ase(*args): # type: (Optional[List[str]]) -> None
     """Annotate ASE"""
-    parser = argparse.ArgumentParser(add_help=False) # type: argparse.ArgumentParser
+    parser = argparse.ArgumentParser( # type: argparse.ArgumentParser
+        add_help=False,
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     io_opts = parser.add_argument_group(title="input/output options") # type: argparse._ArgumentGroup
     io_opts.add_argument( # Input ASE file
         '-i',
@@ -299,14 +309,6 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
         metavar='in.vcf',
         help="Genotype VCF for sample"
     )
-    io_opts.add_argument(
-        '--blacklist',
-        dest='blacklist',
-        type=str,
-        required=False,
-        metavar='blacklist.bed',
-        help="Blacklist"
-    )
     io_opts.add_argument( # Output file
         '-o',
         '--output',
@@ -318,18 +320,70 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
         help="Name of output ASE file; defaults to %(default)s"
     )
     blacklist_opts = parser.add_argument_group(title='blacklist options') # type: argparse._ArgumentGroup
-    blacklist_opts.add_argument(
-        '--low-mapping',
-        dest='low_map',
+    blacklist_opts.add_argument( # Blacklist
+        '--blacklist',
+        dest='blacklist',
         type=str,
         required=False,
-        default='',
-        metavar='low_map.bed',
-        help="BED file with low-mapping regions; defaults to %(default)s"
+        default=pkg_resources.resource_filename('lorals', 'blacklists/hg38-blacklist.v2.bed'),
+        metavar='blacklist.bed',
+        help="Blacklist BED file; defaults to %(default)s"
     )
-    blacklist_opts.add_argument(
-        '--mapping-bias',
-        dest='map_bias'
+    blacklist_opts.add_argument( # Genotype warning
+        '--genotype',
+        dest='warning',
+        type=str,
+        required=False,
+        default=pkg_resources.resource_filename('lorals', 'blacklists/GTEX_Q2AG_braincerebellarhemisphere_illumina_GT_warning.bed'),
+        metavar='genotype_warning.bed',
+        help="Genotype warning BED file; defaults to %(default)s"
+    )
+    blacklist_opts.add_argument( # Multimapping
+        '--mapping',
+        dest='mapping',
+        type=str,
+        required=False,
+        default=pkg_resources.resource_filename('lorals', 'blacklists/wgEncodeCrgMapabilityAlign100mer.hg38.mappingover5.bed'),
+        metavar='multi_mapping.bed',
+        help="BED file with multi-mapping regions; defaults to %(default)s"
+    )
+    stats_opts = parser.add_argument_group(title="ase stats options") # type: argparse._ArgumentGroup
+    stats_opts.add_argument( # Proportion cutoff
+        '-p',
+        '--proportion-cutoff',
+        dest='cutoff',
+        type=float,
+        required=False,
+        default=0.05,
+        help="Maximum proportion of reads arising from non ref/alt read for variant to be used for genotype warning test; defaults to %(default)s"
+    )
+    stats_opts.add_argument( # Coverage
+        '-c',
+        '--coverage',
+        dest='coverage',
+        type=int,
+        required=False,
+        default=20,
+        help="Minimum coverage for a site to be included; defaults to %(default)s"
+    )
+    binom_excl = stats_opts.add_mutually_exclusive_group()
+    binom_excl.add_argument( # Optional binomial NULL
+        '-n',
+        '--binomial-null',
+        dest='binomial',
+        type=float,
+        required=False,
+        default=None,
+        help="For binomail test, the null ref ratio to test against; defaults to auto-calculated null ref ratio"
+    )
+    binom_excl.add_argument( # Method for calculating binomial null
+        '-m',
+        '--method',
+        type=str,
+        required=False,
+        default='mean',
+        choices=('mean', 'median', 'global'),
+        help="Method for calculating biomial null, choose from %(choices)s; defaults to %(default)s"
     )
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
@@ -356,10 +410,199 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
     logging.debug("Reading input ASE took %s seconds", fancy_logging.fmttime(start=read_start))
     if args['vcf']:
         ase_stats = annotate.annotate_genotypes(stats=ase_stats, vcffile=args['vcf']) # type: Tuple[annotate.AnnotatedStat]
-    ase_stats = annotate.annotate_genes(stats=ase_stats, bedfile=args['bed']) # type: Tuple[annotate.AnnotatedStat]
+    ase_stats = annotate.annotate_genes(stats=ase_stats, bedfile=args['bed']) # type: Tuple[annotate.AnnotatedStat, ...]
+    #   Add blacklist, genotype warning, and mappability annotations
+    logging.info("Annotating blacklist status")
+    blacklist = annotate.annotate_bed(stats=ase_stats, bedfile=args['blacklist']) # type: Tuple[str, ...]
+    logging.info("Annotating genotype warning")
+    gt_warning = annotate.annotate_bed(stats=ase_stats, bedfile=args['warning']) # type: Tuple[str, ...]
+    logging.info("Annotating multi mapping")
+    multi_mapping = annotate.annotate_bed(stats=ase_stats, bedfile=args['mapping']) # type: Tuple[str, ...]
+    logging.info("Adding annotations")
+    for i in range(len(ase_stats)): # type: int
+        ase_stats[i].blacklisted = ase_stats[i].default in blacklist # type: bool
+        ase_stats[i].warning = ase_stats[i].default in gt_warning # type: bool
+        ase_stats[i].multi_mapping = ase_stats[i].default in multi_mapping # type: bool
+    #   Get bias stats
+    if args['binomial'] is None:
+        logging.info("Calculating binomial null ratio")
+        stats_bias = tuple(filter(
+            lambda x: not x.blacklisted and not x.warning and not x.multi_mapping and not x.other_warning and not x.indel_warning and x.chrom not in ('chrX', 'chrY'),
+            ase_stats
+        ))
+        bias_stats = annotate.bias_stats(
+            stats=stats_bias,
+            method=args['method'],
+            coverage=args['coverage']
+        )
+        logging.info("Determining null ratios")
+        for i, stat in enumerate(ase_stats): # type: int, annotate.AnnotatedStat
+            ase_stats[i].null_ratio = bias_stats.get(stat.ref + stat.alts, float('nan'))
+    else:
+        for i in range(len(ase_stats)): # type: int
+            ase_stats[i].null_ratio = args['binomial']
+    #   Calculate binomial p-value
+    logging.info("Calculating binomial p-value")
+    for i, stat in enumerate(ase_stats): # type: i, annotate.AnnotatedStat
+        ase_stats[i].pvalue = binom_test(stat.ref_count, stat.total_count, stat.null_ratio)
+    #   Calculate q-values
+    logging.info("Adjusting p-values")
+    stats_cov = tuple(filter(
+        lambda x: not x.multi_mapping and not x.blacklisted and not x.other_warning and not x.indel_warning and not x.warning and x.total_count >= args['coverage'] and x.chrom not in ('chrX', 'chrY'),
+        ase_stats
+    ))
+    qvalues = maths.pvalue_adjust(tuple(x.pvalue for x in ase_stats)) # type: Tuple[float, ...]
+    for i, stat in enumerate(ase_stats): # type: int, annotate.AnnotatedStat
+        try:
+            index = stats_cov.index(stat)
+        except ValueError:
+            pass
+        else:
+            ase_stats[i].qvalue = qvalues[index]
+    #   Write the output file
+    with open(args['output'], 'w') as ofile:
+        logging.info("Writing output to %s", args['output'])
+        ofile.write('\t'.join(annotate.AnnotatedStat.HEADER))
+        ofile.write('\n')
+        ofile.flush()
+        for stat in ase_stats: # type: annotate.AnnotatedStat
+            ofile.write(str(stat))
+            ofile.write('\n')
+            ofile.flush()
 
 
-
-def fetch_haplotype(*args): # type: (Optional[List[str, ...]]) -> None
+def fetch_haplotype(*args): # type: (Optional[List[str]]) -> None
     """..."""
-    pass
+    snp_header = ( # type: Tuple[str, ...]
+        'CHR',
+        'POS',
+        'ALLELE1',
+        'ALLELE2',
+    )
+    parser = argparse.ArgumentParser(add_help=False) # type: argparse.ArgumentParser
+    io_opts = parser.add_argument_group(title="input/output options") # type: argparse._ArgumentGroup
+    io_opts.add_argument( # Input BAM file
+        '-b',
+        '--bam',
+        dest='bam',
+        type=str,
+        required=True,
+        metavar='in.bam',
+        help="BAM file containing RNA-seq reads aligned to the genome"
+    )
+    io_opts.add_argument( # Transcript-aligned BAM file
+        '-t',
+        '--transcripts',
+        dest='trans',
+        type=str,
+        required=True,
+        metavar='transcripts.bam',
+        help="BAM file with reads aligned to the transcriptome"
+    )
+    io_opts.add_argument( # SNP table
+        '-s',
+        '--snps',
+        dest='snps',
+        type=str,
+        required=True,
+        metavar='snps.tsv',
+        help="Tab-delimited file of SNPs fot be used for plotting; should contain the following columns: chrom, position, reference allele, alternate allele(s). Any header should start with a '#'
+    )
+    io_opts.add_argument( # Outdir
+        '-o',
+        '--outdir',
+        dest='outdir'
+        type=str,
+        required=False,
+        default=os.path.join(os.getcwd(), 'lorals_haplo_bams'),
+        metavar='outdir',
+        help="Output directory for the resulting BAM files; defaults to %(default)s"
+    )
+    filter_opts = parser.add_argument_group(title='filtering options') # type: argparse._ArgumentGroup
+    filter_opts.add_argument( # Window size
+        '-w',
+        '--window',
+        dest='window',
+        type=int,
+        required=False,
+        default=5,
+        metavar='window size',
+        help="WIndow around the heterozygous variant to count number of matches and mismatches; defaults to %(default)s"
+    )
+    filter_opts.add_argument( # Minimum number of matches
+        '-m',
+        '--minimum-matches',
+        dest='minmatch',
+        type=int,
+        required=False,
+        default=8,
+        metavar='minimum matches',
+        help="Minimum number of matches within the window around the heterozygous variant; defaults to %(default)s"
+    )
+    _common_opts(parser=parser, group='utility options', version=VERSION)
+    if not sys.argv[1:]:
+        parser.print_help(file=sys.stderr)
+        raise SystemExit(1)
+    args = vars(parser.parse_args(*args)) # type: Dict[str, Any]
+    fancy_logging.configure_logging(level=args['verbosity'])
+    _greeter()
+    read_hash = defaultdict(list) # type: DefaultDict[str, List]
+    # bamfh = pysam.AlignmentFile(args['bam'])
+    for k in ('bam', 'trans', 'snps', 'outdir'): # type: str
+        args[k] = utils.fullpath(path=args[k]) # type: str
+    if not os.path.exists(args['outdir']):
+        os.makedirs(args['outdir'], exist_ok=True)
+    my_open = utils.find_open(args['snps']) # type: Callable
+    with my_open(args['snps'], 'rt') as sfile:
+        #   TODO support multiple SNPs at once
+        for line in sfile:
+            if not line.startswith('#'):
+                break
+        line = line.strip().split('\t') # type: List[str]
+        var = features.Bpileup( # type: features.Bpileup
+            chrom=line[0],
+            position=line[1],
+            ref=line[2],
+            alt=line[3]
+        )
+    with pysam.AlignmentFile(args['trans']) as flairfh:
+        logging.info("Reading transcripts from %s", args['trans'])
+        flair_reads = {read.query_name, read.reference_name for read in flairfh} # type: Dict[str, str]
+    logging.info("getting qnames")
+    qnames = asts.qnames( # type: Tuple[asts.Qname, ...]
+        var=var,
+        bamfile=args['bam'],
+        trans_reads=flair_reads,
+        window=args['window'],
+        min_matches=args['minmatch']
+    )
+    logging.info("splitting qnames")
+    qnames = asts.split_qnames(qnames=qnames) # type: Dict[str, Dict[str, Tuple[str, ...]]]
+    bamfh = pysam.AlignmentFile(args['bam'])
+    outfh = dict() # type: Dict[str, Any]
+    logging.info("prepping out bams")
+    for vartype in qnames: # type: str
+        # outfh[vartype] = dict()
+        for transcript in qnames[vartype]: # type: str
+            outname = os.path.join( # type: str
+                args['outdir'],
+                '%(ts)s_%(vt)s.bam' % {'ts': transcript, 'vt': vartype.lower()}
+            )
+            # outfh[vartype][transcript] = pysam.Samfile(
+            #     outname,
+            #     'wb',
+            #     template=bamfh
+            # )
+            outfh[transcript] = pysam.Samfile(
+                outname,
+                'wb',
+                template=bamfh
+            )
+    combined_qnames = dict() # type: Dict[str, Tuple[str, ...]]
+    for d in qnames.items(): # type: Dict[str, Tuple[str, ...]]
+        combined_qnames.update(d)
+    for read in bamfh.fetch(until_eof=True):
+        if read.query_name in utils.unpack(combined_qnames.values()):
+            transcript = utils.dictsearch(d=combined_qnames, query=read.query_name) # type: str
+            outfh[transcript].write(read)
+    bamfh.close()
