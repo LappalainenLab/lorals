@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 
-__all__ = [ # type: List[str, ...]
+import operator
+
+from typing import Dict, Iterable, List, Tuple, Union
+
+__all__: List[str] = [
     "Cigar"
 ]
-
-import operator
 
 class Cigar(object):
 
     """blah"""
 
-    oper_map = { # type: Dict[int, str]
+    oper_map: Dict[int, str] = {
         0: 'M',
         1: 'I',
         2: 'D',
@@ -23,11 +25,11 @@ class Cigar(object):
         9: 'B'
     }
 
-    def __init__(self, tuples): # type: (Iterable[Tuple[int, int], ...]) -> None
-        last = 0 # type: int
-        self._starts = list() # type: List[int, ...]
-        self._lengths = list() # type: List[int, ...]
-        self._chars = list() # type: List[str, ...]
+    def __init__(self, tuples: Iterable[Tuple[int, int]]) -> None:
+        last: int = 0
+        self._starts: List[int] = list()
+        self._lengths: List[int] = list()
+        self._chars: List[str] = list()
         for oper in tuples: # type: Tuple[int, int]
             if len(oper) != 2 or not all((isinstance(i, int) for i in oper)):
                 raise ValueError("Each CIGAR tuple must have exactly two integer values")
@@ -39,14 +41,13 @@ class Cigar(object):
             self._chars.append(self.oper_map.get(operation))
             last += length
 
-    def __str__(self): # type: (None) -> str
+    def __str__(self) -> str:
         return self[:]
 
-    def __len__(self): # type: (None) -> int
+    def __len__(self) -> int:
         return sum(self._lengths)
 
-    def __getitem__(self, val): # type: (Union[int, slice]) -> str
-        # return NotImplemented
+    def __getitem__(self, val: Union[int, slice]) -> str:
         if not isinstance(val, (int, slice)):
             raise TypeError("Must pass a slice object")
         return ''.join(map(lambda x: operator.mul(*x), zip(self._lengths, self._chars)))[val]

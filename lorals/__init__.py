@@ -7,7 +7,9 @@ except NameError:
     from . import utils
 
 
-__all__ = [ # type: List[str, ...]
+from typing import List
+
+__all__: List[str] = [
     "asts",
     "utils"
 ]

@@ -2,16 +2,6 @@
 
 """ASTS-specific utilities"""
 
-from __future__ import division
-from __future__ import print_function
-
-__all__ = [ # type: List[str, ...]
-    "bam_to_bed",
-    "bed_intersect",
-    "deduplicate_bpileup",
-    "vcf_bpileup",
-]
-
 import os
 import sys
 import time
@@ -19,15 +9,12 @@ import logging
 import tempfile
 
 from collections import namedtuple, defaultdict
+from typing import Callable, DefaultDict, Dict, Iterable, List, Optional, Tuple, Set
 
-if sys.version_info.major == 2:
-    import cigar
-    import utils
-    from .fancy_logging import fmttime
-else:
-    from lorals import cigar
-    from lorals import utils
-    from lorals.fancy_logging import fmttime
+from lorals import cigar
+from lorals.features import Bpileup
+from lorals import utils
+from lorals.fancy_logging import fmttime
 
 
 import pysam
@@ -36,7 +23,14 @@ import pybedtools
 
 from scipy import stats
 
-LengthStat = namedtuple( # type: type
+__all__: List[str] = [
+    "bam_to_bed",
+    "bed_intersect",
+    "deduplicate_bpileup",
+    "vcf_bpileup",
+]
+
+LengthStat = namedtuple(
     "LengthStat",
     (
         "D",
@@ -50,15 +44,15 @@ LengthStat = namedtuple( # type: type
 
 Qname = namedtuple('Qname', ('flairs', 'query', 'vartype'))
 
-NullResult = stats.stats.KstestResult(statistic=utils.nan, pvalue=utils.nan) # type: scipy.stats.stats.KstestResult
+NullResult: stats.stats.KstestResult = stats.stats.KstestResult(statistic=utils.nan, pvalue=utils.nan)
 
-def asts_length(var, bamfile, window=5, match_threshold=8, min_reads=20): # type: (features.Bpileup, str, int, int) -> LengthStat
+def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=8, min_reads: int=20) -> LengthStat:
     """Calculate read length based on SNP"""
     logging.info("Getting read lengths for %s", var.name)
-    lengths_start = time.time() # type: float
-    reads_completed = set() # type: Set[str, ...]
-    lengths = defaultdict(list) # type: Mapping[str, List[int, ...]]
-    bamfile = utils.fullpath(path=bamfile) # type: str
+    lengths_start: float = time.time()
+    reads_completed: Set[str] = set()
+    lengths: DefaultDict[str, List[int]] = defaultdict(list)
+    bamfile: str = utils.fullpath(path=bamfile)
     bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalcalignment.AlignmentFile
     for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position): # type: pysam.libcalignedsegment.PileupColumn
         if pile.pos != var.dummy:
@@ -68,8 +62,8 @@ def asts_length(var, bamfile, window=5, match_threshold=8, min_reads=20): # type
                 continue
             logging.info("Processing read %s", pile_read.alignment.query_name)
             reads_completed.add(pile_read.alignment.query_name)
-            pile_window = utils.window(position=pile_read.query_position, size=window) # type: slice
-            count_m = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M') # type: int
+            pile_window: slice = utils.window(position=pile_read.query_position, size=window)
+            count_m: int = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M')
             if count_m < match_threshold:
                 logging.warning("Skipping read %s", pile_read.alignment.query_name)
                 continue
@@ -79,10 +73,10 @@ def asts_length(var, bamfile, window=5, match_threshold=8, min_reads=20): # type
                 lengths['alt'].append(len(pile_read.alignment.query_sequence))
     if len(lengths['ref']) >= min_reads and len(lengths['alt']) >= min_reads:
         logging.info("Running KS test")
-        ks = stats.ks_2samp(lengths['ref'], lengths['alt']) # type: scipy.stats.stats.KstestResult
+        ks: stats.stats.KstestResult = stats.ks_2samp(lengths['ref'], lengths['alt'])
     else:
         logging.warning("Too few hits for KS test")
-        ks = NullResult # type: scipy.stats.stats.KstestResult
+        ks: stats.stats.KstestResult = NullResult
     logging.info("Finished getting lengths for %s", str(var))
     logging.debug("Getting read lengths took %s seconds", fmttime(start=lengths_start))
     return LengthStat(
@@ -100,44 +94,44 @@ def asts_quant():
     pass
 
 
-def bam_to_bed(bamfile, save=False): # type: (str, bool) -> pybedtools.bedtool.BedTool
+def bam_to_bed(bamfile: str, save: bool=False) -> pybedtools.bedtool.BedTool:
     """Convert a BAM file to a BED file"""
     logging.info("Converting %s from BAM to BED", bamfile)
-    bam_bed_start = time.time()
-    bamfh = pybedtools.bedtool.BedTool(bamfile) # type: pybedtools.bedtool.BedTool
-    bedfh = bamfh.bam_to_bed() # type: pybedtools.bedtool.BedTool
+    bam_bed_start: float = time.time()
+    bamfh: pybedtools.bedtool.BedTool = pybedtools.bedtool.BedTool(bamfile)
+    bedfh: pybedtools.bedtool.BedTool = bamfh.bam_to_bed()
     if save:
-        ofile = os.path.splitext(bamfile)[0] + '.bed' # type: str
+        ofile: str = os.path.splitext(bamfile)[0] + '.bed'
         logging.info("Saving resulting BED file to %s", ofile)
-        bedfh = bedfh.moveto(ofile) # type: pybedtools.bedtool.BedTool
+        bedfh: pybedtools.bedtool.BedTool = bedfh.moveto(ofile)
     logging.debug("Converting from BAM to BED took %s seconds", fmttime(start=bam_bed_start))
     return bedfh
 
 
-def bed_intersect(afile, bfile, ofile=None, **kwargs): # type: (str, str, Optional[str], Optional[Mapping]) -> pybedtools.bedtool.BedTool
+def bed_intersect(afile: str, bfile: str, ofile: Optional[str]=None, **kwargs: Optional) -> pybedtools.bedtool.BedTool:
     """Intersect two bedfiles"""
-    afile = utils.fullpath(path=afile) # type: str
-    bfile = utils.fullpath(path=bfile) # type: str
+    afile: str = utils.fullpath(path=afile)
+    bfile: str = utils.fullpath(path=bfile)
     clean = set() # type: Set[str]
     logging.info("Connecting to %s", afile)
     if os.path.splitext(afile)[-1] == '.bam':
-        afh = bam_to_bed(bamfile=afile) # type: pybedtools.bedtool.BedTool
+        afh: pybedtools.bedtool.BedTool = bam_to_bed(bamfile=afile)
         clean.add(afh.fn)
     else:
-        afh = pybedtools.bedtool.BedTool(afile) # type: pybedtools.bedtool.BedTool
+        afh: pybedtools.bedtool.BedTool = pybedtools.bedtool.BedTool(afile)
     logging.info("Connecting to %s", bfile)
     if os.path.splitext(bfile)[-1] == '.bam':
-        bfh = bam_to_bed(bamfile=bfile) # type: pybedtools.bedtool.BedTool
+        bfh: pybedtools.bedtool.BedTool = bam_to_bed(bamfile=bfile)
         clean.add(bfh.fn)
     else:
-        bfh = pybedtools.bedtool.BedTool(bfile) # type: pybedtools.bedtool.BedTool
+        bfh: pybedtools.bedtool.BedTool = pybedtools.bedtool.BedTool(bfile)
     logging.info("Intersecting two files")
-    intersect_start = time.time()
-    ifh = afh.intersect(bfh, **kwargs) # type: pybedtools.bedtool.BedTool
+    intersect_start: float = time.time()
+    ifh: pybedtools.bedtool.BedTool = afh.intersect(bfh, **kwargs)
     if isinstance(ofile, str):
-        ofile = utils.fullpath(path=ofile) # type: str
+        ofile: str = utils.fullpath(path=ofile)
         logging.info("Saving resulting BED file as %s", ofile)
-        ifh = ifh.moveto(ofile) # type: pybedtools.bedtool.BedTool
+        ifh: pybedtools.bedtool.BedTool = ifh.moveto(ofile)
     logging.info("Number of interesected regions: %s", len(ifh))
     logging.debug("Intersection took %s seconds", fmttime(start=intersect_start))
     if clean:
@@ -147,18 +141,18 @@ def bed_intersect(afile, bfile, ofile=None, **kwargs): # type: (str, str, Option
     return ifh
 
 
-def deduplicate_bpileup(bpileup): # type: (str) -> pandas.core.frame.DataFrame
+def deduplicate_bpileup(bpileup: str) -> pandas.core.frame.DataFrame:
     """Deduplicate a BED file"""
-    bpileup = utils.fullpath(path=bpileup) # type: str
-    dedup_start = time.time() # type: float
-    bed = pandas.read_csv( # type: pandas.core.frame.DataFrame
+    bpileup: str = utils.fullpath(path=bpileup)
+    dedup_start: float = time.time()
+    bed: pandas.core.frame.DataFrame = pandas.read_csv(
         bpileup,
         sep="\t",
         names=['contig', 'dummy', 'position', 'variantID', 'refAllele', 'altAllele']
     )
-    norig = len(bed) # type: int
+    norig: int = len(bed)
     bed.drop_duplicates(keep='first', inplace=True)
-    ndedup = len(bed) # type: int
+    ndedup: int = len(bed)
     if norig == ndedup:
         logging.info("No duplicates in %s", bpileup)
     else:
@@ -167,62 +161,68 @@ def deduplicate_bpileup(bpileup): # type: (str) -> pandas.core.frame.DataFrame
     return bed
 
 
-def qnames(var, bamfile, trans_reads, window=5, min_matches=8): # type: (features.Bpileup, str, Dict[str, str], int, int) -> Tuple[Qname, ...]
-    reads_completed = set() # type: Set[str]
-    flair_reads = list() # type: List[Qname]
-    bamfile = utils.fullpath(path=bamfile) # type: str
+def qnames(
+    var: Bpileup,
+    bamfile: str,
+    trans_reads: Dict[str, str],
+    window: int=5,
+    min_matches: int=8
+) -> Tuple[Qname, ...]:
+    reads_completed: Set[str] = set()
+    flair_reads: List[Qname] = list()
+    bamfile: str = utils.fullpath(path=bamfile)
     bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalcalignment.AlignmentFile
     for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position): # type: pysam.libcalignedsegment.PileupColumn
         if pile.pos != var.dummy:
             continue
         for pile_read in pile.pileups: # type: pysam.libcalignedsegment.PileupRead
-            qname = pile_read.alignment.query_name # type: str
+            qname: str = pile_read.alignment.query_name
             if qname in reads_completed or not pile_read.query_position:
                 continue
             reads_completed.add(qname)
-            pine_window = utils.window(position=pile_read.query_position, size=window) # type: slice
-            count_m = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M') # type: int
-            flairs = tuple(ref for query, ref in trans_reads.items() if query == qname) # type: Tuple[str, ...]
+            pile_window: slice = utils.window(position=pile_read.query_position, size=window)
+            count_m: int = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M')
+            flairs: Tuple[str, ...] = tuple(ref for query, ref in trans_reads.items() if query == qname)
             if not flairs:
                 logging.warning("no flairs")
             if pile_read.alignment.query_sequence[pile_read.query_position] == var.ref:
-                vartype = 'REF' if count_m >= min_matches else 'REF_INDEL' # type: str
+                vartype: str = 'REF' if count_m >= min_matches else 'REF_INDEL'
             elif pile_read.alignment.query_sequence[pile_read.query_position] in var.alt:
-                vartype = 'ALT' if count_m >= min_matches else 'ALT_INDEL' # type: str
+                vartype: str = 'ALT' if count_m >= min_matches else 'ALT_INDEL'
             else:
-                vartype = 'OTHER' # type: str
+                vartype: str = 'OTHER'
             flair_reads.append(Qname(flairs=''.join(flairs), query=qname, vartype=vartype))
     return tuple(filter(lambda x: x.vartype != 'OTHER', flair_reads))
 
 
-def split_qnames(qnames): # type: (Tuple[Qname, ...]) -> Dict[str, Dict[str, Tuple[str, ...]]]
-    qsplit = dict.fromkeys({q.vartype for q in qnames}, ()) # type: Dict[str, Tuple[str, ...]]
+def split_qnames(qnames: Tuple[Qname, ...]) -> Dict[str, Dict[str, Tuple[str, ...]]]:
+    qsplit: Dict = dict.fromkeys({q.vartype for q in qnames})
     for k in qsplit: # type: str
-        qsplit[k] = defaultdict(list)
+        qsplit[k]: DefaultDict[str, List[str]] = defaultdict(list)
     for q in qnames: # type: Qname
         qsplit[q.vartype][q.flairs].append(q.query)
     for k in qsplit: # type: str
-        qsplit[k] = {f: tuple(q) for f, q, in qsplit[k].items()}
+        qsplit[k]: Dict[str, Tuple[str, ...]] = {f: tuple(q) for f, q, in qsplit[k].items()}
     return qsplit
 
 
-def vcf_bpileup(vcffile, pileup=None): # type: (str, Optional[str]) -> str
+def vcf_bpileup(vcffile: str, pileup: Optional[str]=None) -> str:
     """Create a BED-like pileup from a VCF file"""
-    vcffile = utils.fullpath(path=vcffile) # type: str
+    vcffile: str = utils.fullpath(path=vcffile)
     if pileup:
-        pileup = utils.fullpath(path=pileup) # type: str
+        pileup: str = utils.fullpath(path=pileup)
         pfile = utils.find_open(filename=pileup)(pileup, 'w')
     else:
         pfile = tempfile.NamedTemporaryFile(mode='w', delete=False)
-    my_open = utils.find_open(filename=vcffile) # type: function
+    my_open: Callable = utils.find_open(filename=vcffile)
     with my_open(vcffile, 'rt') as vfile:
         logging.info("Reading in VCF file %s", vcffile)
-        pileup_start = time.time()
+        pileup_start: float = time.time()
         for line in vfile: # type: str
             if line.startswith('#'):
                 continue
-            line = line.strip().split() # type: List[str, ...]
-            out = ( # type: Tuple[Union[int, str], ...]
+            line: List[str] = line.strip().split()
+            out: Tuple = (
                 line[0],
                 int(line[1]) - 1,
                 line[1],

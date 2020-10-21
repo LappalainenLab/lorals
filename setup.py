@@ -1,23 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """Install LoRALS"""
 
 import os
 import sys
 import types
-import subprocess
+import builtins
 
 from datetime import datetime
-
-if sys.version_info.major >= 3:
-    import builtins
-    maketrans = str.maketrans
-else:
-    import __builtin__ as builtins
-    from string import maketrans
+from typing import Dict, Iterator, List
 
 
-builtins.__LORALS_SETUP__ = True # type: bool
+builtins.__LORALS_SETUP__: bool = True
 
 #   Get stuff from setuptools
 from setuptools import setup
@@ -25,12 +19,12 @@ from setuptools import find_packages
 from setuptools.command.install import install
 
 #   Some basic information
-NAME = "LoRALS" # type: str
-AUTHOR = "Dafni Glinos" # type: str
-AUTHOR_EMAIL = "dglinos@nygenome.org" # type: str
-LICENSE = "" # type: str
-DESCRIPTION = "" # type: str
-PROJECT_URLS = { # type: Dict[str, str]
+NAME: str = "LoRALS"
+AUTHOR: str = "Dafni Glinos"
+AUTHOR_EMAIL: str = "dglinos@nygenome.org"
+LICENSE: str = ""
+DESCRIPTION: str = ""
+PROJECT_URLS: Dict[str, str] = {
     'Documentation': '',
     'Source': '',
     'Tracker': ''
@@ -40,7 +34,7 @@ PROJECT_URLS = { # type: Dict[str, str]
 VERSION = ""
 
 #   Classifiers
-CLASSIFIERS = [ # type: List[str, ...]
+CLASSIFIERS: List[str] = [
     #   See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     #   For more classfiiers
     #   How mature is this project?
@@ -58,26 +52,24 @@ CLASSIFIERS = [ # type: List[str, ...]
     # 'License :: OSI Approved :: MIT License',
     #   Specify the Python versions you support here. In particular, ensure
     #   that you indicate whether you support Python 2, Python 3 or both.
-    'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3',
-    # 'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3 :: Only',
     #   Operating systems we support
     # 'Operating System :: Microsoft :: Windows',
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Unix',
+    'Typing :: Typed',
 ]
 
 #   Specify Python version
-#   We support Python 2.7 and 3.5 or higher
-PYTHON_REQUIRES='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4' # type: str
+#   We support Python 3.5 or higher
+PYTHON_REQUIRES: str ='>=3.5, <4'
 
 #   Platforms
-PLATFORMS = ['Linux', 'Mac OS-X', 'UNIX'] # type: List[str, ...]
+PLATFORMS: List[str] = ['Linux', 'Mac OS-X', 'UNIX']
 
 #   Dependencies
-INSTALL_REQUIRES = [ # type: List[str, ...]
+INSTALL_REQUIRES: List[str] = [
     "pandas",
     "pybedtools",
     "pysam",
@@ -86,12 +78,13 @@ INSTALL_REQUIRES = [ # type: List[str, ...]
 
 #   Command-line scripts included in this module
 import lorals.scripts as scripts
-SCRIPTS = (script for script in dir(scripts) if isinstance(eval('scripts.' + script), types.FunctionType)) # type: Generator[str, ...]
-SCRIPTS = (script for script in SCRIPTS if eval('scripts.%s.__module__' % script) == 'lorals.scripts') # type: Generator[str, ...]
-SCRIPTS = (script for script in SCRIPTS if not script.startswith('_')) # type: Generator[str, ...]
-SCRIPTS = ['%(script)s = %(pkg)s.scripts:%(script)s' % {'script': script, 'pkg': NAME.lower()} for script in SCRIPTS] # type: List[str, ...]
 
-ENTRY_POINTS = { # type: Dict[str, List[str, ...]]
+SCRIPTS: Iterator[str] = (script for script in dir(scripts) if isinstance(eval('scripts.' + script), types.FunctionType))
+SCRIPTS: Iterator[str] = (script for script in SCRIPTS if eval('scripts.%s.__module__' % script) == 'lorals.scripts')
+SCRIPTS: Iterator[str] = (script for script in SCRIPTS if not script.startswith('_'))
+SCRIPTS: List[str] = ['%(script)s = %(pkg)s.scripts:%(script)s' % {'script': script, 'pkg': NAME.lower()} for script in SCRIPTS]
+
+ENTRY_POINTS: Dict[str, List[str]] = {
     'console_scripts': SCRIPTS
 }
 
@@ -110,5 +103,6 @@ setup(
     install_requires=INSTALL_REQUIRES,
     packages=find_packages(),
     cmdclass={'install': install},
+    # package_data={"": ['blacklists/*.bed']},
     entry_points=ENTRY_POINTS
 )

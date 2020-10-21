@@ -2,34 +2,29 @@
 
 """ASE-specific utilties"""
 
-from __future__ import division
-from __future__ import print_function
+import sys
+import time
+import logging
 
-__all__ = [ # type: List[str, ...]
+from typing import Dict, Iterable, List, Optional, Set, Tuple
+
+# from lorals import cigar
+import lorals.cigar as cigar
+
+from lorals import utils
+from lorals.features import Bpileup
+
+import pysam
+
+__all__: List[str] = [
     'AllelicStat',
     'allelic_stats',
     'filter_stats',
 ]
 
-import sys
-import time
-import logging
-
-if sys.version_info.major == 2:
-    from . import cigar
-    from . import utils
-    from .features import Bpileup
-else:
-    from lorals import cigar
-    from lorals import utils
-    from lorals.features import Bpileup
-
-
-import pysam
-
 class AllelicStat(Bpileup):
 
-    HEADER = ( # type: Tuple[str, ...]
+    HEADER: Tuple[str, ...] = (
         'contig',
         'position',
         'variantID',
@@ -45,8 +40,8 @@ class AllelicStat(Bpileup):
     )
 
     @classmethod
-    def fromstring(cls, string, sep='\t'): # type: (str) -> AllelicStat
-        string = string.strip().split(sep) # type: List[str]
+    def fromstring(cls, string: str, sep: str='\t'):
+        string: str = string.strip().split(sep)
         if len(string) != len(AllelicStat.HEADER):
             raise ValueError("Incorrect number of columns")
         #   totalCount and rawDepth are calculated by AllelicStat
@@ -66,18 +61,17 @@ class AllelicStat(Bpileup):
     @classmethod
     def frombpileup(
             cls,
-            var, # type: Bpileup
-            ref_count, # type: int
-            alt_count, # type: int
-            other_count, # type: int
-            ref_indel, # type: int
-            alt_indel # type: int
-    ): # type: (...) -> AllelicStat
+            var: Bpileup,
+            ref_count: int,
+            alt_count: int,
+            other_count: int,
+            ref_indel: int,
+            alt_indel: int
+    ):
         return cls(
             chrom=var.chrom,
             position=var.position,
             ref=var.ref,
-            # alt = ','.join(var.alt),
             alt=var.alts,
             ref_count=ref_count,
             alt_count=alt_count,
@@ -89,17 +83,17 @@ class AllelicStat(Bpileup):
 
     def __init__(
             self,
-            chrom, # type: str
-            position, # type: int
-            ref, # type: str
-            alt, # type: str
-            ref_count, # type: int
-            alt_count, # type: int
-            other_count, # type: int
-            ref_indel, # type: int
-            alt_indel, # type: int
-            name=None #type: Optional[str]
-    ): # type: (...) -> None
+            chrom: str,
+            position: int,
+            ref: str,
+            alt: str,
+            ref_count: int,
+            alt_count: int,
+            other_count: int,
+            ref_indel: int,
+            alt_indel: int,
+            name: Optional[str]=None
+    ) -> None:
         super(AllelicStat, self).__init__(
             chrom=chrom,
             position=position,
@@ -107,14 +101,14 @@ class AllelicStat(Bpileup):
             alt=alt,
             name=name
         )
-        self._rc = int(ref_count) # type: int
-        self._ac = int(alt_count) # type: int
-        self._oc = int(other_count) # type: int
-        self._ric = int(ref_indel) # type: int
-        self._aic = int(alt_indel) # type: int
+        self._rc: int = int(ref_count)
+        self._ac: int = int(alt_count)
+        self._oc: int = int(other_count)
+        self._ric: int = int(ref_indel)
+        self._aic: int = int(alt_indel)
 
-    def __str__(self): # type: (None) -> str
-        out = ( # type: Tuple[Union[int, str], ...]
+    def __str__(self) -> str:
+        out: Tuple = (
             self.chrom,
             self.position,
             self.name,
@@ -130,7 +124,7 @@ class AllelicStat(Bpileup):
         )
         return '\t'.join(map(str, out))
 
-    def print_bpileup(self): # type: (None) -> str
+    def print_bpileup(self) -> str:
         """Print this AllelicStat as if it was a Bpileup"""
         return super(AllelicStat, self).__str__()
 
@@ -146,16 +140,15 @@ class AllelicStat(Bpileup):
     )
 
 
-def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.Bpileup, str, int, int) -> Optional[AllelicStat]
+def allelic_stats(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=8) -> AllelicStat:
     """..."""
     logging.info("Getting allelic reads for %s", repr(var))
-    ase_start = time.time()
-    reads_completed = set() # type: Set[str, ...]
-    stats = dict.fromkeys(('keep_ref', 'keep_alt', 'indel_ref', 'indel_alt', 'other'), 0) # type: Dict[str, int]
-    bamfile = utils.fullpath(path=bamfile) # type: str
+    ase_start: float = time.time()
+    reads_completed: Set[str] = set()
+    stats: Dict[str, int] = dict.fromkeys(('keep_ref', 'keep_alt', 'indel_ref', 'indel_alt', 'other'), 0)
+    bamfile: str = utils.fullpath(path=bamfile)
     bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalignmentfile.AlignmentFile
     for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position): # type: pysam.libcalignedsegment.PileupColumn
-        # if pile.pos != var.start:
         if pile.pos != var.dummy:
             continue
         for pile_read in pile.pileups: # type: pysam.libcalignedsegment.PileupRead
@@ -163,14 +156,14 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
                 continue
             logging.info("Processing read %s", pile_read.alignment.query_name)
             reads_completed.add(pile_read.alignment.query_name)
-            pile_window = utils.window(position=pile_read.query_position, size=window) # type: slice
-            count_m = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M') # type: int
+            pile_window: slice = utils.window(position=pile_read.query_position, size=window)
+            count_m: int = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M')
             if pile_read.alignment.query_sequence[pile_read.query_position] == var.ref:
-                key = 'keep_ref' if count_m >= match_threshold else 'indel_ref' # type: str
+                key: str = 'keep_ref' if count_m >= match_threshold else 'indel_ref'
             elif pile_read.alignment.query_sequence[pile_read.query_position] in var.alt:
-                key = 'keep_alt' if count_m >= match_threshold else 'indel_alt' # type: str
+                key: str = 'keep_alt' if count_m >= match_threshold else 'indel_alt'
             else:
-                key = 'other' # type: str
+                key: str = 'other'
             stats[key] += 1
         break
     logging.info("Finished getting allelic reads for %s", repr(var))
@@ -189,15 +182,21 @@ def allelic_stats(var, bamfile, window=5, match_threshold=8): # type: (features.
         return None
 
 
-def filter_stats(stats, total_coverage=10, allelic_coverage=5, proportion_match=0.8, proportion_indel=0.8): # type: (Iterable[AllelicStat], int, int, float) -> Tuple[AllelicStat, ...]
+def filter_stats(
+    stats: Iterable[AllelicStat],
+    total_coverage: int=10,
+    allelic_coverage: int=5,
+    proportion_match: int=0.8,
+    proportion_indel: int=0.8
+) -> Tuple[AllelicStat, ...]:
     """Filter ase stats"""
     logging.info("Filtering ASE results")
-    filter_start = time.time()
-    stats = tuple(stats) # type: Tuple[AllelicStat, ...]
-    stats = filter(lambda x: x.total_count >= total_coverage, stats) # type: Tuple[AllelicStat, ...]
-    stats = filter(lambda x: x.ref_count >= allelic_coverage, stats) # type: Tuple[AllelicStat, ...]
-    stats = filter(lambda x: x.alt_count >= allelic_coverage, stats) # type: Tuple[AllelicStat, ...]
-    stats = filter(lambda x: x.total_count / x.depth >= proportion_match, stats) # type: Tuple[AllelicStat, ...]
-    stats = filter(lambda x: x.total_count / (x.total_count + x.ref_indel + x.alt_indel) >= proportion_indel, stats) # type: Tuple[AllelicStat, ...]
+    filter_start: float = time.time()
+    stats: Tuple[AllelicStat, ...] = tuple(stats)
+    stats: Iterable[AllelicStat] = filter(lambda x: x.total_count >= total_coverage, stats)
+    stats: Iterable[AllelicStat] = filter(lambda x: x.ref_count >= allelic_coverage, stats)
+    stats: Iterable[AllelicStat] = filter(lambda x: x.alt_count >= allelic_coverage, stats)
+    stats: Iterable[AllelicStat] = filter(lambda x: x.total_count / x.depth >= proportion_match, stats)
+    stats: Iterable[AllelicStat] = filter(lambda x: x.total_count / (x.total_count + x.ref_indel + x.alt_indel) >= proportion_indel, stats)
     logging.debug("Filtering ASE results took %s seconds", round(time.time() - filter_start, 3))
-    return stats
+    return tuple(stats)

@@ -2,7 +2,15 @@
 
 """Some utility functions"""
 
-__all__ = [ # type: List[str, ...]
+import os
+import gzip
+import operator
+import itertools
+
+from collections import Counter
+from typing import Any, Callable, Dict, Iterable, List, Tuple
+
+__all__: List[str] = [
     "nan",
     "dictsearch",
     "find_open",
@@ -12,14 +20,7 @@ __all__ = [ # type: List[str, ...]
     "window",
 ]
 
-import os
-import gzip
-import operator
-import itertools
-
-from collections import Counter
-
-nan = float('nan') # type: float
+nan: float = float('nan')
 
 def cigar_parse(tuples):
     """
@@ -49,14 +50,14 @@ def cigar_parse(tuples):
     return [(value, psam_to_char[feature]) for feature, value in tuples]
 
 
-def dictsearch(d, query): # type: (Dict[str, Iterable[Any]], Any) -> str
+def dictsearch(d: Dict[str, Iterable], query: Any) -> str:
     """Search a dictionary 'd' by value 'query'"""
     for key, value in d.items(): # type: str, Iterable[Any]:
         if query in value:
             return key
 
 
-def find_open(filename): # type: (str) -> function
+def find_open(filename: str) -> Callable:
     """Figure out which version of open (open vs gzip.open) to use
 
     Standard open cannot handle gzipped files easily. To get around this, this
@@ -75,7 +76,7 @@ def find_open(filename): # type: (str) -> function
     return open
 
 
-def fullpath(path): # type: (str) -> str
+def fullpath(path: str) -> str:
     """Find the full path to a file or directory"""
     return os.path.realpath(os.path.expanduser(path))
 
@@ -93,9 +94,9 @@ def get_count_m(tuples, position, window): # type: (Iterable[], int) -> Counter
     return Counter(wind)
 
 
-def unpack(collection): # type: (Iterable[Any]) -> Tuple[Any]
+def unpack(collection: Iterable) -> Tuple:
     """Unpack a series of nested lists, sets, or tuples"""
-    result = [] # type: List
+    result: List = []
     for item in collection: # type: Any
         if hasattr(item, '__iter__') and not isinstance(item, str):
             result.extend(unpack(collection=item))
@@ -104,27 +105,31 @@ def unpack(collection): # type: (Iterable[Any]) -> Tuple[Any]
     return tuple(result)
 
 
-def where(name, flags=os.X_OK): # type: (str, int) -> str
-    """Find an executable"""
-    extensions = os.path.splitext(name)[1]
+def where(name: str, flags: int=os.X_OK) -> str:
+    dirname, name = os.path.split(name) # type: str, str
+    #   Figure out the paths we're working with
+    paths: Tuple[str, str] = (dirname, os.getcwd())
+    paths: Tuple[str, ...] = paths + tuple(os.environ.get('PATH', '').split(os.pathsep))
+    paths: Tuple[str, ...] = tuple(filter(None, paths))
+    #   Figure out all the extensions we need to test
+    name, extensions = os.path.splitext(name) # type: str, str
     if extensions:
-        extensions = tuple([extensions]) # type: Tuple[str]
-        name = os.path.splitext(name)[0] # type: str
+        extensions: Tuple[str] = (extensions,)
     else:
-        extensions = os.environ.get('PATHEXT', '').split(os.pathsep) # type: List[Optional[str], ...]
-        extensions = ('',) + tuple(filter(None, extensions)) # type: Tuple[Optional[str], ...]
-    names = itertools.product([name], extensions)
-    names = tuple(map(lambda x: operator.add(*x), names))
-    paths = [os.getcwd()] + os.environ.get('PATH', '').split(os.pathsep) # type: List[str, ...]
-    paths = tuple(filter(None, paths)) # type: Tuple[str, ...]
+        extensions: List[str] = os.environ.get('PATHEXT', '').split(os.pathsep)
+        extensions: Tuple[str, ...] = ('',) + tuple(filter(None, extensions))
+    #   Get all the combinations of name + extension we're testing
+    names: itertools.product = itertools.product([name], extensions)
+    names: Tuple[str, ...] = tuple(map(lambda x: operator.add(*x), names))
+    #   Find the first matching executable
     for path in paths: # type: str
         for exe in (os.path.join(path, e) for e in names): # type: str
             if os.access(exe, flags):
                 return exe
     else:
-        raise ValueError("Cannot find %s" % name)
+        raise ValueError("Cannot find %(name)s%(ext)s" % {'name': name, 'ext': extensions[0]})
 
 
-def window(position, size): # type (int, int) -> slice
+def window(position: int, size: int) -> slice:
     """Make a window slice"""
     return slice(position - (size + 1), position + size)

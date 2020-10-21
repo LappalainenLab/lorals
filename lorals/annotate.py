@@ -1,33 +1,31 @@
 #!/usr/bin/env python3
 
-from __future__ import division
-from __future__ import print_function
-
 import sys
 import time
 import logging
 
+from numbers import Real
 from collections import defaultdict
+from typing import Callable, DefaultDict, Dict, Iterable, List, Optional, Set, Tuple
 
-if sys.version_info.major == 2:
-    from . import ase
-    from . import asts
-    from . import maths
-    from . import utils
-    from . import features
-    from .fancy_logging import fmttime
-else:
-    from lorals import ase
-    from lorals import asts
-    from lorals import maths
-    from lorals import utils
-    from lorals import features
-    from lorals.fancy_logging import fmttime
+# from lorals import ase
+# from lorals import asts
+# from lorals import maths
+# from lorals import utils
+# from lorals import features
+# from lorals.fancy_logging import fmttime
+
+from . import ase
+from . import asts
+from . import maths
+from . import utils
+from . import features
+from .fancy_logging import fmttime
 
 
 class AnnotatedStat(ase.AllelicStat, features.GenoVar):
 
-    HEADER = ( # type: Tuple[str, ...]
+    HEADER: Tuple[str, ...] = (
         'CHR',
         'POS',
         'rsID',
@@ -54,17 +52,17 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
 
     def __init__(
             self,
-            chrom, # type: str
-            position, # type: int
-            ref, # type: str
-            alt, # type: str
-            ref_count, # type: int
-            alt_count, # type: int
-            other_count, # type: int
-            ref_indel, # type: int
-            alt_indel, # type: int
-            name=None #type: Optional[str]
-    ): # type: (...) -> None
+            chrom: str,
+            position: int,
+            ref: str,
+            alt: str,
+            ref_count: int,
+            alt_count: int,
+            other_count: int,
+            ref_indel: int,
+            alt_indel: int,
+            name: Optional[str]=None
+    ) ->  None:
         super(AnnotatedStat, self).__init__(
             chrom=chrom,
             position=position,
@@ -76,16 +74,16 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
             ref_indel=ref_indel,
             alt_indel=alt_indel
         )
-        self._gene = "" # type: str
-        self._blacklist = False # type: bool
-        self._warning = False # type: bool
-        self._map = False # type: bool
-        self._null = float('nan') # type: float
-        self._pvalue = float('nan') # type: float
-        self._qvalue = float('nan') # type: float
+        self._gene: str = ""
+        self._blacklist: bool = False
+        self._warning: bool = False
+        self._map: bool = False
+        self._null: float = float('nan')
+        self._pvalue: float = float('nan')
+        self._qvalue: float = float('nan')
 
-    def __str__(self): # type: (None) -> str
-        out = ( # type: Tuple[Union[str, int, float], ...]
+    def __str__(self) -> str:
+        out: Tuple = (
             self.chrom,
             self.position,
             self.name,
@@ -112,62 +110,62 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
         return '\t'.join(map(str, out))
 
     @property
-    def gene(self): # type: (None) -> str
+    def gene(self) -> str:
         """Gene name for this annotated stat"""
         return self._gene
 
     @gene.setter
-    def gene(self, value): # type: (str) -> None
+    def gene(self, value: str) -> None:
         if value is None:
             value = "" # type: str
         self._gene = str(value)
 
     @property
-    def blacklisted(self): # type: (None) -> bool
+    def blacklisted(self) -> bool:
         return self._blacklist
 
     @blacklisted.setter
-    def blacklisted(self, value): # type: (bool) -> None
+    def blacklisted(self, value: bool) -> None:
         self._blacklist = bool(value) # type: bool
 
     @property
-    def warning(self): # type: (None) -> bool
+    def warning(self) -> bool:
         return self._warning
 
     @warning.setter
-    def warning(self, value): # type: (bool) -> None
+    def warning(self, value: bool):
         self._warning = bool(value) # type: bool
 
     @property
-    def multi_mapping(self): # type: (None) -> bool
+    def multi_mapping(self) -> bool:
         return self._map
 
     @multi_mapping.setter
-    def multi_mapping(self, value): # type: (bool) -> None
+    def multi_mapping(self, value: bool) -> None:
         self._map = bool(value)
 
     @property
-    def null_ratio(self): # type: (None) -> float
+    def null_ratio(self) -> float:
         return self._null
 
     @null_ratio.setter
-    def null_ratio(self, value): # type: (float) -> None
+    def null_ratio(self, value: float) -> None:
         self._null = float(value)
 
     @property
-    def pvalue(self): # type: (None) -> float
+    def pvalue(self) -> float:
         return self._pvalue
 
     @pvalue.setter
-    def pvalue(self, value): # type: (float) -> None
+    def pvalue(self, value: float) -> None:
         self._pvalue = float(value)
 
     @property
-    def qvalue(self): # type: (float) -> None
+    def qvalue(self) -> float:
         return self._qvalue
 
     @qvalue.setter
-    def qvalue(self, value): # type: (float) -> None
+    def qvalue(self, value: float) -> None:
         self._qvalue = float(value)
 
     ref_ratio = property(fget=lambda self: self.ref_count / self.total_count, doc="Reference Ratio")
@@ -180,53 +178,53 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
     indel_warning = property(fget=lambda self: self.indel_ratio >= 0.2, doc="High indel warning")
 
 
-def annotate_bed(stats, bedfile): # type: (Iterable[AnnotatedStat], str) -> Tuple[str, ...]
-    mstats = tuple(stats[:]) # type: Tuple[AnnotatedStat, ...]
-    statfile = features.write_bed(bpileups=mstats, default=True) # type: str
-    gfh = asts.bed_intersect(afile=statfile, bfile=bedfile, u=True) # type: str
-    my_open = utils.find_open(filename=gfh.fn) # type: function
+def annotate_bed(stats: Iterable[AnnotatedStat], bedfile: str) -> Tuple[str, ...]:
+    mstats: Tuple[AnnotatedStat, ...] = tuple(stats[:])
+    statfile: str = features.write_bed(bpileups=mstats, default=True)
+    gfh = asts.bed_intersect(afile=statfile, bfile=bedfile, u=True)
+    my_open: Callable = utils.find_open(filename=gfh.fn)
     with my_open(gfh.fn, 'rt') as gfile:
-        regions = tuple(line.strip().split('\t')[3] for line in gfile)
+        regions: Tuple[str, ...] = tuple(line.strip().split('\t')[3] for line in gfile)
     return regions
 
 
-def annotate_genes(stats, bedfile): # type: (Iterable[AnnotatedStat], str) -> Tuple[AnnotatedStat, ...]
+def annotate_genes(stats: Iterable[AnnotatedStat], bedfile: str) -> Tuple[AnnotatedStat, ...]:
     logging.info("Annotating genes")
-    gene_start = time.time() # type: float
-    mstats = tuple(stats[:]) # type: Tuple[AnnotatedStat, ...]
-    statfile = features.write_bed(bpileups=mstats, default=True) # type: str
+    gene_start: float = time.time()
+    mstats: Tuple[AnnotatedStat, ...] = tuple(stats[:])
+    statfile: str = features.write_bed(bpileups=mstats, default=True)
     gfh = asts.bed_intersect(afile=statfile, bfile=bedfile, loj=True) # type: pybedtools.bedtool.BedTool
-    my_open = utils.find_open(filename=gfh.fn) # type: function
-    dict_genes = defaultdict(list) # type: Mapping[str, List[str]]
+    my_open: Callable = utils.find_open(filename=gfh.fn)
+    dict_genes: DefaultDict[str, List[str]] = defaultdict(list)
     logging.info("Fetching gene names")
     with my_open(gfh.fn, 'rt') as gfile:
         for line in gfile: # type: str
-            line = line.strip().split('\t') # type: List[str]
+            line: List[str] = line.strip().split('\t')
             dict_genes[line[3]].append(line[7])
     logging.info("Matching gene names")
     for i in range(len(mstats)): # type: int
-        mstats[i].gene = ','.join(dict_genes.get(mstats[i].default, (None,)))
+        mstats[i].gene: str = ','.join(dict_genes.get(mstats[i].default, (None,)))
     logging.debug("Annotating genes took %s seconds", fmttime(start=gene_start))
     return mstats
 
 
-def annotate_genotypes(stats, vcffile): # type: (Iterable[AnnotatedStat], str) -> Tuple[AnnotatedStat, ...]
-    mstats = tuple(stats[:]) # type: Tuple[AnnotatedStat]
+def annotate_genotypes(stats: Iterable[AnnotatedStat], vcffile: str) -> Tuple[AnnotatedStat, ...]:
+    mstats: Tuple[AnnotatedStat, ...] = tuple(stats[:])
     logging.info("Annotating genotypes")
-    gt_start = time.time() # type: float
-    statfile = features.write_bed(bpileups=mstats, default=True) # type: str
+    gt_start: float = time.time()
+    statfile: str = features.write_bed(bpileups=mstats, default=True)
     gfh = asts.bed_intersect(afile=vcffile, bfile=statfile, u=True) # type: pybedtools.bedtool.BedTool
-    genotypes = set() # type: Set[features.GenoVar]
-    my_open = utils.find_open(filename=gfh.fn) # type: function
+    genotypes: Set[features.GenoVar] = set()
+    my_open: Callable = utils.find_open(filename=gfh.fn)
     logging.info("Fetching genotypes")
     with my_open(gfh.fn, 'rt') as gfile:
         for line in gfile: # type: str
             genotypes.add(features.GenoVar.fromvcf(vcf=line))
-    genotypes = tuple(genotypes) # type: Tuple[features.GenoVar, ...]
+    genotypes: Tuple[features.GenoVar] = tuple(genotypes)
     logging.info("Matching genotypes")
     for index, stat in enumerate(mstats): # type: int, AnnotatedStat
         try:
-            gt_index = genotypes.index(stat) # type: int
+            gt_index: int = genotypes.index(stat)
         except ValueError:
             pass
         else:
@@ -235,24 +233,24 @@ def annotate_genotypes(stats, vcffile): # type: (Iterable[AnnotatedStat], str) -
     return mstats
 
 
-def bias_stats(stats, method, coverage): # type(...) -> ...
+def bias_stats(stats: Iterable[AnnotatedStat], method: str, coverage: int) -> Dict[str, Real]:
     logging.info("Calculating bias stats")
-    upper_percentile = maths.percentile( # type: float
+    upper_percentile: float = maths.percentile(
         x=tuple(x.total_count for x in filter(lambda x: x.total_count >= coverage, stats)),
         probs=75
     )
-    bias_stats = dict() # type: Dict[str, List[float, float, int]]
-    ref_ratios = defaultdict(list) # type: Mapping[str, List[float]]
+    bias_stats: Dict[str, List[float, float, int]] = dict()
+    ref_ratios: DefaultDict[str, List[float]] = defaultdict(list)
     ref_cuml, total_cuml = int(), int() # type: int, int
-    all_ratios = list() # type: List[float]
-    bias_out = dict() # type: Dict[str, float]
+    all_ratios: List[float] = list()
+    bias_out: Dict[str, Real] = dict()
     for stat in stats: # type: AnnotatedStat
-        key = stat.ref + stat.alts # type: str
+        key: str = stat.ref + stat.alts
         if key not in bias_stats:
-            bias_stats[key] = [0, 0, 0] # type: List[float, float, int]
+            bias_stats[key]: List[float, float, int] = [0, 0, 0]
         if stat.total_count > upper_percentile:
-            ref_count = upper_percentile * (stat.ref_count / stat.total_count) # type: float
-            alt_count = upper_percentile * (stat.alt_count / stat.total_count) # type: float
+            ref_count: float = upper_percentile * (stat.ref_count / stat.total_count)
+            alt_count: float = upper_percentile * (stat.alt_count / stat.total_count)
         else:
             ref_count, alt_count = stat.ref_count, stat.alt_count # type: int, int
         bias_stats[key][0] += ref_count
@@ -261,20 +259,20 @@ def bias_stats(stats, method, coverage): # type(...) -> ...
         ref_ratios[key].append(stat.ref_ratio)
         ref_cuml += ref_count
         total_cuml += ref_count + alt_count
-    bias_out['genomeWide'] = ref_cuml / total_cuml # type: float
+    bias_out['genomeWide']: float = ref_cuml / total_cuml
     if method == 'global':
-        all_ratios = tuple(x.ref_ratio for x in stats) # type: Tuple[float]
+        all_ratios: Tuple[float, ...] = tuple(x.ref_ratio for x in stats)
     logging.info("Determining bias")
-    for key in bias_stats:
+    for key in bias_stats: # str
         if bias_stats[key][2] >= 100:
             if method == 'mean':
-                bias_out[key] = bias_stats[key][0] / bias_stats[key][1]
+                bias_out[key]: Real = bias_stats[key][0] / bias_stats[key][1]
             elif method == 'median':
-                bias_out[key] = maths.median(ref_ratios[key])
+                bias_out[key]: Real = maths.median(ref_ratios[key])
             else:
-                bias_out[key] = maths.median(all_ratios)
+                bias_out[key]: Real = maths.median(all_ratios)
         elif method == 'mean':
-            bias_out[key] = bias_out['genomeWide']
+            bias_out[key]: Real = bias_out['genomeWide']
         else:
-            bias_out[key] = maths.median(all_ratios)
+            bias_out[key]: Real = maths.median(all_ratios)
     return bias_out
