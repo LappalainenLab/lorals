@@ -14,11 +14,14 @@ import logging
 import argparse
 import subprocess
 
+from collections import defaultdict
+
 import pkg_resources
 
 try:
     __LORALS_SETUP__
 except NameError:
+    import pysam
     import pandas
     import pybedtools
     from scipy.stats import binom_test
@@ -106,7 +109,7 @@ def _greeter(): # type: (None) -> None
     logging.info("Author: Dafni Glinos (dglinos@nygenome.org)")
 
 
-def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
+def calc_asts(*args): # type: (Optional[List[str]]) -> None
     """Calculate ASTS"""
     # parser = _common_parser() # type: argparse.ArgumentParser
     parser = argparse.ArgumentParser(add_help=False)
@@ -215,7 +218,8 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     )
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
-        sys.exit(parser.print_help())
+        parser.print_help(file=sys.stderr)
+        raise SystemExit(1)
     args = vars(parser.parse_args(*args)) # type: Dict[str, Any]
     fancy_logging.configure_logging(level=args['verbosity'])
     _ = utils.where('bedtools') # type: _
@@ -271,7 +275,7 @@ def calc_asts(*args): # type: (Optional[List[str, ...]]) -> None
     logging.info("Done")
 
 
-def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
+def annotate_ase(*args): # type: (Optional[List[str]]) -> None
     """Annotate ASE"""
     parser = argparse.ArgumentParser( # type: argparse.ArgumentParser
         add_help=False,
@@ -467,6 +471,138 @@ def annotate_ase(*args): # type: (Optional[List[str, ...]]) -> None
             ofile.flush()
 
 
-def fetch_haplotype(*args): # type: (Optional[List[str, ...]]) -> None
+def fetch_haplotype(*args): # type: (Optional[List[str]]) -> None
     """..."""
-    pass
+    snp_header = ( # type: Tuple[str, ...]
+        'CHR',
+        'POS',
+        'ALLELE1',
+        'ALLELE2',
+    )
+    parser = argparse.ArgumentParser(add_help=False) # type: argparse.ArgumentParser
+    io_opts = parser.add_argument_group(title="input/output options") # type: argparse._ArgumentGroup
+    io_opts.add_argument( # Input BAM file
+        '-b',
+        '--bam',
+        dest='bam',
+        type=str,
+        required=True,
+        metavar='in.bam',
+        help="BAM file containing RNA-seq reads aligned to the genome"
+    )
+    io_opts.add_argument( # Transcript-aligned BAM file
+        '-t',
+        '--transcripts',
+        dest='trans',
+        type=str,
+        required=True,
+        metavar='transcripts.bam',
+        help="BAM file with reads aligned to the transcriptome"
+    )
+    io_opts.add_argument( # SNP table
+        '-s',
+        '--snps',
+        dest='snps',
+        type=str,
+        required=True,
+        metavar='snps.tsv',
+        help="Tab-delimited file of SNPs fot be used for plotting; should contain the following columns: chrom, position, reference allele, alternate allele(s). Any header should start with a '#'
+    )
+    io_opts.add_argument( # Outdir
+        '-o',
+        '--outdir',
+        dest='outdir'
+        type=str,
+        required=False,
+        default=os.path.join(os.getcwd(), 'lorals_haplo_bams'),
+        metavar='outdir',
+        help="Output directory for the resulting BAM files; defaults to %(default)s"
+    )
+    filter_opts = parser.add_argument_group(title='filtering options') # type: argparse._ArgumentGroup
+    filter_opts.add_argument( # Window size
+        '-w',
+        '--window',
+        dest='window',
+        type=int,
+        required=False,
+        default=5,
+        metavar='window size',
+        help="WIndow around the heterozygous variant to count number of matches and mismatches; defaults to %(default)s"
+    )
+    filter_opts.add_argument( # Minimum number of matches
+        '-m',
+        '--minimum-matches',
+        dest='minmatch',
+        type=int,
+        required=False,
+        default=8,
+        metavar='minimum matches',
+        help="Minimum number of matches within the window around the heterozygous variant; defaults to %(default)s"
+    )
+    _common_opts(parser=parser, group='utility options', version=VERSION)
+    if not sys.argv[1:]:
+        parser.print_help(file=sys.stderr)
+        raise SystemExit(1)
+    args = vars(parser.parse_args(*args)) # type: Dict[str, Any]
+    fancy_logging.configure_logging(level=args['verbosity'])
+    _greeter()
+    read_hash = defaultdict(list) # type: DefaultDict[str, List]
+    # bamfh = pysam.AlignmentFile(args['bam'])
+    for k in ('bam', 'trans', 'snps', 'outdir'): # type: str
+        args[k] = utils.fullpath(path=args[k]) # type: str
+    if not os.path.exists(args['outdir']):
+        os.makedirs(args['outdir'], exist_ok=True)
+    my_open = utils.find_open(args['snps']) # type: Callable
+    with my_open(args['snps'], 'rt') as sfile:
+        #   TODO support multiple SNPs at once
+        for line in sfile:
+            if not line.startswith('#'):
+                break
+        line = line.strip().split('\t') # type: List[str]
+        var = features.Bpileup( # type: features.Bpileup
+            chrom=line[0],
+            position=line[1],
+            ref=line[2],
+            alt=line[3]
+        )
+    with pysam.AlignmentFile(args['trans']) as flairfh:
+        logging.info("Reading transcripts from %s", args['trans'])
+        flair_reads = {read.query_name, read.reference_name for read in flairfh} # type: Dict[str, str]
+    logging.info("getting qnames")
+    qnames = asts.qnames( # type: Tuple[asts.Qname, ...]
+        var=var,
+        bamfile=args['bam'],
+        trans_reads=flair_reads,
+        window=args['window'],
+        min_matches=args['minmatch']
+    )
+    logging.info("splitting qnames")
+    qnames = asts.split_qnames(qnames=qnames) # type: Dict[str, Dict[str, Tuple[str, ...]]]
+    bamfh = pysam.AlignmentFile(args['bam'])
+    outfh = dict() # type: Dict[str, Any]
+    logging.info("prepping out bams")
+    for vartype in qnames: # type: str
+        # outfh[vartype] = dict()
+        for transcript in qnames[vartype]: # type: str
+            outname = os.path.join( # type: str
+                args['outdir'],
+                '%(ts)s_%(vt)s.bam' % {'ts': transcript, 'vt': vartype.lower()}
+            )
+            # outfh[vartype][transcript] = pysam.Samfile(
+            #     outname,
+            #     'wb',
+            #     template=bamfh
+            # )
+            outfh[transcript] = pysam.Samfile(
+                outname,
+                'wb',
+                template=bamfh
+            )
+    combined_qnames = dict() # type: Dict[str, Tuple[str, ...]]
+    for d in qnames.items(): # type: Dict[str, Tuple[str, ...]]
+        combined_qnames.update(d)
+    for read in bamfh.fetch(until_eof=True):
+        if read.query_name in utils.unpack(combined_qnames.values()):
+            transcript = utils.dictsearch(d=combined_qnames, query=read.query_name) # type: str
+            outfh[transcript].write(read)
+    bamfh.close()
