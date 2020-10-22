@@ -40,7 +40,7 @@ class AllelicStat(Bpileup):
     )
 
     @classmethod
-    def fromstring(cls, string: str, sep: str='\t'):
+    def fromstring(cls, string: str, sep: str='\t') -> 'AllelicStat':
         string: str = string.strip().split(sep)
         if len(string) != len(AllelicStat.HEADER):
             raise ValueError("Incorrect number of columns")
@@ -67,7 +67,7 @@ class AllelicStat(Bpileup):
             other_count: int,
             ref_indel: int,
             alt_indel: int
-    ):
+    ) -> 'AllelicStat':
         return cls(
             chrom=var.chrom,
             position=var.position,

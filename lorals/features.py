@@ -61,7 +61,7 @@ class Bpileup(object):
         }
 
     @classmethod
-    def frominterval(cls, interval: pybedtools.cbedtools.Interval):
+    def frominterval(cls, interval: pybedtools.cbedtools.Interval) -> 'Bpileup':
         """Create a Bpileup from an Interval"""
         if interval.file_type != 'bed':
             raise TypeError("Must be a BED interval")
@@ -75,7 +75,7 @@ class Bpileup(object):
             name=interval.fields[3]
         )
 
-    def __init__(self, chrom: str, position: int, ref: str, alt: str, name: Optional[str]=None,):
+    def __init__(self, chrom: str, position: int, ref: str, alt: str, name: Optional[str]=None) -> None:
         """Initialize a Bpileup object
 
         Args:
@@ -130,7 +130,7 @@ class Bpileup(object):
             alt=self.alts
         )
 
-    def bed(self, default: bool=False):
+    def bed(self, default: bool=False) -> str:
         """Format this Bpileup to a bed4 format
 
         Args:
@@ -168,7 +168,7 @@ class GenoVar(Bpileup):
         return None
 
     @classmethod
-    def fromvcf(cls, vcf: str):
+    def fromvcf(cls, vcf: str) -> 'GenoVar':
         vcf: List[str] = vcf.strip().split('\t')
         gt_index: int = vcf[8].split(':').index('GT')
         gt: Tuple[str, ...] = tuple(x.split(':')[gt_index] for x in vcf[9:])

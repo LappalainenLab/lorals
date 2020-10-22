@@ -221,7 +221,7 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
     args['bam'] = utils.fullpath(path=args['bam']) # type: str
     args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
-    os.makedirs(os.path.dirname(arg['out']), exist_ok=True)
+    os.makedirs(os.path.dirname(args['out']), exist_ok=True)
     #   Create a BED-like pilup from VCF
     bpileup: str = asts.vcf_bpileup(vcffile=args['vcf'])
     ifh: pybedtools.bedtool.BedTool = asts.bed_intersect(afile=bpileup, bfile=args['bam'])
@@ -388,7 +388,7 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         logging.critical(msg)
         raise ValueError(msg)
     my_open: Callable = utils.find_open(filename=args['input'])
-    ase_stats: list[annotate.AnnotatedStat] = list()
+    ase_stats: List[annotate.AnnotatedStat] = list()
     with my_open(args['input'], 'rt') as ifile:
         logging.info("Reading in input ASE from %s", args['input'])
         read_start: float = time.time()
