@@ -335,9 +335,10 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         dest='warning',
         type=str,
         required=False,
-        default=pkg_resources.resource_filename('lorals', 'blacklists/GTEX_Q2AG_braincerebellarhemisphere_illumina_GT_warning.bed'),
+        # default=pkg_resources.resource_filename('lorals', 'blacklists/GTEX_Q2AG_braincerebellarhemisphere_illumina_GT_warning.bed'),
         metavar='genotype_warning.bed',
-        help="Genotype warning BED file; defaults to %(default)s"
+        # help="Genotype warning BED file; defaults to %(default)s"
+        help="Genotype warning BED file"
     )
     blacklist_opts.add_argument( # Multimapping
         '--mapping',
@@ -415,8 +416,12 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
     #   Add blacklist, genotype warning, and mappability annotations
     logging.info("Annotating blacklist status")
     blacklist: Tuple[str, ...] = annotate.annotate_bed(stats=ase_stats, bedfile=args['blacklist'])
-    logging.info("Annotating genotype warning")
-    gt_warning: Tuple[str, ...] = annotate.annotate_bed(stats=ase_stats, bedfile=args['warning'])
+    if args['warning']:
+        logging.info("Annotating genotype warning")
+        gt_warning: Tuple[str, ...] = annotate.annotate_bed(stats=ase_stats, bedfile=args['warning'])
+    else:
+        logging.warning("No genotype warning BED file provided")
+        gt_warning: Tuple = tuple()
     logging.info("Annotating multi mapping")
     multi_mapping: Tuple[str, ...] = annotate.annotate_bed(stats=ase_stats, bedfile=args['mapping'])
     logging.info("Adding annotations")
