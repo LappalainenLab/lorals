@@ -30,18 +30,32 @@ It utilises the
 Usage
 ------------
 
-Optional alignment steps
+Optional alignment steps if high reference bias is observed.
 
 
 .. code:: bash
 
-    TBD
+    process_vcf
 
-Generates two genome references based on a phased VCF file and a fasta genome reference file.
+The pipeline requires the VCFs to only contain a single individual and for optimal performance to only
+include heterozygous variants. We provide this script in order to obtain such a VCF.
+This script will perform these actions:
+
+1. Filter VCF to only contain biallelic variants
+2. Split a VCF containing records for multiple individuals into one VCF per individual and tabix the files
+3. For each sample create two fasta ref files for each haplotype
+4. For each sample VCF only keep het variants
 
 .. code:: bash
 
-    TBD
+    make_new_vcf
+
+It uses an aligned bam file to correct the phased haplotypes in a vcf file.
+This VCF file is then used to generate two haplotype specific genome references.
+
+.. code:: bash
+
+    hap_aligner
 
 Aligns reads to each of the two genomes using minimap2, selects the best aligned read of the two based on the MAPQ score.
 In case of ties it randomly selects an equal proportion from each of the two alignments.
@@ -67,6 +81,7 @@ For additional options run with --help
     annotate_ase
 
 Annotates the output of calc_asts based on five different filters:
+
 1. Ratio of reads containing indels within the variant used for ASE to the total number of reads
 2. Ratio of other alleles to the REF or the ALT that are found at the variant used for ASE
 Optional
