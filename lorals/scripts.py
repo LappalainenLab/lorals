@@ -144,8 +144,8 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         default='length',
         choices=('length', 'quant'),
         metavar='mode',
-        # help="ASTS mode, choose from %(choices)s; defaults to %(default)s"
-        help=argparse.SUPPRESS
+        help="ASTS mode, choose from %(choices)s; defaults to %(default)s"
+        # help=argparse.SUPPRESS
     )
     asts_opts.add_argument( # Transcriptome-aligned BAM files
         '-x',
@@ -154,8 +154,8 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         type=str,
         required=False,
         metavar='transcripts.bam',
-        # help="BAM file aligned to transcriptome; used when 'mode' is set to 'quant'"
-        help=argparse.SUPPRESS
+        help="BAM file aligned to transcriptome; used when 'mode' is set to 'quant'"
+        # help=argparse.SUPPRESS
     )
     asts_opts.add_argument( # Match window
         '-w',
@@ -217,7 +217,7 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     _ = utils.where('bedtools')
     _greeter()
     if args['mode'] == 'quant' and not args['flair']:
-        parser.error("'-t|--transcripts' must be supplied when 'mode' is 'quant'")
+        parser.error("'-x|--transcripts' must be supplied when 'mode' is 'quant'")
     args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
     args['bam'] = utils.fullpath(path=args['bam']) # type: str
     args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
@@ -248,7 +248,18 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     logging.info("Calculating ASTS")
     if args['mode'] == 'length':
         header: Tuple[str, ...] = getattr(asts.LengthStat, '_fields')
-        asts_stats: Tuple[asts.LengthStat] = tuple(asts.asts_length(var=stat, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for stat in ase_stats)
+        asts_stats: Tuple[asts.LengthStat, ...] = tuple(asts.asts_length(var=stat, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for stat in ase_stats)
+    elif args['mode'] == 'quant':
+        header: Tuple[str, ...] = getattr(asts.QuantStat, '_fields')
+        asts_stats: Tuple[asts.QuantStat, ...] = tuple()
+        for stat in ase_stats: # type: ase.AllelicStat
+            asts_stats += asts.asts_quant(
+                var=stat,
+                bamfile=args['bam'],
+                trans_reads=asts.reads_dict(bamfile=args['flair']),
+                window=args['window'],
+                match_threshold=args['threshold']
+            )
     else:
         msg = "Unknown mode: %s" % args['mode']
         logging.critical(msg)
@@ -258,7 +269,7 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         ofile.write('\t'.join(header))
         ofile.write('\n')
         ofile.flush()
-        for stat in asts_stats: # type: Union[asts.LengthStat]
+        for stat in asts_stats: # type: Union[asts.LengthStat, asts.QuantStat]
             ofile.write('\t'.join(map(str, stat)))
             ofile.write('\n')
             ofile.flush()

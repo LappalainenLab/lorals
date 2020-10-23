@@ -8,7 +8,7 @@ import time
 import logging
 import tempfile
 
-from collections import namedtuple, defaultdict
+from collections import namedtuple, defaultdict, Counter
 from typing import Callable, DefaultDict, Dict, Iterable, List, Optional, Tuple, Set
 
 from lorals import cigar
@@ -39,6 +39,18 @@ LengthStat = namedtuple(
         "position",
         "refAllele",
         "altAllele",
+    )
+)
+
+QuantStat = namedtuple(
+    'QuantStat',
+    (
+        'transcript',
+        'count',
+        'chrom',
+        'position',
+        'ref',
+        'alt'
     )
 )
 
@@ -89,9 +101,43 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
     )
 
 
-def asts_quant():
+def asts_quant(var: Bpileup, bamfile: str, trans_reads: Dict[str, str], window: int=5, match_threshold: int=8, min_reads: int=20):
     """..."""
-    pass
+    reads_completed: Set[str] = set()
+    flair_reads: DefaultDict[str, List[str]] = defaultdict(list)
+    quants: List[QuantStat] = list()
+    bamfile: str = utils.fullpath(path=bamfile)
+    bamfh = pysam.AlignmentFile(bamfile)
+    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position):
+        if pile.pos != var.dummy:
+            continue
+        for pile_read in pile.pileups: # type: pysam.libcalcalignedsegment.PileupRead
+            qname: str = pile_read.alignment.query_name
+            logging.info("Processing read %s", qname)
+            if qname in reads_completed or not pile_read.query_position:
+                continue
+            reads_completed.add(qname)
+            pile_window: slice = utils.window(position=pile_read.query_position, size=window)
+            count_m: int = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M')
+            if pile_read.alignment.query_sequence[pile_read.query_position] == var.ref:
+                key: str = 'ref' if count_m >= match_threshold else 'ref_indel'
+            elif pile_read.alignment.query_sequence[pile_read.query_position] in var.alt:
+                key: str = 'alt' if count_m >= match_threshold else 'alt_indel'
+            flair_reads[key].extend(reference for query, reference in trans_reads.items() if query == qname)
+    if len(flair_reads['ref']) >= 10 and len(flair_reads['alt']) >= 10:
+        for key in ('ref', 'alt'): # type: str
+            for tx, count in Counter(flair_reads[key]).items(): # type: str, int
+                quants.append(QuantStat(
+                    transcript=tx,
+                    count=count,
+                    chrom=var.chrom,
+                    position=var.position,
+                    ref=var.ref,
+                    alt=var.alts
+                ))
+    else:
+        logging.warning("Too few transcripts for %s", repr(var))
+    return tuple(quants)
 
 
 def bam_to_bed(bamfile: str, save: bool=False) -> pybedtools.bedtool.BedTool:
@@ -193,6 +239,13 @@ def qnames(
                 vartype: str = 'OTHER'
             flair_reads.append(Qname(flairs=''.join(flairs), query=qname, vartype=vartype))
     return tuple(filter(lambda x: x.vartype != 'OTHER', flair_reads))
+
+
+def reads_dict(bamfile: str) -> Dict[str, str]:
+    # with pysam.AlignmentFile(bamfile) as bamfh:
+    with pysam.libcalignmentfile.AlignmentFile(bamfile) as bamfh:
+        reads: Dict[str, str] = {read.query_name: read.reference_name for read in bamfh}
+    return reads
 
 
 def split_qnames(qnames: Tuple[Qname, ...]) -> Dict[str, Dict[str, Tuple[str, ...]]]:
