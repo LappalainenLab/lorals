@@ -8,11 +8,9 @@ import logging
 
 from typing import Dict, Iterable, List, Optional, Set, Tuple
 
-# from lorals import cigar
-import lorals.cigar as cigar
-
-from lorals import utils
-from lorals.features import Bpileup
+from . import cigar
+from . import utils
+from .features import Bpileup
 
 import pysam
 

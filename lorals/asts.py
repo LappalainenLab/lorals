@@ -11,10 +11,10 @@ import tempfile
 from collections import namedtuple, defaultdict, Counter
 from typing import Callable, DefaultDict, Dict, Iterable, List, Optional, Tuple, Set
 
-from lorals import cigar
-from lorals.features import Bpileup
-from lorals import utils
-from lorals.fancy_logging import fmttime
+from . import cigar
+from . import utils
+from .features import Bpileup
+from .fancy_logging import fmttime
 
 
 import pysam

@@ -9,8 +9,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 import pandas
 import pybedtools
 
-# from lorals import utils
-import lorals.utils as utils
+from . import utils
 
 __all__: List[str] = [
     'Bpileup',

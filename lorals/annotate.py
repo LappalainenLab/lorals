@@ -8,13 +8,6 @@ from numbers import Real
 from collections import defaultdict
 from typing import Callable, DefaultDict, Dict, Iterable, List, Optional, Set, Tuple
 
-# from lorals import ase
-# from lorals import asts
-# from lorals import maths
-# from lorals import utils
-# from lorals import features
-# from lorals.fancy_logging import fmttime
-
 from . import ase
 from . import asts
 from . import maths
