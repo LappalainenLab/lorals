@@ -4,6 +4,7 @@
 
 import os
 import sys
+import glob
 import types
 import builtins
 
@@ -104,5 +105,6 @@ setup(
     packages=find_packages(),
     cmdclass={'install': install},
     package_data={"lorals": ['blacklists/*.bed', 'py.typed']},
-    entry_points=ENTRY_POINTS
+    entry_points=ENTRY_POINTS,
+    scripts=glob.glob('scripts/*.sh')
 )
