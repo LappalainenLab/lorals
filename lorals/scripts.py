@@ -30,9 +30,9 @@ except NameError:
     from lorals import fancy_logging
 
 
-__all__: List = []
-
 VERSION: str = ''
+
+__all__: List = []
 
 def _common_parser() -> argparse.ArgumentParser:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
@@ -102,8 +102,30 @@ def _greeter() -> None:
     logging.info("Author: Dafni Glinos (dglinos@nygenome.org)")
 
 
-def calc_asts(*args: Optional[List[str]]) -> None:
-    """Calculate ASTS"""
+def _read_ase(filename: str) -> Tuple[annotate.AnnotatedStat, ...]:
+    ase_stats: List[annotate.AnnotatedStat] = list()
+    with open(filename, 'rt') as ifile:
+        for line in ifile: # type: str
+            if line.startswith(('#', ase.AllelicStat.HEADER[0], annotate.AnnotatedStat.HEADER[0])):
+                continue
+            stat: annotate.AnnotatedStat = annotate.AnnotatedStat.fromstring(string=line)
+            line: List[str] = line.strip().split()
+            if len(line) == len(annotate.AnnotatedStat.HEADER):
+                stat.geno = line[12]
+                stat.geno = line[13]
+                stat.warning = line[14]
+                stat.blacklisted = line[15]
+                stat.multi_mapping = line[16]
+                # stat.other_warning = line[17]
+                # stat.indel_warning = line[18]
+                stat.null_ratio = line[19]
+                stat.pvalue = line[20]
+                stat.qvalue = line[21]
+            ase_stats.append(stat)
+    return ase_stats
+
+
+def calc_ase(*args: Optional[List[str]]) -> None:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
     io_opts: argparse._ArgumentGroup = parser.add_argument_group(title="input/output options")
     io_opts.add_argument( # BAM file
@@ -133,6 +155,86 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         default=os.path.join(os.getcwd(), 'lorals_out', 'asts'),
         metavar='/path/to/output',
         help="Directory and prefix of output files; defaults to %(default)s"
+    )
+    _common_opts(parser=parser, group='utility_options', version=VERSION)
+    if not sys.argv[1:]:
+        parser.print_help(file=sys.stderr)
+        raise SystemExit(1)
+    args: Dict[str, Any] = vars(parser.parse_args(*args))
+    fancy_logging.configure_logging(level=args['verbosity'])
+    _greeter()
+    for key in ('bam', 'vcf', 'out'):
+        args[key]: str = utils.fullpath(path=args[key])
+    os.makedirs(os.path.dirname(args['out']), exist_ok=True)
+    #   Create a BED-like pileup from the VCF
+    bpileup: str = asts.vcf_bpileup(vcffile=args['vcf'])
+    ifh: pybedtools.bedtool.BedTool = asts.bed_intersect(afile=bpileup, bfile=args['bam'])
+    os.remove(bpileup)
+    bpileup: pandas.core.frame.DataFrame = asts.deduplicate_bpileup(bpileup=ifh.fn)
+    #   Calculate ASE
+    ase_stats: Set[ase.AllelicStat] = set()
+    for var in features.iter_var(df=bpileup): # type: features.Bpileup
+        ase_stats.add(ase.allelic_stats(
+            var=var,
+            bamfile=args['bam'],
+            window=args['window'],
+            match_threshold=args['threshold']
+        ))
+    ase_stats: Tuple[ase.AllelicStat, ...] = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.chrom, x.position)))
+    with open(args['out'], 'w') as ofile: # type: file
+        logging.info("Saving raw ASE results to %s", ofile.name)
+        ofile.write('\t'.join(ase.AllelicStat.HEADER))
+        ofile.write('\n')
+        ofile.flush()
+        for stat in ase_stats: # type: ase.AllelicStat
+            ofile.write(str(stat))
+            ofile.write('\n')
+            ofile.flush()
+
+
+def calc_asts(*args: Optional[List[str]]) -> None:
+    """Calculate ASTS"""
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
+    io_opts: argparse._ArgumentGroup = parser.add_argument_group(title="input/output options")
+    # io_opts.add_argument( # BAM file
+    #     '-b',
+    #     '--bam',
+    #     dest='bam',
+    #     type=str,
+    #     required=True,
+    #     metavar='in.bam',
+    #     help="BAM file containing RNA-seq reads"
+    # )
+    # io_opts.add_argument( # VCF file
+    #     '-f',
+    #     '--vcf',
+    #     dest='vcf',
+    #     type=str,
+    #     required=True,
+    #     metavar='in.vcf',
+    #     help="Genotype VCF for sample"
+    # )
+    io_opts.add_argument( # Input ASE matrix
+        '-i',
+        '--input',
+        dest='input',
+        type=str,
+        required=True,
+        metavar='ase.tsv',
+        help="Input ASE file"
+    )
+    io_opts.add_argument( # Output file
+        '-o',
+        '--output',
+        dest='out',
+        type=str,
+        required=False,
+        # default=os.path.join(os.getcwd(), 'lorals_out', 'asts'),
+        default='asts.tsv',
+        # metavar='/path/to/output',
+        metavar='asts.tsv',
+        # help="Directory and prefix of output files; defaults to %(default)s"
+        help="Name of output file; defaults to %(default)s"
     )
     asts_opts: argparse._ArgumentGroup = parser.add_argument_group(title="asts options")
     asts_opts.add_argument( # ASTS mode
@@ -218,32 +320,36 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     _greeter()
     if args['mode'] == 'quant' and not args['flair']:
         parser.error("'-x|--transcripts' must be supplied when 'mode' is 'quant'")
-    args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
-    args['bam'] = utils.fullpath(path=args['bam']) # type: str
-    args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
-    os.makedirs(os.path.dirname(args['out']), exist_ok=True)
-    #   Create a BED-like pilup from VCF
-    bpileup: str = asts.vcf_bpileup(vcffile=args['vcf'])
-    ifh: pybedtools.bedtool.BedTool = asts.bed_intersect(afile=bpileup, bfile=args['bam'])
-    os.remove(bpileup)
-    bpileup: pandas.core.frame.DataFrame = asts.deduplicate_bpileup(bpileup=ifh.fn)
-    #   Calculate ASE
-    ase_stats: Set[ase.AllelicStat] = {ase.allelic_stats(var=var, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for var in features.iter_var(df=bpileup)}
-    ase_stats: Tuple[ase.AllelicStat, ...] = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.chrom, x.position)))
-    with open('%s_ase.tsv' % args['out'], 'w') as ofile: # type: file
-        logging.info("Saving raw ASE results to %s", ofile.name)
-        ofile.write('\t'.join(ase.AllelicStat.HEADER))
-        ofile.write('\n')
-        ofile.flush()
-        for stat in ase_stats: # type: ase.AllelicStat
-            ofile.write(str(stat))
-            ofile.write('\n')
-            ofile.flush()
-    ase_stats: Tuple[ase.AllelicStat, ...] = ase.filter_stats(
-        stats=ase_stats,
-        total_coverage=args['coverage'],
-        allelic_coverage=args['allelic']
-    )
+    for k in ('input', 'out', 'flair'): # type: str
+        if args[k]:
+            args[k]: str = utils.fullpath(path=args[k])
+    # args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
+    # args['bam'] = utils.fullpath(path=args['bam']) # type: str
+    # args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
+    # os.makedirs(os.path.dirname(args['out']), exist_ok=True)
+    # #   Create a BED-like pilup from VCF
+    # bpileup: str = asts.vcf_bpileup(vcffile=args['vcf'])
+    # ifh: pybedtools.bedtool.BedTool = asts.bed_intersect(afile=bpileup, bfile=args['bam'])
+    # os.remove(bpileup)
+    # bpileup: pandas.core.frame.DataFrame = asts.deduplicate_bpileup(bpileup=ifh.fn)
+    # #   Calculate ASE
+    # ase_stats: Set[ase.AllelicStat] = {ase.allelic_stats(var=var, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for var in features.iter_var(df=bpileup)}
+    # ase_stats: Tuple[ase.AllelicStat, ...] = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.chrom, x.position)))
+    # with open('%s_ase.tsv' % args['out'], 'w') as ofile: # type: file
+    #     logging.info("Saving raw ASE results to %s", ofile.name)
+    #     ofile.write('\t'.join(ase.AllelicStat.HEADER))
+    #     ofile.write('\n')
+    #     ofile.flush()
+    #     for stat in ase_stats: # type: ase.AllelicStat
+    #         ofile.write(str(stat))
+    #         ofile.write('\n')
+    #         ofile.flush()
+    # ase_stats: Tuple[ase.AllelicStat, ...] = ase.filter_stats(
+    #     stats=ase_stats,
+    #     total_coverage=args['coverage'],
+    #     allelic_coverage=args['allelic']
+    # )
+    ase_stats: Tuple[annotate.AnnotatedStat, ...] = _read_ase(filename=args['input'])
     #   Calculate ASTS
     logging.info("Calculating ASTS")
     if args['mode'] == 'length':
