@@ -102,7 +102,7 @@ def _greeter() -> None:
     logging.info("Author: Dafni Glinos (dglinos@nygenome.org)")
 
 
-def _read_ase(filename: str) -> Tuple[annotate.AnnotatedStat, ...]:
+def _read_ase(filename: str) -> 'Tuple[annotate.AnnotatedStat, ...]':
     ase_stats: List[annotate.AnnotatedStat] = list()
     with open(filename, 'rt') as ifile:
         for line in ifile: # type: str
