@@ -156,7 +156,7 @@ def calc_ase(*args: Optional[List[str]]) -> None:
         metavar='/path/to/output',
         help="Directory and prefix of output files; defaults to %(default)s"
     )
-        asts_opts.add_argument( # Match window
+    asts_opts.add_argument( # Match window
         '-w',
         '--window',
         dest='window',
