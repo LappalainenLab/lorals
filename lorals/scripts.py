@@ -167,7 +167,7 @@ def calc_ase(*args: Optional[List[str]]) -> None:
         metavar='window',
         help="Window around a variant to calculate number of matches; defaults to %(default)s"
     )
-    asts_opts.add_argument( # Minimum match threshold
+    ase_opts.add_argument( # Minimum match threshold
         '-t',
         '--threshold',
         dest='threshold',
