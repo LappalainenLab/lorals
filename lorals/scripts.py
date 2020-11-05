@@ -156,6 +156,26 @@ def calc_ase(*args: Optional[List[str]]) -> None:
         metavar='/path/to/output',
         help="Directory and prefix of output files; defaults to %(default)s"
     )
+        asts_opts.add_argument( # Match window
+        '-w',
+        '--window',
+        dest='window',
+        type=int,
+        required=False,
+        default=5,
+        metavar='window',
+        help="Window around a variant to calculate number of matches; defaults to %(default)s"
+    )
+    asts_opts.add_argument( # Minimum match threshold
+        '-t',
+        '--threshold',
+        dest='threshold',
+        type=int,
+        required=False,
+        default=8,
+        metavar="threhsold",
+        help="Minimum number of matches in window around the variant; defaults to %(default)s"
+    )
     _common_opts(parser=parser, group='utility_options', version=VERSION)
     if not sys.argv[1:]:
         parser.print_help(file=sys.stderr)
