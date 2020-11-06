@@ -639,7 +639,7 @@ def fetch_haplotype(*args: Optional[List[str]]) -> None:
         type=str,
         required=True,
         metavar='snps.tsv',
-        help="Tab-delimited file of SNPs fot be used for plotting; should contain the following columns: chrom, position, reference allele, alternate allele(s). Any header should start with a '#'"
+        help="Tab-delimited file of SNPs be used for plotting; should contain the following columns: chrom, position, reference allele, alternate allele(s). Any header should start with a '#'"
     )
     io_opts.add_argument( # Outdir
         '-o',
@@ -660,7 +660,7 @@ def fetch_haplotype(*args: Optional[List[str]]) -> None:
         required=False,
         default=5,
         metavar='window size',
-        help="WIndow around the heterozygous variant to count number of matches and mismatches; defaults to %(default)s"
+        help="Window around the heterozygous variant to count number of matches and mismatches; defaults to %(default)s"
     )
     filter_opts.add_argument( # Minimum number of matches
         '-m',
