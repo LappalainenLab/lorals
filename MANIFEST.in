@@ -1,1 +1,1 @@
-include lorals/blacklists/*.bed
+include lorals/blacklists/*.bed*

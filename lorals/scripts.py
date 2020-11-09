@@ -472,7 +472,7 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         dest='mapping',
         type=str,
         required=False,
-        default=pkg_resources.resource_filename('lorals', 'blacklists/wgEncodeCrgMapabilityAlign100mer.hg38.mappingover5.bed'),
+        default=pkg_resources.resource_filename('lorals', 'blacklists/wgEncodeCrgMapabilityAlign100mer.hg38.mappingover5.bed.gz'),
         metavar='multi_mapping.bed',
         help="BED file with multi-mapping regions; defaults to %(default)s"
     )

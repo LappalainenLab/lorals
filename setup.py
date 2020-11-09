@@ -104,7 +104,7 @@ setup(
     install_requires=INSTALL_REQUIRES,
     packages=find_packages(),
     cmdclass={'install': install},
-    package_data={"lorals": ['blacklists/*.bed', 'py.typed']},
+    package_data={"lorals": ['blacklists/*.bed*', 'py.typed']},
     entry_points=ENTRY_POINTS,
     scripts=glob.glob('scripts/*.sh')
 )
