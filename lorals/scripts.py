@@ -152,7 +152,7 @@ def calc_ase(*args: Optional[List[str]]) -> None:
         dest='out',
         type=str,
         required=False,
-        default=os.path.join(os.getcwd(), 'lorals_out', 'asts'),
+        default=os.path.join(os.getcwd(), 'lorals_out', 'ase.tsv'),
         metavar='/path/to/output',
         help="Directory and prefix of output files; defaults to %(default)s"
     )
@@ -250,10 +250,10 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         dest='out',
         type=str,
         required=False,
-        # default=os.path.join(os.getcwd(), 'lorals_out', 'asts'),
-        default='asts.tsv',
-        # metavar='/path/to/output',
-        metavar='asts.tsv',
+        default=os.path.join(os.getcwd(), 'lorals_out', 'asts.tsv'),
+        #default='asts.tsv',
+        metavar='/path/to/output',
+        #metavar='asts.tsv',
         # help="Directory and prefix of output files; defaults to %(default)s"
         help="Name of output file; defaults to %(default)s"
     )
@@ -443,8 +443,10 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         dest='output',
         type=str,
         required=False,
-        default='ase_annotated.tsv',
-        metavar='ase_annotated.tsv',
+        default=os.path.join(os.getcwd(), 'lorals_out', 'ase_annotated.tsv'),
+        #default='ase_annotated.tsv',
+        metavar='/path/to/output',
+        #metavar='ase_annotated.tsv',
         help="Name of output ASE file; defaults to %(default)s"
     )
     blacklist_opts: argparse._ArgumentGroup = parser.add_argument_group(title='blacklist options')
