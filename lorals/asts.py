@@ -89,7 +89,7 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
     else:
         logging.warning("Too few hits for KS test")
         ks: stats.stats.KstestResult = NullResult
-    logging.info("Finished getting lengths for %s", str(var))
+    logging.info("Finished getting lengths")
     logging.debug("Getting read lengths took %s seconds", fmttime(start=lengths_start))
     return LengthStat(
         contig=var.chrom,
