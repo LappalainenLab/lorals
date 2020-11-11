@@ -38,16 +38,13 @@ Usage
 
 Calculates the allelic coverage of each variant. It only requires a genome aligned bam file and a phased VCF file.
 
-The most efficient way to carry out ASTS analysis is to first run this command and filter out the variants that get tagged by
-different flags.
-
 For additional options run with --help
 
 .. code:: bash
 
     annotate_ase
 
-Annotates the output of calc_asts based on five filters and assigns it a gene. Make sure to provide a gene coordinates
+Annotates the output of calc_ase based on five criteria and assigns it a gene. Make sure to provide a gene coordinates
 file that does not contain introns if you want to avoid multiple genes assigned to a variant.
 
 1. Ratio of reads containing indels within the variant used for ASE to the total number of reads. If you don't want to use
@@ -62,8 +59,11 @@ file for hg38 which you can replace with any other file you like
 5. The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype
 is ambiguous. The expected file is in BED format.
 
-The output file can be used as it is for allele specific expression that is per variant. If you want to carry allele specific expression
-based on the exact reads assigned to a transcript please look into process_ase
+The output file can be used as it is for allele specific expression, calculated per variant. If you want to carry allele specific expression
+based on the exact reads assigned to a transcript please look into process_ase.
+
+The most efficient way to carry out ASTS analysis is to first run calc_ase, followed by annotate_ase. You can then filter out the variants that get
+tagged by different flags and use the filtered file as an input to calc_asts.
 
 .. code:: bash
 
