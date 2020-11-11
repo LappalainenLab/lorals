@@ -42,7 +42,11 @@ For additional options run with --help
 
 .. code:: bash
 
-    annotate_ase
+    annotate_ase -i in_ase.tsv -b ref.bed [-f in.vcf] [-o /path/to/output]
+                    [--blacklist blacklist.bed]
+                    [--genotype genotype_warning.bed]
+                    [--mapping multi_mapping.bed] [-c COVERAGE]
+                    [-n BINOMIAL | -m {mean,median,global}] [-v level]
 
 Annotates the output of calc_ase based on five criteria and assigns it a gene. Make sure to provide a gene coordinates
 file that does not contain introns if you want to avoid multiple genes assigned to a variant.
