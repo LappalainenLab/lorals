@@ -217,15 +217,15 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     """Calculate ASTS"""
     parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
     io_opts: argparse._ArgumentGroup = parser.add_argument_group(title="input/output options")
-    # io_opts.add_argument( # BAM file
-    #     '-b',
-    #     '--bam',
-    #     dest='bam',
-    #     type=str,
-    #     required=True,
-    #     metavar='in.bam',
-    #     help="BAM file containing RNA-seq reads"
-    # )
+    io_opts.add_argument( # BAM file
+        '-b',
+        '--bam',
+        dest='bam',
+        type=str,
+        required=True,
+        metavar='in.bam',
+        help="BAM file containing RNA-seq reads"
+    )
     # io_opts.add_argument( # VCF file
     #     '-f',
     #     '--vcf',
@@ -345,7 +345,7 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         if args[k]:
             args[k]: str = utils.fullpath(path=args[k])
     # args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
-    # args['bam'] = utils.fullpath(path=args['bam']) # type: str
+    args['bam'] = utils.fullpath(path=args['bam']) # type: str
     # args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
     # os.makedirs(os.path.dirname(args['out']), exist_ok=True)
     # #   Create a BED-like pilup from VCF
