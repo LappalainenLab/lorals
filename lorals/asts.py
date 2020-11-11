@@ -87,13 +87,9 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
                 lengths['alt'].append(len(pile_read.alignment.query_sequence))
     if len(lengths['ref']) >= min_reads and len(lengths['alt']) >= min_reads:
         logging.info("Running KS test")
-        myreflength: ','.join(lengths['ref'])
-        myaltlength: ','.join(lengths['alt'])
         ks: stats.stats.KstestResult = stats.ks_2samp(lengths['ref'], lengths['alt'])
     else:
         logging.warning("Too few hits for KS test")
-        myreflength: NullResult
-        myaltlength: NullResult
         ks: stats.stats.KstestResult = NullResult
     logging.info("Finished getting lengths")
     logging.debug("Getting read lengths took %s seconds", fmttime(start=lengths_start))
