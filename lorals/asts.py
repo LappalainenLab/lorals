@@ -38,7 +38,9 @@ LengthStat = namedtuple(
         "refAllele",
         "altAllele",
         "D",
-        "pvalue"
+        "pvalue",
+        "refLengths",
+        "altLengths"
     )
 )
 
@@ -97,7 +99,7 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
         refAllele=var.ref,
         altAllele=','.join(var.alt),
         D=ks.statistic,
-        pvalue=ks.pvalue
+        pvalue=ks.pvalue,
         refLengths=','.join(lengths['ref']),
         altLengths=','.join(lengths['alt'])
     )
