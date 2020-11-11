@@ -479,15 +479,6 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         help="BED file with multi-mapping regions; defaults to %(default)s"
     )
     stats_opts: argparse._ArgumentGroup = parser.add_argument_group(title="ase stats options")
-    stats_opts.add_argument( # Proportion cutoff
-        '-p',
-        '--proportion-cutoff',
-        dest='cutoff',
-        type=float,
-        required=False,
-        default=0.05,
-        help="Maximum proportion of reads arising from non ref/alt read for variant to be used for genotype warning test; defaults to %(default)s"
-    )
     stats_opts.add_argument( # Coverage
         '-c',
         '--coverage',
