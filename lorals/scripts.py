@@ -574,7 +574,7 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
     #   Calculate q-values
     logging.info("Adjusting p-values")
     stats_cov: Tuple[annotate.AnnotatedStat, ...] = tuple(filter(
-        lambda x: not x.multi_mapping and not x.blacklisted and not x.other_warning and not x.indel_warning and not x.warning and x.total_count >= args['coverage'] and x.chrom not in ('chrX', 'chrY'),
+        lambda x: not x.multi_mapping and not x.blacklisted and not x.other_warning and not x.indel_warning and not x.warning and x.total_count >= args['coverage'],
         ase_stats
     ))
     qvalues: Tuple[float, ...] = maths.pvalue_adjust(tuple(x.pvalue for x in ase_stats))
