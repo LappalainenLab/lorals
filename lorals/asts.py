@@ -105,7 +105,7 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
         D=ks.statistic,
         pvalue=ks.pvalue,
         refLengths=myreflength,
-        altLengths=myaltlength)
+        altLengths=myaltlength
     )
 
 
