@@ -25,6 +25,8 @@ docs/build/html
 /*.vcf*
 /*.out
 /*.sh
+/*.bed
+/*.txt
 
 # Ignore results
 ################
