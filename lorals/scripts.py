@@ -10,7 +10,7 @@ import argparse
 import subprocess
 
 from collections import defaultdict
-from typing import Any, Callable, DefaultDict, Dict, List, Optional, Set, Tuple
+from typing import Any, Callable, DefaultDict, Dict, List, Optional, Set, Tuple, Union
 
 import pkg_resources
 
@@ -33,6 +33,15 @@ except NameError:
 VERSION: str = ''
 
 __all__: List = []
+
+def _binomial_null(value: str) -> Union[str, float]:
+    if value != 'auto':
+        try:
+            value: float = float(value)
+        except ValueError:
+            raise argparse.ArgumentTypeError("Must pass a floating-point value")
+    return value
+
 
 def _common_parser() -> argparse.ArgumentParser:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
@@ -444,7 +453,6 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         type=str,
         required=False,
         default=os.path.join(os.getcwd(), 'lorals_out', 'ase_annotated.tsv'),
-        #default='ase_annotated.tsv',
         metavar='/path/to/output',
         #metavar='ase_annotated.tsv',
         help="Name of output ASE file; defaults to %(default)s"
@@ -493,10 +501,10 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         '-n',
         '--binomial-null',
         dest='binomial',
-        type=float,
+        type=_binomial_null,
         required=False,
-        default=None,
-        help="For binomail test, the null ref ratio to test against; defaults to auto-calculated null ref ratio"
+        default=0.5,
+        help="For binomial test, the null ref ration to test against, pass 'auto' to auto-calculate null ref ratio; defaults to %(default)s"
     )
     binom_excl.add_argument( # Method for calculating binomial null
         '-m',
@@ -550,7 +558,7 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         ase_stats[i].warning: bool = ase_stats[i].default in gt_warning
         ase_stats[i].multi_mapping: bool = ase_stats[i].default in multi_mapping
     #   Get bias stats
-    if args['binomial'] is None:
+    if args['binomial'] =='auto':
         logging.info("Calculating binomial null ratio")
         stats_bias: Tuple[annotate.AnnotatedStat, ...] = tuple(filter(
             lambda x: not x.blacklisted and not x.warning and not x.multi_mapping and not x.other_warning and not x.indel_warning and x.chrom not in ('chrX', 'chrY'),
