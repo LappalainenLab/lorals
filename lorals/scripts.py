@@ -496,24 +496,42 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         default=20,
         help="Minimum coverage for a site to be included; defaults to %(default)s"
     )
-    binom_excl = stats_opts.add_mutually_exclusive_group()
-    binom_excl.add_argument( # Optional binomial NULL
+    stats_opts.add_argument( # Optional binomial NULL
         '-n',
         '--binomial-null',
         dest='binomial',
         type=_binomial_null,
         required=False,
         default=0.5,
-        help="For binomial test, the null ref ration to test against, pass 'auto' to auto-calculate null ref ratio; defaults to %(default)s"
+        help="For binomial test, the null ref ratio to test against, pass 'auto' to auto-calculate null ref ratio; defaults to %(default)s"
     )
-    binom_excl.add_argument( # Method for calculating binomial null
+    stats_opts.add_argument( # Method for calculating binomial null
         '-m',
         '--method',
+        dest='method',
         type=str,
         required=False,
         default='mean',
         choices=('mean', 'median', 'global'),
         help="Method for calculating biomial null, choose from %(choices)s; defaults to %(default)s"
+    )
+    stats_opts.add_argument( # Other warning threshold
+        '--other-threshold',
+        dest='other',
+        type=float,
+        required=False,
+        default=0.8,
+        metavar='threshold',
+        help="Threshold for issuing an other allele warning; defaults to %(default)s"
+    )
+    stats_opts.add_argument( # Indel warning threshold
+        '--indel-threshold',
+        dest='indel',
+        type=float,
+        required=False,
+        default=0.2,
+        metavar='threshold',
+        help="Threshold for issuing an indel warning; defaults to %(default)s"
     )
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
@@ -522,6 +540,8 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
     fancy_logging.configure_logging(level=args['verbosity'])
     _ = utils.where("bedtools")
     _greeter()
+    annotate.AnnotatedStat.other_threshold: float = args['other']
+    annotate.AnnotatedStat.indel_threshold: float = args['indel']
     args['input']: str = utils.fullpath(path=args['input'])
     if not os.path.exists(args['input']):
         msg = "Cannot find input file %s" % args['input'] # type: str

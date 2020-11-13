@@ -43,6 +43,9 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
         'BINOM_P_ADJUSTED',
     )
 
+    other_threshold: float = 0.8
+    indel_threshold: float = 0.2
+
     def __init__(
             self,
             chrom: str,
@@ -167,8 +170,14 @@ class AnnotatedStat(ase.AllelicStat, features.GenoVar):
         fget=lambda self: (self.ref_indel + self.alt_indel) / self.total_count,
         doc="Indel ratio"
     )
-    other_warning = property(fget=lambda self: self.all_ratio < 0.8, doc="Other allele warning")
-    indel_warning = property(fget=lambda self: self.indel_ratio >= 0.2, doc="High indel warning")
+    other_warning = property(
+        fget=lambda self: self.all_ratio < self.other_threshold,
+        doc="Other allele warning"
+    )
+    indel_warning = property(
+        fget=lambda self: self.indel_ratio >= self.indel_threshold,
+        doc="High indel warning"
+    )
 
 
 def annotate_bed(stats: Iterable[AnnotatedStat], bedfile: str) -> Tuple[str, ...]:
