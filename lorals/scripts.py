@@ -672,7 +672,6 @@ def fetch_haplotype(*args: Optional[List[str]]) -> None:
     args: Dict[str, Any] = vars(parser.parse_args(*args))
     fancy_logging.configure_logging(level=args['verbosity'])
     _greeter()
-    # read_hash: DefaultDict[str, List] = defaultdict(list)
     for k in ('bam', 'trans', 'snps', 'outdir'): # type: str
         args[k] = utils.fullpath(path=args[k]) # type: str
     os.makedirs(args['outdir'], exist_ok=True)
@@ -706,27 +705,28 @@ def fetch_haplotype(*args: Optional[List[str]]) -> None:
     outfh: Dict[str, Any] = dict()
     logging.info("prepping out bams")
     for vartype in qnames: # type: str
-        # outfh[vartype] = dict()
-        for transcript in qnames[vartype]: # type: str
-            outname: str = os.path.join(
-                args['outdir'],
-                '%(ts)s_%(vt)s.bam' % {'ts': transcript, 'vt': vartype.lower()}
-            )
-            # outfh[vartype][transcript] = pysam.Samfile(
-            #     outname,
-            #     'wb',
-            #     template=bamfh
-            # )
-            outfh[transcript] = pysam.Samfile(
-                outname,
-                'wb',
-                template=bamfh
-            )
-    combined_qnames: Dict[str, Tuple[str, ...]] = dict()
-    for d in qnames.items(): # type: Dict[str, Tuple[str, ...]]
-        combined_qnames.update(d)
+        for chrom in qnames[vartype]: # type: str
+            for transcript in qnames[vartype][chrom]: # type: str
+                outname: str = os.path.join(
+                    args['outdir'],
+                    '%(ts)s_%(vt)s.bam' % {'ts': transcript, 'vt': vartype.lower()}
+                )
+                outfh[transcript] = pysam.Samfile(
+                    outname,
+                    'wb',
+                    template=bamfh
+                )
+    logging.info("Collapsing qnames")
+    combined_qnames: DefaultDict[str, Tuple[str, ...]] = defaultdict(tuple)
+    for vartype in qnames: # type: str
+        for transcripts in qnames[vartype].values(): # type: Tuple[str, ...]
+            combined_qnames[vartype] += transcripts
+    combined_qnames: Tuple[str, ...] = utils.unpack(combined_qnames.values())
+    logging.info("Creating output BAM files")
     for read in bamfh.fetch(until_eof=True): # type: Any
-        if read.query_name in utils.unpack(combined_qnames.values()):
-            transcript = utils.dictsearch(d=combined_qnames, query=read.query_name) # type: str
-            outfh[transcript].write(read)
+        # if read.query_name in utils.unpack(combined_qnames.values()):
+        if read.query_name in combined_qnames:
+            # transcript = utils.dictsearch(d=combined_qnames, query=read.query_name) # type: str
+            # outfh[transcript].write(read)
+            outfh[read.query_name].write(read)
     bamfh.close()
