@@ -53,19 +53,11 @@ For additional options run with --help
 Annotates the output of calc_ase based on five criteria and assigns it a gene. Make sure to provide a gene coordinates
 file that does not contain introns if you want to avoid multiple genes assigned to a variant.
 
-1. --indel-threshold: Ratio of reads containing indels within the variant used for ASE to the total number of reads.
-If you don't want to use this flag you can set it to 0. The default is 0.2.
-2. --other-threshold: Ratio of REF and ALT containing reads to the total number of reads covering the variant site used for ASE.
-If you don't want to use this flag you can set it to 0. The default is 0.8. 
-
-Optional
-
-3. --blacklist: The variant falls within the ENCODE blacklist region. The expected file is in BED format. For ease we provide one such
-file for hg38 which you can replace with any other file you like
-4. --mapping: The variant falls  within a multi-mapping region. The expected file is in BED format. For ease we provide one such
-file for hg38 which you can replace with any other file you like
-5. --genotype: The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype
-is ambiguous. The expected file is in BED format.
+1. indel-threshold: Ratio of reads containing indels within the variant used for ASE to the total number of reads. If you don't want to use this flag you can set it to 0. The default is 0.2.
+2. other-threshold: Ratio of REF and ALT containing reads to the total number of reads covering the variant site used for ASE.  If you don't want to use this flag you can set it to 0. The default is 0.8. 
+3. blacklist (optional): The variant falls within the ENCODE blacklist region. The expected file is in BED format. For ease we provide one such file for hg38 which you can replace with any other file you like
+4. mapping (optional): The variant falls  within a multi-mapping region. The expected file is in BED format. For ease we provide one such file for hg38 which you can replace with any other file you like
+5. genotype (optional): The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype is ambiguous. The expected file is in BED format.
 
 The output file can be used as it is for allele specific expression, calculated per variant. If you want to carry allele specific expression
 based on the exact reads assigned to a transcript please look into process_ase.
