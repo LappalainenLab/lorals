@@ -45,30 +45,27 @@ For additional options run with --help
     annotate_ase -i in_ase.tsv -b ref.bed [-f in.vcf] [-o /path/to/output]
                     [--blacklist blacklist.bed]
                     [--genotype genotype_warning.bed]
-                    [--mapping multi_mapping.bed] [-c COVERAGE]
-                    [-n BINOMIAL | -m {mean,median,global}] [-v level]
+                    [--mapping multi_mapping.bed] [-c COVERAGE] [-n BINOMIAL]
+                    [-m {mean,median,global}] [--other-threshold threshold]
+                    [--indel-threshold threshold] [-v level]
+
 
 Annotates the output of calc_ase based on five criteria and assigns it a gene. Make sure to provide a gene coordinates
 file that does not contain introns if you want to avoid multiple genes assigned to a variant.
 
-
-1. Ratio of reads containing indels within the variant used for ASE to the total number of reads. If you don't want to use
-this flag you can set it to 0.
-
-2. Ratio of other alleles to the REF or the ALT that are found at the variant site used for ASE. If you don't want to use
-this flag you can set it to 0.
+1. --indel-threshold: Ratio of reads containing indels within the variant used for ASE to the total number of reads.
+If you don't want to use this flag you can set it to 0. The default is 0.2.
+2. --other-threshold: Ratio of REF and ALT containing reads to the total number of reads covering the variant site used for ASE.
+If you don't want to use this flag you can set it to 0. The default is 0.8. 
 
 Optional
 
-3. The variant falls within the ENCODE blacklist region. The expected file is in BED format. For ease we provide one such
+3. --blacklist: The variant falls within the ENCODE blacklist region. The expected file is in BED format. For ease we provide one such
 file for hg38 which you can replace with any other file you like
-
-4. The variant falls  within a multi-mapping region. The expected file is in BED format. For ease we provide one such
+4. --mapping: The variant falls  within a multi-mapping region. The expected file is in BED format. For ease we provide one such
 file for hg38 which you can replace with any other file you like
-
-5. The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype
+5. --genotype: The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype
 is ambiguous. The expected file is in BED format.
-
 
 The output file can be used as it is for allele specific expression, calculated per variant. If you want to carry allele specific expression
 based on the exact reads assigned to a transcript please look into process_ase.
@@ -78,7 +75,9 @@ tagged by different flags and use the filtered file as an input to calc_asts.
 
 .. code:: bash
 
-    calc_asts -m quant
+    calc_asts -m quant -b in.bam -i ase.tsv [-o /path/to/output]
+              [-x transcripts.bam] [-w window] [-t threhsold] [-c coverage]
+              [-a allelic coverage] [-q mapping quality] [-v level]
 
 Calculates the number of reads containing the REF or ALT allele assigned to each transcript.
 It requires the user to have aligned the reads to the relevant transcriptome and provide the alignments in BAM format.
@@ -103,7 +102,9 @@ for a transcript to 10.
 
 .. code:: bash
 
-    calc_asts -m length
+    calc_asts -m length -b in.bam -i ase.tsv [-o /path/to/output]
+              [-w window] [-t threhsold] [-c coverage]
+              [-a allelic coverage] [-q mapping quality] [-v level]
 
 In case the exact transcriptome is not readily available we provide this alternative ASTS analysis. Here all the
 distribution of the reads overlapping the REF allele are compared to the distribution of the reads overlapping the ALT
