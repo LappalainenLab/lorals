@@ -51,6 +51,7 @@ For additional options run with --help
 Annotates the output of calc_ase based on five criteria and assigns it a gene. Make sure to provide a gene coordinates
 file that does not contain introns if you want to avoid multiple genes assigned to a variant.
 
+
 1. Ratio of reads containing indels within the variant used for ASE to the total number of reads. If you don't want to use
 this flag you can set it to 0.
 2. Ratio of other alleles to the REF or the ALT that are found at the variant site used for ASE. If you don't want to use
@@ -62,6 +63,7 @@ file for hg38 which you can replace with any other file you like
 file for hg38 which you can replace with any other file you like
 5. The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype
 is ambiguous. The expected file is in BED format.
+
 
 The output file can be used as it is for allele specific expression, calculated per variant. If you want to carry allele specific expression
 based on the exact reads assigned to a transcript please look into process_ase.
