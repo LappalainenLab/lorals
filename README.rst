@@ -54,13 +54,18 @@ file that does not contain introns if you want to avoid multiple genes assigned 
 
 1. Ratio of reads containing indels within the variant used for ASE to the total number of reads. If you don't want to use
 this flag you can set it to 0.
+
 2. Ratio of other alleles to the REF or the ALT that are found at the variant site used for ASE. If you don't want to use
 this flag you can set it to 0.
+
 Optional
+
 3. The variant falls within the ENCODE blacklist region. The expected file is in BED format. For ease we provide one such
 file for hg38 which you can replace with any other file you like
+
 4. The variant falls  within a multi-mapping region. The expected file is in BED format. For ease we provide one such
 file for hg38 which you can replace with any other file you like
+
 5. The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype
 is ambiguous. The expected file is in BED format.
 
