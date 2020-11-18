@@ -1,15 +1,16 @@
+=======
 LORALS
 =======
 
 A Python package for allele-specific analyses in long-read data. Written by Dafni Glinos
 
 Dependencies
-------------
+============
 
 LoRALS depends on Python 3, SAMTools, and Bedtools. All other dependencies are installed automatically by pip
 
 Installation
-------------
+============
 
 To install, run the following command
 
@@ -22,13 +23,16 @@ If you are not installing system-wide, please install within your ``$PATH`` and 
 or use virtualenv
 
 Background
-------------
+============
 The method behind LORALS can be found in this preprint:
 
-It utilises the
+Please cite this paper when using any part of this method.
 
 Usage
-------------
+============
+
+Calculate per variant read counts
+------------------------------------
 
 .. code:: bash
 
@@ -49,7 +53,6 @@ For additional options run with --help
                     [-m {mean,median,global}] [--other-threshold threshold]
                     [--indel-threshold threshold] [-v level]
 
-
 Annotates the output of calc_ase based on five criteria and assigns it a gene. Make sure to provide a gene coordinates
 file that does not contain introns if you want to avoid multiple genes assigned to a variant.
 
@@ -64,6 +67,9 @@ based on the exact reads assigned to a transcript please look into process_ase.
 
 The most efficient way to carry out ASTS analysis is to first run calc_ase, followed by annotate_ase. You can then filter out the variants that get
 tagged by different flags and use the filtered file as an input to calc_asts.
+
+Calculate transcript counts assigned to each haplotype
+--------------------------------------------------------
 
 .. code:: bash
 
@@ -105,24 +111,26 @@ allele.
 The user can either get a summary result where XX test is performed or get the lengths per variant to carry the test of
 their choice.
 
+Further investigation of specific genes/snps    
+--------------------------------------------------------
+
 .. code:: bash
 
-    fetch_haplotype -b in.bam -t transcripts.bam -s snp.txt
+    fetch_haplotype -b in.bam -t transcripts.bam -s snps.tsv [-o outdir]
+                    [-w window size] [-m minimum matches] [-v level]
 
 This script output the reads that overlap a specific SNP per haplotype and transcript. They can be useful for visualisation
 using IGV or any other software.
 
-
-Optional alignment steps if high reference bias is observed.
-
+Optional alignment steps
+--------------------------------------------------------
 
 .. code:: bash
 
-    process_vcf
+    process_vcf.sh
 
-The pipeline requires the VCFs to only contain a single individual and for optimal performance to only
-include heterozygous variants. We provide this script in order to obtain such a VCF.
-This script will perform these actions:
+We provide this script in order to obtain a per-individual VCF file, filtered to only
+include heterozygous SNP variants. This script will perform these actions:
 
 1. Filter VCF to only contain biallelic variants
 2. Split a VCF containing records for multiple individuals into one VCF per individual and tabix the files
@@ -131,17 +139,17 @@ This script will perform these actions:
 
 .. code:: bash
 
-    make_new_vcf
-
-It uses an aligned bam file to correct the phased haplotypes in a vcf file.
-This VCF file is then used to generate two haplotype specific genome references.
-
-.. code:: bash
-
-    hap_aligner
+    hap_aligner.sh
 
 Aligns reads to each of the two genomes using minimap2, selects the best aligned read of the two based on the MAPQ score.
 In case of ties it randomly selects an equal proportion from each of the two alignments.
 It then converts the aligned minimap2 `sam` output to `bam` format and indexes the reads.
 
 Alternatively, the user can align the reads themselves with their aligner of choice.
+
+.. code:: bash
+
+    correct_vcf.sh
+
+It uses an aligned bam file to correct the phased haplotypes in a vcf file.
+This VCF file is then used to generate two haplotype specific genome references.
