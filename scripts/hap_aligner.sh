@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Align and process ONT reads with minimap2 in splice mode
-# Will align, sort, add/replace read groups, and mark duplicates
+# The alignment will happen to each copy of your genome
+# Will align, sort and indec
 
 set -eo pipefail
 
-declare -a DEPDENCIES=(minimap2 samtools awk java)
+declare -a DEPDENCIES=(minimap2 samtools awk)
 for DEP in ${DEPDENCIES[@]}; do $(command -v ${DEP} >/dev/null 2>&1) || (echo "Cannot find ${DEP}" >&2; exit 1); done
 
 OUTDIR_DEFAULT="$(pwd -P)/aligned"
@@ -141,9 +142,6 @@ cd ..
      samtools sort -@ ${THREADS} - -o ${NAME}_reads_aln_sorted.merged.bam)
 (set -x; samtools index ${NAME}_reads_aln_sorted.merged.bam)
 
-(set -x; java -jar /nfs/sw/picard-tools/picard-tools-2.8.0/picard.jar AddOrReplaceReadGroups \
-     I=${NAME}_reads_aln_sorted.merged.bam O=${NAME}_reads_aln_sorted.merged_rg.bam RGID=1 \
-     RGSM=${NAME} VALIDATION_STRINGENCY=LENIENT RGLB=library RGPL=ONT RGPU=machine)
 
 if ${INTERMEDIATE}=="no"; then
      echo "Deleting intermediate files"
