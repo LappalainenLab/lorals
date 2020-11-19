@@ -97,10 +97,10 @@ echo "Processing sample" ${NAME} >> ${NAME}_hap_aware.log
 
 # Align to each haplotype using minimap2 and get sorted bam files
 # Only keep primary alignments with MAPQ more than 10
-(set -x; minimap2 -t ${THREADS} -ax splice -uf -k14 ${REFERENCE}.hap1.fa ${FASTQ} ${REVERSE} | \
+(set -x; minimap2 -t ${THREADS} -ax splice -uf -k14 ${REFERENCE}_hap1.fa ${FASTQ} ${REVERSE} | \
      samtools view -q ${MIN_MAPQ} -F 2304 -Sb | \
      samtools sort -@ ${THREADS} - -o ${NAME}_temp/${NAME}_reads_aln_sorted.hap1.bam)
-(set -x; minimap2 -t ${THREADS} -ax splice -uf -k14 ${REFERENCE}.hap2.fa ${FASTQ} ${REVERSE} | \
+(set -x; minimap2 -t ${THREADS} -ax splice -uf -k14 ${REFERENCE}_hap2.fa ${FASTQ} ${REVERSE} | \
      samtools view -q ${MIN_MAPQ} -F 2304 -Sb | \
      samtools sort -@ ${THREADS} - -o ${NAME}_temp/${NAME}_reads_aln_sorted.hap2.bam)
 
