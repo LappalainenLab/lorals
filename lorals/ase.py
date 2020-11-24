@@ -2,7 +2,6 @@
 
 """ASE-specific utilties"""
 
-import sys
 import time
 import logging
 

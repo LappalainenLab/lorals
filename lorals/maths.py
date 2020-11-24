@@ -6,7 +6,7 @@ import logging
 
 from numbers import Real
 from operator import itemgetter
-from typing import Iterable, Iterator, Tuple, Union
+from typing import Iterable, Tuple, Union
 
 def median(x: Iterable[Real]) -> Real:
     """Calculate the median

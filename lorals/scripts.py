@@ -8,7 +8,6 @@ import time
 import logging
 import argparse
 import builtins
-import subprocess
 
 from collections import defaultdict
 from typing import Any, Callable, DefaultDict, Dict, List, Optional, Set, Tuple, Union

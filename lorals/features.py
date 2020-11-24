@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import re
-import sys
 import tempfile
 
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Iterable, List, Optional, Set, Tuple
 
 import pandas
 import pybedtools

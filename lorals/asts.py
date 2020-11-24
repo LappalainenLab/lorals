@@ -3,13 +3,12 @@
 """ASTS-specific utilities"""
 
 import os
-import sys
 import time
 import logging
 import tempfile
 
 from collections import namedtuple, defaultdict, Counter
-from typing import Callable, DefaultDict, Dict, Iterable, List, Optional, Tuple, Set
+from typing import Callable, DefaultDict, Dict, List, Optional, Tuple, Set
 
 from . import cigar
 from . import utils
