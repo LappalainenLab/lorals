@@ -1,0 +1,33 @@
+name: Build Docs
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare build
+        run: mkdir -vp docs/build/html
+      - uses: actions/checkout@v2
+        with:
+          ref: 'gh-pages'
+          path: 'docs/build/html'
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Build docs
+        run: |
+          pip3 install sphinx sphinxcontrib-napoleon
+          cd docs
+          python3 -m sphinx -ab html source build/html
+      - name: Deploy docs
+        run: |
+          cd docs/build/html
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add -A
+          git commit -m "Update website" || exit 0
+          git push
