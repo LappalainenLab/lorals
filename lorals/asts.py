@@ -168,7 +168,7 @@ def bed_intersect(afile: str, bfile: str, ofile: Optional[str]=None, **kwargs: O
     """Intersect two bedfiles"""
     afile: str = utils.fullpath(path=afile)
     bfile: str = utils.fullpath(path=bfile)
-    clean = set() # type: Set[str]
+    clean: Set[str] = set()
     logging.info("Connecting to %s", afile)
     if os.path.splitext(afile)[-1] == '.bam':
         afh: pybedtools.bedtool.BedTool = bam_to_bed(bamfile=afile)
