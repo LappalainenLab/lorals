@@ -21,13 +21,13 @@ docs/build/html
 
 # Ignore data files in the top-level directory
 ##############################################
-/*.bam*
-/*.vcf*
-/*.out
 /*.sh
 /*.bed
-/*.txt
 
-# Ignore results
-################
+# Ignore results and input files
+################################
 *.tsv
+*.bam*
+*.vcf*
+*.out
+*.txt
