@@ -7,6 +7,7 @@ import sys
 import time
 import logging
 import argparse
+import builtins
 import subprocess
 
 from collections import defaultdict
@@ -120,13 +121,12 @@ def _read_ase(filename: str) -> 'Tuple[annotate.AnnotatedStat, ...]':
             stat: annotate.AnnotatedStat = annotate.AnnotatedStat.fromstring(string=line)
             line: List[str] = line.strip().split()
             if len(line) == len(annotate.AnnotatedStat.HEADER):
+                builtins.__LORALS_ANNOTATED__: bool = True
                 stat.geno = line[12]
-                stat.geno = line[13]
+                stat.gene = line[13]
                 stat.warning = line[14]
                 stat.blacklisted = line[15]
                 stat.multi_mapping = line[16]
-                # stat.other_warning = line[17]
-                # stat.indel_warning = line[18]
                 stat.null_ratio = line[19]
                 stat.pvalue = line[20]
                 stat.qvalue = line[21]
@@ -224,6 +224,13 @@ def calc_ase(*args: Optional[List[str]]) -> None:
 
 def calc_asts(*args: Optional[List[str]]) -> None:
     """Calculate ASTS"""
+    filters: Dict[str, str] = {
+        'bl': 'blacklisted',
+        'gt': 'warning',
+        'mm': 'multi_mapping',
+        'other': 'other_warning',
+        'indel': 'indel_warning',
+    }
     parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
     io_opts: argparse._ArgumentGroup = parser.add_argument_group(title="input/output options")
     io_opts.add_argument( # BAM file
@@ -235,15 +242,6 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         metavar='in.bam',
         help="BAM file containing RNA-seq reads"
     )
-    # io_opts.add_argument( # VCF file
-    #     '-f',
-    #     '--vcf',
-    #     dest='vcf',
-    #     type=str,
-    #     required=True,
-    #     metavar='in.vcf',
-    #     help="Genotype VCF for sample"
-    # )
     io_opts.add_argument( # Input ASE matrix
         '-i',
         '--input',
@@ -260,10 +258,7 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         type=str,
         required=False,
         default=os.path.join(os.getcwd(), 'lorals_out', 'asts.tsv'),
-        #default='asts.tsv',
         metavar='/path/to/output',
-        #metavar='asts.tsv',
-        # help="Directory and prefix of output files; defaults to %(default)s"
         help="Name of output file; defaults to %(default)s"
     )
     asts_opts: argparse._ArgumentGroup = parser.add_argument_group(title="asts options")
@@ -340,6 +335,17 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         metavar='mapping quality',
         help="Minimum mapping quality; defaults to %(default)s"
     )
+    filter_opts.add_argument( # Enable filtering
+        '--filter',
+        dest='filter',
+        type=str,
+        required=False,
+        default=False,
+        choices=filters,
+        nargs='*',
+        metavar='filter',
+        help="For annotated ASE tables, filter based on warnings provided. Choose one or more from bl (blacklisted), gt (genotype), mm (multimapping), other, or indel; pass '--filter' with no extra arguments for all filters"
+    )
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
         parser.print_help(file=sys.stderr)
@@ -353,38 +359,41 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     for k in ('input', 'out', 'flair'): # type: str
         if args[k]:
             args[k]: str = utils.fullpath(path=args[k])
-    # args['vcf'] = utils.fullpath(path=args['vcf']) # type: str
-    args['bam'] = utils.fullpath(path=args['bam']) # type: str
-    # args['out'] = utils.fullpath(path=os.path.splitext(args['out'])[0]) # type: str
-    # os.makedirs(os.path.dirname(args['out']), exist_ok=True)
-    # #   Create a BED-like pilup from VCF
-    # bpileup: str = asts.vcf_bpileup(vcffile=args['vcf'])
-    # ifh: pybedtools.bedtool.BedTool = asts.bed_intersect(afile=bpileup, bfile=args['bam'])
-    # os.remove(bpileup)
-    # bpileup: pandas.core.frame.DataFrame = asts.deduplicate_bpileup(bpileup=ifh.fn)
-    # #   Calculate ASE
-    # ase_stats: Set[ase.AllelicStat] = {ase.allelic_stats(var=var, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for var in features.iter_var(df=bpileup)}
-    # ase_stats: Tuple[ase.AllelicStat, ...] = tuple(sorted(filter(None, ase_stats), key=lambda x: (x.chrom, x.position)))
-    # with open('%s_ase.tsv' % args['out'], 'w') as ofile: # type: file
-    #     logging.info("Saving raw ASE results to %s", ofile.name)
-    #     ofile.write('\t'.join(ase.AllelicStat.HEADER))
-    #     ofile.write('\n')
-    #     ofile.flush()
-    #     for stat in ase_stats: # type: ase.AllelicStat
-    #         ofile.write(str(stat))
-    #         ofile.write('\n')
-    #         ofile.flush()
-    # ase_stats: Tuple[ase.AllelicStat, ...] = ase.filter_stats(
-    #     stats=ase_stats,
-    #     total_coverage=args['coverage'],
-    #     allelic_coverage=args['allelic']
-    # )
+    os.makedirs(os.path.dirname(args['out']), exist_ok=True)
     ase_stats: Tuple[annotate.AnnotatedStat, ...] = _read_ase(filename=args['input'])
+    #   Filter ASE
+    try:
+        __LORALS_ANNOTATED__
+    except NameError:
+        args['filter'] = False
+    if isinstance(args['filter'], list):
+        if not args['filter']:
+            args['filter'] = tuple(filters)
+        logging.info("Filtering annotated stats")
+        filter_start: float = time.time()
+        for f in args['filter']:
+            logging.info("Filtering based on %s", filters[f])
+            ase_stats: Tuple[annotate.AnnotatedStat, ...] = tuple(filter(
+                lambda x: getattr(x, filters[f]),
+                ase_stats
+            ))
+        logging.debug("Filtering took %s seconds", fancy_logging.fmttime(start=filter_start))
+        if not ase_stats:
+            msg: str = "No ASE stats that pass filters provided"
+            logging.critical(msg)
+            raise ValueError(msg)
     #   Calculate ASTS
     logging.info("Calculating ASTS")
     if args['mode'] == 'length':
         header: Tuple[str, ...] = getattr(asts.LengthStat, '_fields')
-        asts_stats: Tuple[asts.LengthStat, ...] = tuple(asts.asts_length(var=stat, bamfile=args['bam'], window=args['window'], match_threshold=args['threshold']) for stat in ase_stats)
+        asts_stats: Tuple[asts.LengthStat, ...] = tuple(
+            asts.asts_length(
+                var=stat,
+                bamfile=args['bam'],
+                window=args['window'],
+                match_threshold=args['threshold']
+            ) for stat in ase_stats
+        )
     elif args['mode'] == 'quant':
         header: Tuple[str, ...] = getattr(asts.QuantStat, '_fields')
         asts_stats: Tuple[asts.QuantStat, ...] = tuple()
@@ -472,9 +481,7 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
         dest='warning',
         type=str,
         required=False,
-        # default=pkg_resources.resource_filename('lorals', 'blacklists/GTEX_Q2AG_braincerebellarhemisphere_illumina_GT_warning.bed'),
         metavar='genotype_warning.bed',
-        # help="Genotype warning BED file; defaults to %(default)s"
         help="Genotype warning BED file"
     )
     blacklist_opts.add_argument( # Multimapping
@@ -627,12 +634,6 @@ def annotate_ase(*args: Optional[List[str]]) -> None:
 
 def fetch_haplotype(*args: Optional[List[str]]) -> None:
     """..."""
-    # snp_header = ( # type: Tuple[str, ...]
-    #     'CHR',
-    #     'POS',
-    #     'ALLELE1',
-    #     'ALLELE2',
-    # )
     parser = argparse.ArgumentParser(add_help=False) # type: argparse.ArgumentParser
     io_opts: argparse._ArgumentGroup = parser.add_argument_group(title="input/output options")
     io_opts.add_argument( # Input BAM file
@@ -752,9 +753,6 @@ def fetch_haplotype(*args: Optional[List[str]]) -> None:
     combined_qnames: Tuple[str, ...] = utils.unpack(combined_qnames.values())
     logging.info("Creating output BAM files")
     for read in bamfh.fetch(until_eof=True): # type: Any
-        # if read.query_name in utils.unpack(combined_qnames.values()):
         if read.query_name in combined_qnames:
-            # transcript = utils.dictsearch(d=combined_qnames, query=read.query_name) # type: str
-            # outfh[transcript].write(read)
             outfh[read.query_name].write(read)
     bamfh.close()
