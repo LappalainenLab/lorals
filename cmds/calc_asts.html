@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>calc_asts &#8212; LoRALS  documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -14,6 +14,7 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="fetch_haplotype" href="fetch_haplotype.html" />
     <link rel="prev" title="annotate_ase" href="annotate_ase.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -54,8 +55,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="annotate_ase.html"><code class="code docutils literal notranslate"><span class="pre">annotate_ase</span></code></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="code docutils literal notranslate"><span class="pre">calc_asts</span></code></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Command-Line Programs Listing</a></li>
 </ul>
 </ul>
 </li>
@@ -69,7 +69,12 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#"><code class="code docutils literal notranslate"><span class="pre">calc_asts</span></code></a></li>
+<li><a class="reference internal" href="#"><code class="code docutils literal notranslate"><span class="pre">calc_asts</span></code></a><ul>
+<li><a class="reference internal" href="#arguments">Arguments</a></li>
+<li><a class="reference internal" href="#input-formats">Input Formats</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -80,6 +85,10 @@
                 
   <li>
     <a href="annotate_ase.html" title="Previous Chapter: annotate_ase"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; annotate_ase</span>
+    </a>
+  </li>
+  <li>
+    <a href="fetch_haplotype.html" title="Next Chapter: fetch_haplotype"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">fetch_haplotype &raquo;</span>
     </a>
   </li>
               
@@ -115,7 +124,54 @@
       
   <div class="section" id="calc-asts">
 <h1><code class="code docutils literal notranslate"><span class="pre">calc_asts</span></code><a class="headerlink" href="#calc-asts" title="Permalink to this headline">¶</a></h1>
-<p>blah</p>
+<blockquote>
+<div><p>Calculate transcript counts assigned to each haplotype</p>
+</div></blockquote>
+<div class="section" id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span><span class="o">/</span><span class="n">output</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">b</span><span class="o">|--</span><span class="n">bam</span>        <span class="n">BAM</span> <span class="n">file</span> <span class="n">containing</span> <span class="n">RNA</span><span class="o">-</span><span class="n">seq</span> <span class="n">reads</span>
+    <span class="o">-</span><span class="n">i</span><span class="o">|--</span><span class="nb">input</span>      <span class="n">Input</span> <span class="n">ASE</span> <span class="n">table</span>
+    <span class="o">-</span><span class="n">o</span><span class="o">|--</span><span class="n">output</span>     <span class="n">Name</span> <span class="n">of</span> <span class="n">output</span> <span class="n">ASTS</span> <span class="n">file</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="n">lorals_out</span><span class="o">/</span><span class="n">asts</span><span class="o">.</span><span class="n">tsv</span>
+
+<span class="n">asts</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">m</span><span class="o">|--</span><span class="n">mode</span>           <span class="n">ASTS</span> <span class="n">mode</span><span class="p">,</span> <span class="n">choose</span> <span class="kn">from</span> <span class="nn">length</span><span class="p">,</span> <span class="n">quant</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="n">length</span>
+    <span class="o">-</span><span class="n">x</span><span class="o">|--</span><span class="n">transcripts</span>    <span class="n">BAM</span> <span class="n">file</span> <span class="n">aligned</span> <span class="n">to</span> <span class="n">transcriptome</span><span class="p">;</span> <span class="n">used</span> <span class="n">when</span> <span class="s1">&#39;mode&#39;</span> <span class="ow">is</span>
+                        <span class="nb">set</span> <span class="n">to</span> <span class="s1">&#39;quant&#39;</span>
+    <span class="o">-</span><span class="n">w</span><span class="o">|--</span><span class="n">window</span>         <span class="n">Window</span> <span class="n">around</span> <span class="n">a</span> <span class="n">variant</span> <span class="n">to</span> <span class="n">calculate</span> <span class="n">number</span> <span class="n">of</span> <span class="n">matches</span><span class="p">;</span>
+                        <span class="n">defaults</span> <span class="n">to</span> <span class="mi">5</span>
+    <span class="o">-</span><span class="n">t</span><span class="o">--</span><span class="n">threshold</span>       <span class="n">Minimum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">matches</span> <span class="ow">in</span> <span class="n">window</span> <span class="n">around</span> <span class="n">the</span> <span class="n">variant</span><span class="p">;</span>
+                        <span class="n">defaults</span> <span class="n">to</span> <span class="mi">8</span>
+
+<span class="nb">filter</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">c</span><span class="o">|--</span><span class="n">coverage</span>           <span class="n">Minimum</span> <span class="n">overall</span> <span class="n">coverage</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mi">10</span>
+    <span class="o">-</span><span class="n">a</span><span class="o">|--</span><span class="n">allelic</span><span class="o">-</span><span class="n">coverage</span>   <span class="n">Minimum</span> <span class="n">coverage</span> <span class="n">per</span> <span class="n">allele</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mi">5</span>
+    <span class="o">-</span><span class="n">q</span><span class="o">|--</span><span class="n">mapq</span> <span class="n">mapping</span>       <span class="n">Minimum</span> <span class="n">mapping</span> <span class="n">quality</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mi">10</span>
+    <span class="o">--</span><span class="nb">filter</span>                <span class="n">For</span> <span class="n">annotated</span> <span class="n">ASE</span> <span class="n">tables</span><span class="p">,</span> <span class="nb">filter</span> <span class="n">based</span> <span class="n">on</span> <span class="n">warnings</span> <span class="n">provided</span><span class="o">.</span>
+                            <span class="n">Choose</span> <span class="n">one</span> <span class="ow">or</span> <span class="n">more</span> <span class="kn">from</span> <span class="nn">bl</span> <span class="p">(</span><span class="n">blacklisted</span><span class="p">),</span> <span class="n">gt</span> <span class="p">(</span><span class="n">genotype</span><span class="p">),</span>
+                            <span class="n">mm</span> <span class="p">(</span><span class="n">multimapping</span><span class="p">),</span> <span class="n">other</span><span class="p">,</span> <span class="ow">or</span> <span class="n">indel</span><span class="p">;</span> <span class="k">pass</span> <span class="s1">&#39;--filter&#39;</span> <span class="k">with</span> <span class="n">no</span>
+                            <span class="n">extra</span> <span class="n">arguments</span> <span class="k">for</span> <span class="nb">all</span> <span class="n">filters</span>
+
+<span class="n">utility</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">v</span><span class="o">|--</span><span class="n">verbosity</span>  <span class="n">Verbosity</span> <span class="n">level</span><span class="p">,</span> <span class="n">choose</span> <span class="kn">from</span> <span class="nn">debug</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">warning</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">critical</span><span class="p">;</span>
+                    <span class="n">defaults</span> <span class="n">to</span> <span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="input-formats">
+<h2>Input Formats<a class="headerlink" href="#input-formats" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>ASE table</dt><dd><p>See the output of <code class="docutils literal notranslate"><span class="pre">calc_ase</span></code> or <code class="docutils literal notranslate"><span class="pre">annotate_ase</span></code></p>
+</dd>
+<dt>BAM file</dt><dd><p>Standard <a class="reference external" href="http://samtools.github.io/hts-specs/SAMv1.pdf">BAM file</a></p>
+</dd>
+</dl>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<p>A tab-separated table with the following columns:</p>
+<p>…</p>
+</div>
 </div>
 
 
@@ -131,7 +187,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Dafni Glinos, Paul Hoffman.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>

@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>annotate_ase &#8212; LoRALS  documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -14,6 +14,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="calc_asts" href="calc_asts.html" />
+    <link rel="prev" title="calc_ase" href="calc_ase.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -51,7 +53,11 @@
      href="../index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"></ul>
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Command-Line Programs Listing</a></li>
+</ul>
+</ul>
 </li>
               
                 <li class="dropdown">
@@ -63,7 +69,12 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#"><code class="code docutils literal notranslate"><span class="pre">annotate_ase</span></code></a></li>
+<li><a class="reference internal" href="#"><code class="code docutils literal notranslate"><span class="pre">annotate_ase</span></code></a><ul>
+<li><a class="reference internal" href="#arguments">Arguments</a></li>
+<li><a class="reference internal" href="#input-formats">Input Formats</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -72,6 +83,14 @@
             
               
                 
+  <li>
+    <a href="calc_ase.html" title="Previous Chapter: calc_ase"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; calc_ase</span>
+    </a>
+  </li>
+  <li>
+    <a href="calc_asts.html" title="Next Chapter: calc_asts"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">calc_asts &raquo;</span>
+    </a>
+  </li>
               
             
             
@@ -105,7 +124,99 @@
       
   <div class="section" id="annotate-ase">
 <h1><code class="code docutils literal notranslate"><span class="pre">annotate_ase</span></code><a class="headerlink" href="#annotate-ase" title="Permalink to this headline">¶</a></h1>
-<p>blah</p>
+<blockquote>
+<div><p>Annotate an ASE table with warning flags and gene information</p>
+</div></blockquote>
+<div class="section" id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span><span class="o">/</span><span class="n">output</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">i</span><span class="o">|--</span><span class="nb">input</span>      <span class="n">Input</span> <span class="n">ASE</span> <span class="n">table</span>
+    <span class="o">-</span><span class="n">b</span><span class="o">|--</span><span class="n">bed</span>        <span class="n">Reference</span> <span class="n">BED</span> <span class="n">file</span>
+    <span class="o">-</span><span class="n">f</span><span class="o">|--</span><span class="n">vcf</span>        <span class="n">Genotype</span> <span class="n">VCF</span> <span class="k">for</span> <span class="n">sample</span>
+    <span class="o">-</span><span class="n">o</span><span class="o">|--</span><span class="n">output</span>     <span class="n">Name</span> <span class="n">of</span> <span class="n">output</span> <span class="n">ASE</span> <span class="n">file</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="n">lorals_out</span><span class="o">/</span><span class="n">ase_annotated</span><span class="o">.</span><span class="n">tsv</span>
+
+<span class="n">blacklist</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">--</span><span class="n">blacklist</span> <span class="n">blacklist</span><span class="o">.</span><span class="n">bed</span>           <span class="n">Blacklist</span> <span class="n">BED</span> <span class="n">file</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="n">included</span> <span class="n">file</span>
+    <span class="o">--</span><span class="n">genotype</span> <span class="n">genotype_warning</span><span class="o">.</span><span class="n">bed</span>     <span class="n">Genotype</span> <span class="n">warning</span> <span class="n">BED</span> <span class="n">file</span>
+    <span class="o">--</span><span class="n">mapping</span> <span class="n">multi_mapping</span><span class="o">.</span><span class="n">bed</span>         <span class="n">BED</span> <span class="n">file</span> <span class="k">with</span> <span class="n">multi</span><span class="o">-</span><span class="n">mapping</span> <span class="n">regions</span><span class="p">;</span>
+                                        <span class="n">defaults</span> <span class="n">to</span> <span class="n">included</span> <span class="n">file</span>
+
+<span class="n">ase</span> <span class="n">stats</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">c</span><span class="o">|--</span><span class="n">coverage</span>       <span class="n">Minimum</span> <span class="n">coverage</span> <span class="k">for</span> <span class="n">a</span> <span class="n">site</span> <span class="n">to</span> <span class="n">be</span> <span class="n">included</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mi">20</span>
+    <span class="o">-</span><span class="n">n</span><span class="o">|--</span><span class="n">binomial</span><span class="o">-</span><span class="n">null</span>  <span class="n">For</span> <span class="n">binomial</span> <span class="n">test</span><span class="p">,</span> <span class="n">the</span> <span class="n">null</span> <span class="n">ref</span> <span class="n">ratio</span> <span class="n">to</span> <span class="n">test</span> <span class="n">against</span><span class="p">,</span>
+                        <span class="k">pass</span> <span class="s1">&#39;auto&#39;</span> <span class="n">to</span> <span class="n">auto</span><span class="o">-</span><span class="n">calculate</span> <span class="n">null</span> <span class="n">ref</span> <span class="n">ratio</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.5</span>
+    <span class="o">-</span><span class="n">m</span><span class="o">|--</span><span class="n">method</span>         <span class="n">Method</span> <span class="k">for</span> <span class="n">calculating</span> <span class="n">biomial</span> <span class="n">null</span><span class="p">,</span> <span class="n">choose</span> <span class="kn">from</span> <span class="nn">mean</span><span class="p">,</span> <span class="n">median</span><span class="p">,</span>
+                        <span class="k">global</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="n">mean</span>
+    <span class="o">--</span><span class="n">other</span><span class="o">-</span><span class="n">threshold</span>   <span class="n">Threshold</span> <span class="k">for</span> <span class="n">issuing</span> <span class="n">an</span> <span class="n">other</span> <span class="n">allele</span> <span class="n">warning</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.8</span>
+    <span class="o">--</span><span class="n">indel</span><span class="o">-</span><span class="n">threshold</span>   <span class="n">Threshold</span> <span class="k">for</span> <span class="n">issuing</span> <span class="n">an</span> <span class="n">indel</span> <span class="n">warning</span><span class="p">;</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.2</span>
+
+<span class="n">utility</span> <span class="n">options</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">v</span><span class="o">|--</span><span class="n">verbosity</span>  <span class="n">Verbosity</span> <span class="n">level</span><span class="p">,</span> <span class="n">choose</span> <span class="kn">from</span> <span class="nn">debug</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">warning</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">critical</span><span class="p">;</span>
+                    <span class="n">defaults</span> <span class="n">to</span> <span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="input-formats">
+<h2>Input Formats<a class="headerlink" href="#input-formats" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>ASE table</dt><dd><p>See the output of <code class="docutils literal notranslate"><span class="pre">calc_ase</span></code></p>
+</dd>
+<dt>BED files</dt><dd><p>Standard <a class="reference external" href="http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1">BED file format</a>: requires at least a four-column BED file</p>
+</dd>
+<dt>VCF file</dt><dd><p>Bgzipped <a class="reference external" href="http://samtools.github.io/hts-specs/VCFv4.3.pdf">VCF file</a></p>
+</dd>
+</dl>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<p>A tab-separated table with the following columns:</p>
+<dl class="simple">
+<dt>contig</dt><dd><p>The chromosome or contig of the variant</p>
+</dd>
+<dt>position</dt><dd><p>The position of the variant</p>
+</dd>
+<dt>variantID</dt><dd><p>The ID given to the variant</p>
+</dd>
+<dt>refAllele</dt><dd><p>The reference allele of the variant</p>
+</dd>
+<dt>altAllele</dt><dd><p>The alternate alleles, joined by commas, of the variant</p>
+</dd>
+<dt>refCount</dt><dd><p>The count of the reference allele for this variant</p>
+</dd>
+<dt>altCount</dt><dd><p>The count of the alternate allele for this variant</p>
+</dd>
+<dt>totalCount</dt><dd><p>The total expression (ref + alt) count for this variant</p>
+</dd>
+<dt>refIndelCount</dt><dd><p>Ref indel count</p>
+</dd>
+<dt>altIndelCount</dt><dd><p>alt indel count</p>
+</dd>
+<dt>otherBases</dt><dd><p>The count of other alleles for this variant</p>
+</dd>
+<dt>rawDepth</dt><dd><p>The total expression (ref + alt + other) count for this variant</p>
+</dd>
+<dt>GENOTYPE</dt><dd><p>The genotype for this variant</p>
+</dd>
+<dt>GENE_ID</dt><dd><p>A comma-separated list of gene identifiers for this variant</p>
+</dd>
+<dt>GENOTYPE_WARNING</dt><dd><p>Was this variant flagged for being in a region prone to genotyping errors? <code class="docutils literal notranslate"><span class="pre">1</span></code> for yes, <code class="docutils literal notranslate"><span class="pre">0</span></code> for no</p>
+</dd>
+<dt>BLACKLIST</dt><dd><p>Was this variant flagged for being in a blacklisted region? <code class="docutils literal notranslate"><span class="pre">1</span></code> for yes, <code class="docutils literal notranslate"><span class="pre">0</span></code> for no</p>
+</dd>
+<dt>MULTI_MAPPING</dt><dd><p>Was this variant flagged for being in a region prone to multimapping? <code class="docutils literal notranslate"><span class="pre">1</span></code> for yes, <code class="docutils literal notranslate"><span class="pre">0</span></code> for no</p>
+</dd>
+<dt>OTHER_ALLELE_WARNING</dt><dd><p>Was this variant flagged for having a high ratio of other alleles? <code class="docutils literal notranslate"><span class="pre">1</span></code> for yes, <code class="docutils literal notranslate"><span class="pre">0</span></code> for no</p>
+</dd>
+<dt>HIGH_INDEL_WARNING</dt><dd><p>Was this variant flagged for having a high ratio of indels? <code class="docutils literal notranslate"><span class="pre">1</span></code> for yes, <code class="docutils literal notranslate"><span class="pre">0</span></code> for no</p>
+</dd>
+<dt>NULL_RATIO</dt><dd><p>Null reference ratio used for the binomial test</p>
+</dd>
+<dt>BINOM_P</dt><dd><p><cite>p</cite>-value for the binomial test</p>
+</dd>
+<dt>BINOM_P_ADJUSTED</dt><dd><p>FDR-adjusted <cite>p</cite>-value</p>
+</dd>
+</dl>
+</div>
 </div>
 
 
@@ -121,7 +232,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Dafni Glinos, Paul Hoffman.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>
