@@ -10,11 +10,10 @@ LoRALS is a package and collection of tools for conducting allele-specific analy
 in Oxford Nanopore-generated long read data
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
-   :glob:
 
-   cmds/*
+   cmds/index.rst
 
 
 Installation
@@ -27,13 +26,13 @@ LoRALS is available on GitHub at https://github.com/mojaveazure/lorals and can b
     pip install git+https://github.com/mojaveazure/lorals.git
 
 
-Command-line tools
-------------------
+.. Command-line tools
+.. ------------------
 
-LoRALS provides the following command-line tools
+.. LoRALS provides the following command-line tools
 
-- :code:`calc_asts`: Calculate allele specific transcript structure (asts) and allele-specific expression (ase)
-- :code:`annotate_ase`: Annotate an ase matrix with gene IDs, genotype information, and blacklist and other warnings
+.. - :code:`calc_asts`: Calculate allele specific transcript structure (asts) and allele-specific expression (ase)
+.. - :code:`annotate_ase`: Annotate an ase matrix with gene IDs, genotype information, and blacklist and other warnings
 
 Indices and tables
 ==================
