@@ -3,7 +3,8 @@
 # Using an aligned bam file it will correct phased haplotypes in vcf file and output a new vcf
 set -eo pipefail
 
-declare -a DEPENDENCIES=(parallel bcftools bgzip tabix hapcut2 gatk)
+# declare -a DEPENDENCIES=(parallel bcftools bgzip tabix extractHAIRS  HAPCUT2 HapCUT2VCF.py gatk)
+declare -a DEPENDENCIES=(bcftools bgzip tabix extractHAIRS HAPCUT2 HapCUT2VCF.py gatk)
 for DEP in ${DEPENDENCIES[@]}; do $(command -v ${DEP} > /dev/null 2> /dev/null) || (echo "Cannot find ${DEP}" >&2; exit 1); done
 
 OUTDIR_DEFAULT="$(pwd -P)/vcf"
