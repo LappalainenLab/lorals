@@ -40,7 +40,8 @@ class AllelicStat(Bpileup):
     @classmethod
     def fromstring(cls, string: str, sep: str='\t') -> 'AllelicStat':
         string: str = string.strip().split(sep)
-        if len(string) != len(AllelicStat.HEADER):
+        # if len(string) != len(AllelicStat.HEADER):
+        if len(string) < len(AllelicStat.HEADER):
             raise ValueError("Incorrect number of columns")
         #   totalCount and rawDepth are calculated by AllelicStat
         return cls(

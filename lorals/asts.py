@@ -101,8 +101,16 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
     )
 
 
-def asts_quant(var: Bpileup, bamfile: str, trans_reads: Dict[str, str], window: int=5, match_threshold: int=8, min_reads: int=10):
+def asts_quant(
+    var: Bpileup,
+    bamfile: str,
+    trans_reads: Dict[str, str],
+    window: int=5,
+    match_threshold: int=8,
+    min_reads: int=10
+):
     """..."""
+    logging.info("Getting read quants for %s", var.name)
     reads_completed: Set[str] = set()
     flair_reads: DefaultDict[str, List[str]] = defaultdict(list)
     quants: List[QuantStat] = list()
@@ -123,8 +131,11 @@ def asts_quant(var: Bpileup, bamfile: str, trans_reads: Dict[str, str], window: 
                 key: str = 'ref' if count_m >= match_threshold else 'ref_indel'
             elif pile_read.alignment.query_sequence[pile_read.query_position] in var.alt:
                 key: str = 'alt' if count_m >= match_threshold else 'alt_indel'
+            else:
+                key: str = 'unknown'
             flair_reads[key].extend(reference for query, reference in trans_reads.items() if query == qname)
     if len(flair_reads['ref']) >= min_reads and len(flair_reads['alt']) >= min_reads:
+        logging.info("Assembling quant stats")
         for key in ('ref', 'alt'): # type: str
             for tx, count in Counter(flair_reads[key]).items(): # type: str, int
                 quants.append(QuantStat(
