@@ -20,7 +20,7 @@ jobs:
           python-version: '3.8'
       - name: Build docs
         run: |
-          pip3 install sphinx sphinxcontrib-napoleon
+          pip3 install sphinx sphinxcontrib-napoleon sphinx-bootstrap-theme
           cd docs
           python3 -m sphinx -ab html source build/html
       - name: Deploy docs
