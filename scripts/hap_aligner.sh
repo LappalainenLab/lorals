@@ -93,30 +93,29 @@ done
 EXTENSION="$(extension ${FASTQ})"
 NAME="$(basename ${FASTQ} $(extension ${FASTQ}))"
 
-echo "Processing sample" ${NAME} >> ${NAME}_hap_aware.log
 (set -x; mkdir ${NAME}_temp)
+cd ${NAME}_temp
+echo "Processing sample" ${NAME} >> ${NAME}_hap_aware.log
 
 # Align to each haplotype using minimap2 and get sorted bam files
 # Only keep primary alignments with MAPQ more than 10
 (set -x; minimap2 -t ${THREADS} -ax splice -uf -k14 ${REFERENCE}_hap1.fa ${FASTQ} ${REVERSE} | \
      samtools view -q ${MIN_MAPQ} -F 2304 -Sb | \
-     samtools sort -@ ${THREADS} - -o ${NAME}_temp/${NAME}_reads_aln_sorted.hap1.bam)
+     samtools sort -@ ${THREADS} - -o ${NAME}_reads_aln_sorted.hap1.bam)
 (set -x; minimap2 -t ${THREADS} -ax splice -uf -k14 ${REFERENCE}_hap2.fa ${FASTQ} ${REVERSE} | \
      samtools view -q ${MIN_MAPQ} -F 2304 -Sb | \
-     samtools sort -@ ${THREADS} - -o ${NAME}_temp/${NAME}_reads_aln_sorted.hap2.bam)
+     samtools sort -@ ${THREADS} - -o ${NAME}_reads_aln_sorted.hap2.bam)
 
-(set -x; samtools index ${NAME}_temp/${NAME}_reads_aln_sorted.hap1.bam)
-(set -x; samtools index ${NAME}_temp/${NAME}_reads_aln_sorted.hap2.bam)
+(set -x; samtools index ${NAME}_reads_aln_sorted.hap1.bam)
+(set -x; samtools index ${NAME}_reads_aln_sorted.hap2.bam)
 
 # Select reads based on MAPQ score
-(set -x; samtools view ${NAME}_temp/${NAME}_reads_aln_sorted.hap1.bam | \
-     cut -f1,5 | sort -k1,1 > ${NAME}_temp/${NAME}_mapq_hap1.txt)
-(set -x; samtools view ${NAME}_temp/${NAME}_reads_aln_sorted.hap2.bam | \
-     cut -f1,5 | sort -k1,1 > ${NAME}_temp/${NAME}_mapq_hap2.txt)
+(set -x; samtools view ${NAME}_reads_aln_sorted.hap1.bam | \
+     cut -f1,5 | sort -k1,1 > ${NAME}_mapq_hap1.txt)
+(set -x; samtools view ${NAME}_reads_aln_sorted.hap2.bam | \
+     cut -f1,5 | sort -k1,1 > ${NAME}_mapq_hap2.txt)
 
-(set -x; join -1 1 -2 1 ${NAME}_temp/${NAME}_mapq_hap1.txt ${NAME}_temp/${NAME}_mapq_hap2.txt -e 0 > ${NAME}_temp/${NAME}_mapq_hap.txt)
-
-cd ${NAME}_temp
+(set -x; join -1 1 -2 1 ${NAME}_mapq_hap1.txt ${NAME}_mapq_hap2.txt -e 0 > ${NAME}_mapq_hap.txt)
 
 (set -x; awk '$2 > $3' ${NAME}_mapq_hap.txt | cut -f1 -d' ' > ${NAME}_reads_from_hap1.txt)
 echo "Reads from hap1" $(wc -l ${NAME}_reads_from_hap1.txt | cut -f1 -d' ') >> ${NAME}_hap_aware.log
