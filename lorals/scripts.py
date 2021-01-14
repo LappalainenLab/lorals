@@ -261,6 +261,12 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         metavar='/path/to/output',
         help="Name of output file; defaults to %(default)s"
     )
+    io_opts.add_argument( # Output raw lengths
+        '--raw-lengths',
+        dest='raw_lengths',
+        action='store_true',
+        help="Output raw lengths for length mode"
+    )
     asts_opts: argparse._ArgumentGroup = parser.add_argument_group(title="asts options")
     asts_opts.add_argument( # ASTS mode
         '-m',
@@ -354,8 +360,10 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     fancy_logging.configure_logging(level=args['verbosity'])
     _ = utils.where('bedtools')
     _greeter()
-    if args['mode'] == 'quant' and not args['flair']:
-        parser.error("'-x|--transcripts' must be supplied when 'mode' is 'quant'")
+    if args['mode'] == 'quant':
+        args['raw_lengths']: bool = False
+        if not args['flair']:
+            parser.error("'-x|--transcripts' must be supplied when 'mode' is 'quant'")
     for k in ('input', 'out', 'flair'): # type: str
         if args[k]:
             args[k]: str = utils.fullpath(path=args[k])
@@ -386,20 +394,33 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     logging.info("Calculating ASTS")
     if args['mode'] == 'length':
         header: Tuple[str, ...] = getattr(asts.LengthStat, '_fields')
-        asts_stats: Tuple[asts.LengthStat, ...] = tuple(
-            asts.asts_length(
+        # asts_stats: Tuple[asts.LengthStat, ...] = tuple(
+        #     asts.asts_length(
+        #         var=stat,
+        #         bamfile=args['bam'],
+        #         window=args['window'],
+        #         match_threshold=args['threshold']
+        #     ) for stat in ase_stats
+        # )
+        asts_stats: Tuple[asts.LengthStat, ...] = tuple()
+        raw_lengths: Tuple[asts.LengthSummary, ...] = tuple()
+        for stat in ase_stats: # type: annotate.AnnotatedStat
+            asts_stat, raw = asts.asts_length(
                 var=stat,
                 bamfile=args['bam'],
                 window=args['window'],
                 match_threshold=args['threshold']
-            ) for stat in ase_stats
-        )
+            )
+            asts_stats += (asts_stat,)
+            raw_lengths += (raw,)
+        raw_lengths: Tuple[asts.LengthSummary, ...] = tuple(filter(None, raw_lengths))
     elif args['mode'] == 'quant':
         header: Tuple[str, ...] = getattr(asts.QuantStat, '_fields')
         asts_stats: Tuple[asts.QuantStat, ...] = tuple()
         logging.info("Generating transcript dictionary")
         trans_start: float = time.time()
         trans_reads: Dict[str, str] = asts.reads_dict(bamfile=args['flair'])
+        raw_lengths = None
         logging.debug("Generating transcript dictionary took %s seconds", round(time.time() - trans_start, 3))
         for stat in ase_stats: # type: ase.AllelicStat
             asts_stats += asts.asts_quant(
@@ -422,6 +443,13 @@ def calc_asts(*args: Optional[List[str]]) -> None:
             ofile.write('\t'.join(map(str, stat)))
             ofile.write('\n')
             ofile.flush()
+    if args['raw_lengths'] and raw_lengths:
+        with open("%s_raw_lengths.tsv" % args['out'], 'w') as ofile: # type: file
+            logging.info("Saving raw lengths to %s", ofile.name)
+            for raw in raw_lengths: # type: asts.LengthSummary
+                ofile.write(str(raw))
+                ofile.write('\n')
+                ofile.flush()
     logging.info("Done")
 
 

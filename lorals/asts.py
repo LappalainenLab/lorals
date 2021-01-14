@@ -8,7 +8,7 @@ import logging
 import tempfile
 
 from collections import namedtuple, defaultdict, Counter
-from typing import Callable, DefaultDict, Dict, List, Optional, Tuple, Set
+from typing import Callable, DefaultDict, Dict, Iterable, List, Optional, Tuple, Set
 
 from . import cigar
 from . import utils
@@ -58,6 +58,45 @@ Qname = namedtuple('Qname', ('flairs', 'query', 'vartype'))
 
 NullResult: stats.stats.KstestResult = stats.stats.KstestResult(statistic=utils.nan, pvalue=utils.nan)
 
+class LengthSummary(Bpileup):
+
+    HEADER: Tuple[str, ...] = (
+        'contig',
+        'position',
+        'variantID',
+        'refAllele',
+        'altAllele',
+        'type',
+        'count',
+    )
+
+    def __init__(
+        self,
+        chrom: str,
+        position: int,
+        ref: str,
+        alt: str,
+        ref_lens: Iterable[int],
+        alt_lens: Iterable[int]
+    ):
+        super().__init__(chrom=chrom, position=position, ref=ref, alt=alt)
+        self._rlens: Tuple[int, ...] = tuple(int(x) for x in ref_lens)
+        self._alens: Tuple[int, ...] = tuple(int(x) for x in alt_lens)
+
+    def __str__(self) -> str:
+        n: int = len(self._rlens) + len(self._alens)
+        chroms: Tuple[str, ...] = (self.chrom,) * n
+        poss: Tuple[str, ...] = (str(self.position),) * n
+        ids: Tuple[str, ...] = (self.default,) * n
+        refs: Tuple[str, ...] = (self.ref,) * n
+        alts: Tuple[str, ...] = (self.alts,) * n
+        types: Tuple[str, ...] = ('ref',) * len(self._rlens) + ('alt',) * len(self._alens)
+        counts: Tuple[str, ...] = tuple(str(x) for x in self._rlens + self._alens)
+        outs: Tuple[Tuple[str, ...], ...] = tuple(zip(chroms, poss, ids, refs, alts, types, counts))
+        outs: Tuple[str, ...] = tuple('\t'.join(x) for x in outs)
+        return '\n'.join(outs)
+
+
 def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=8, min_reads: int=20) -> LengthStat:
     """Calculate read length based on SNP"""
     logging.info("Getting read lengths for %s", var.name)
@@ -86,19 +125,27 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
     if len(lengths['ref']) >= min_reads and len(lengths['alt']) >= min_reads:
         logging.info("Running KS test")
         ks: stats.stats.KstestResult = stats.ks_2samp(lengths['ref'], lengths['alt'])
+        raw: LengthSummary = LengthSummary(
+            chrom=var.chrom,
+            position=var.position,
+            ref=var.ref,
+            alt=var.alts,
+            ref_lens=lengths['ref'],
+            alt_lens=lengths['alt']
+        )
     else:
         logging.warning("Too few hits for KS test")
         ks: stats.stats.KstestResult = NullResult
+        raw = None
     logging.info("Finished getting lengths")
     logging.debug("Getting read lengths took %s seconds", fmttime(start=lengths_start))
-    return LengthStat(
-        contig=var.chrom,
+    return LengthStat(contig=var.chrom,
         position=var.position,
         refAllele=var.ref,
-        altAllele=','.join(var.alt),
+        altAllele=var.alts,
         D=ks.statistic,
         pvalue=ks.pvalue
-    )
+    ), raw
 
 
 def asts_quant(
