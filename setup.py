@@ -71,6 +71,7 @@ PLATFORMS: List[str] = ['Linux', 'Mac OS-X', 'UNIX']
 
 #   Dependencies
 INSTALL_REQUIRES: List[str] = [
+    "numpy",
     "pandas",
     "pybedtools",
     "pysam",

@@ -49,7 +49,8 @@ QuantStat = namedtuple(
         'refAllele',
         'altAllele',
         'transcript',
-        'count'
+        'refCount',
+        'altCount',
     )
 )
 
@@ -115,14 +116,16 @@ def asts_quant(
     quants: List[QuantStat] = list()
     bamfile: str = utils.fullpath(path=bamfile)
     bamfh = pysam.AlignmentFile(bamfile)
+    logging.debug("Building pileup on %s from %s to %s", var.chrom, var.dummy, var.position)
     for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position):
         if pile.pos != var.dummy:
             continue
+        logging.debug("Working with %s potential reads in the pileup", len(pile.pileups))
         for pile_read in pile.pileups: # type: pysam.libcalcalignedsegment.PileupRead
             qname: str = pile_read.alignment.query_name
-            logging.info("Processing read %s", qname)
             if qname in reads_completed or not pile_read.query_position:
                 continue
+            logging.info("Processing read %s", qname)
             reads_completed.add(qname)
             pile_window: slice = utils.window(position=pile_read.query_position, size=window)
             count_m: int = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M')
@@ -132,21 +135,29 @@ def asts_quant(
                 key: str = 'alt' if count_m >= match_threshold else 'alt_indel'
             else:
                 key: str = 'unknown'
+            logging.debug("Read %s classified as %s", qname, key)
             flair_reads[key].extend(reference for query, reference in trans_reads.items() if query == qname)
     if len(flair_reads['ref']) >= min_reads and len(flair_reads['alt']) >= min_reads:
         logging.info("Assembling quant stats")
-        for key in ('ref', 'alt'): # type: str
+        counts: DefaultDict[str, Dict[str, int]] = defaultdict(dict)
+        for key in ('ref', 'alt'):
             for tx, count in Counter(flair_reads[key]).items(): # type: str, int
-                quants.append(QuantStat(
-                    contig=var.chrom,
-                    position=var.position,
-                    refAllele=var.ref,
-                    altAllele=var.alts,
-                    transcript=tx,
-                    count=count
-                ))
+                counts[tx][key] = count
+        counts: Dict[str, Dict[str, int]] = dict(counts)
+        for tx in counts: # type: str
+            quants.append(QuantStat(
+                contig=var.chrom,
+                position=var.position,
+                refAllele=var.ref,
+                altAllele=var.alts,
+                transcript=tx,
+                refCount=counts[tx].get('ref', 0),
+                altCount=counts[tx].get('alt', 0)
+            ))
     else:
         logging.warning("Too few transcripts for %s", repr(var))
+        logging.debug("Ref transcripts: %s", len(flair_reads['ref']))
+        logging.debug("Alt transcripts: %s", len(flair_reads['alt']))
     return tuple(quants)
 
 
@@ -252,7 +263,6 @@ def qnames(
 
 
 def reads_dict(bamfile: str) -> Dict[str, str]:
-    # with pysam.AlignmentFile(bamfile) as bamfh:
     with pysam.libcalignmentfile.AlignmentFile(bamfile) as bamfh:
         reads: Dict[str, str] = {read.query_name: read.reference_name for read in bamfh}
     return reads

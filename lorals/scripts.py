@@ -25,6 +25,7 @@ except NameError:
     from lorals import asts
     from lorals import maths
     from lorals import utils
+    from lorals import process
     from lorals import annotate
     from lorals import features
     from lorals import fancy_logging
@@ -185,7 +186,7 @@ def calc_ase(*args: Optional[List[str]]) -> None:
         metavar="threhsold",
         help="Minimum number of matches in window around the variant; defaults to %(default)s"
     )
-    _common_opts(parser=parser, group='utility_options', version=VERSION)
+    _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
         parser.print_help(file=sys.stderr)
         raise SystemExit(1)
@@ -396,11 +397,15 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     elif args['mode'] == 'quant':
         header: Tuple[str, ...] = getattr(asts.QuantStat, '_fields')
         asts_stats: Tuple[asts.QuantStat, ...] = tuple()
+        logging.info("Generating transcript dictionary")
+        trans_start: float = time.time()
+        trans_reads: Dict[str, str] = asts.reads_dict(bamfile=args['flair'])
+        logging.debug("Generating transcript dictionary took %s seconds", round(time.time() - trans_start, 3))
         for stat in ase_stats: # type: ase.AllelicStat
             asts_stats += asts.asts_quant(
                 var=stat,
                 bamfile=args['bam'],
-                trans_reads=asts.reads_dict(bamfile=args['flair']),
+                trans_reads=trans_reads,
                 window=args['window'],
                 match_threshold=args['threshold']
             )
@@ -755,3 +760,116 @@ def fetch_haplotype(*args: Optional[List[str]]) -> None:
         if read.query_name in combined_qnames:
             outfh[read.query_name].write(read)
     bamfh.close()
+
+
+def process_asts(*args: Optional[List[str]]) -> None:
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
+    io_opts: argparse._ArgumentGroup = parser.add_argument_group(title="input/output options")
+    in_files = io_opts.add_mutually_exclusive_group(required=True)
+    in_files.add_argument( # Input files
+        '-i',
+        '--input',
+        dest='in_file',
+        type=str,
+        default=None,
+        nargs='+',
+        metavar='asts.tsv',
+        help="Provide one or more input ASTS tables"
+    )
+    in_files.add_argument( # TODO: File list
+        '-l',
+        '--asts-list',
+        dest='in_list',
+        type=str,
+        default=None,
+        metavar='sample list',
+        help=argparse.SUPPRESS
+        # help="Provide a list of ASTS tables to process, each on its own line"
+    )
+    in_files.add_argument( # TODO: Input directory
+        '-d',
+        '--asts-directory',
+        type=str,
+        default=None,
+        metavar='ASTS directory',
+        help=argparse.SUPPRESS
+        # help="Provide a directory with ASTS tables; each table must end with ***"
+    )
+    io_opts.add_argument( # Gene table
+        '-g',
+        '--genes',
+        dest='genes',
+        type=str,
+        required=True,
+        default=None,
+        metavar="genes.tsv",
+        help="Table of transcript assignment to genes, first column should be the transcript ID and second should be gene ID"
+    )
+    io_opts.add_argument( # Output directory
+        '-o',
+        '--outdir',
+        dest='outdir',
+        type=str,
+        required=False,
+        default=os.path.join(os.getcwd(), 'lorals_out', 'processed'),
+        metavar='outdir',
+        help="Directory to place output files; defaults to %(default)s"
+    )
+    filter_opts: argparse._ArgumentGroup = parser.add_argument_group(title="filtering options")
+    filter_opts.add_argument( # Minimum reads per gene
+        '-r',
+        '--min-reads-gene',
+        dest='min_gene',
+        type=int,
+        required=False,
+        default=10,
+        metavar='min reads per gene',
+        help="Minimum reads per gene; defaults to %(default)s"
+    )
+    filter_opts.add_argument( # Minimum reads per transcript
+        '-t',
+        '--min-reads-transcript',
+        dest='min_tx',
+        type=int,
+        required=False,
+        default=10,
+        metavar='min reads per transcript',
+        help="Minimum reads per transcript; defaults to %(default)s"
+    )
+    _common_opts(parser=parser, group='utility options', version=VERSION)
+    if not sys.argv[1:]:
+        parser.print_help(file=sys.stderr)
+        raise SystemExit(1)
+    args: Dict[str, Any] = vars(parser.parse_args(*args))
+    fancy_logging.configure_logging(level=args['verbosity'])
+    _greeter()
+    if not args['in_file']:
+        logging.critical("Missing '-i|--input'")
+        raise SystemExit(1)
+    for key in ('outdir', 'genes'):
+        args[key]: str = utils.fullpath(path=args[key])
+    os.makedirs(args['outdir'], exist_ok=True)
+    genes_df = defaultdict(list)
+    with open(args['genes'], 'rt') as ifile:
+        logging.info("Reading in genes table %s", args['genes'])
+        for line in ifile: # type: str
+            if line.startswith(('#', 'Transcript', 'transcript')):
+                continue
+            line: List[str] = line.strip().split('\t')
+            genes_df['transcript'].append(line[0])
+            genes_df['gene'].append(line[1])
+    genes_df = pandas.DataFrame(genes_df)
+    processed_ase = process._process_ase(
+        genes_df=genes_df,
+        file_list=args['in_file'],
+        min_reads_gene=args['min_gene']
+    )
+    if isinstance(processed_ase, pandas.DataFrame):
+        processed_ase.to_csv(os.path.join(args['outdir'], 'processed_ase.tsv'), sep='\t')
+    processed_asts = process._process_asts(
+        genes_df=genes_df,
+        file_list=args['in_file'],
+        min_reads=args['min_tx']
+    )
+    if isinstance(processed_asts, pandas.DataFrame):
+        processed_asts.to_csv(os.path.join(args['outdir'], 'processed_asts.tsv'), sep='\t')
