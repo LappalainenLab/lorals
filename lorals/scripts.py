@@ -446,6 +446,9 @@ def calc_asts(*args: Optional[List[str]]) -> None:
     if args['raw_lengths'] and raw_lengths:
         with open("%s_raw_lengths.tsv" % args['out'], 'w') as ofile: # type: file
             logging.info("Saving raw lengths to %s", ofile.name)
+            ofile.write('\t'.join(asts.LengthSummary.HEADER))
+            ofile.write('\n')
+            ofile.flush()
             for raw in raw_lengths: # type: asts.LengthSummary
                 ofile.write(str(raw))
                 ofile.write('\n')
