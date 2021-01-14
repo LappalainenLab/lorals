@@ -24,6 +24,8 @@ docs/build/html
 ##############################################
 /*.sh
 /*.bed
+/*.py
+!/setup.py
 
 # Ignore results and input files
 ################################
