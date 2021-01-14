@@ -28,6 +28,15 @@ The method behind LORALS can be found in this preprint:
 
 Please cite this paper when using any part of this method.
 
+.. image:: ../images/lorals_pipeline.svg
+      :class: with-shadow
+      :width: 200px
+
+      Figure 1. Suggested pipeline of allelic read analysis using LORALS
+      
+
+The pipeline of analysis provided by LORALS is outlined on Figure 1. It is not necessary to run these steps in succession, as LORALS is modular and each step can accept different types of inputs. Please see specific functions for more information.
+
 Usage
 ============
 
@@ -101,15 +110,21 @@ for a transcript to 10.
 .. code:: bash
 
     calc_asts -m length -b in.bam -i ase.tsv [-o /path/to/output]
-              [-w window] [-t threhsold] [-c coverage]
+              [-w window] [-t threhsold] [-c coverage] [--raw-lengths]
               [-a allelic coverage] [-q mapping quality] [-v level]
 
 In case the exact transcriptome is not readily available we provide this alternative ASTS analysis. Here all the
 distribution of the reads overlapping the REF allele are compared to the distribution of the reads overlapping the ALT
 allele.
 
-The user can either get a summary result where XX test is performed or get the lengths per variant to carry the test of
-their choice.
+The user can either get a summary result where Kolmorogov-Smirnov test is performed or get the
+lengths per variant to carry the test of their choice by. using the --raw-lengths option.
+
+.. image:: ../images/pipeline_analysis.svg
+      :class: with-shadow
+      :width: 200px
+
+      Figure 2. Statistical tests perfomed for different types of analysis using LORALS
 
 Further investigation of specific genes/snps    
 --------------------------------------------------------
@@ -149,7 +164,8 @@ Alternatively, the user can align the reads themselves with their aligner of cho
 
 .. code:: bash
 
-    correct_vcf.sh
+    make_new_vcf.sh
 
 It uses an aligned bam file to correct the phased haplotypes in a vcf file.
 This VCF file is then used to generate two haplotype specific genome references.
+It requires bcftools, GATK, HAPCUT2 and `HapCUT2VCF.py <https://github.com/liangjiaoxue/PythonNGSTools/blob/master/HapCUT2VCF.py>`_ to be in your path.
