@@ -28,11 +28,12 @@ The method behind LORALS can be found in this preprint:
 
 Please cite this paper when using any part of this method.
 
-figure:: images/lorals_pipeline.png
-      :class: with-shadow
-      :width: 200px
 
-      Figure 1. Suggested pipeline of allelic read analysis using LORALS
+.. figure:: images/lorals_pipeline.png
+    :class: with-shadow
+    :width: 180px
+
+    Figure 1. Suggested pipeline of allelic read analysis using LORALS
       
 
 The pipeline of analysis provided by LORALS is outlined on Figure 1. It is not necessary to run these steps in succession, as LORALS is modular and each step can accept different types of inputs. Please see specific functions for more information.
@@ -119,11 +120,12 @@ The user can either get a summary result where Kolmorogov-Smirnov test is perfor
 lengths per variant to carry the test of their choice by. using the --raw-lengths option.
 
 
-image:: images/pipeline_analysis.png
-      :class: with-shadow
-      :width: 200px
+.. figure:: images/pipeline_analysis.png
+    :class: with-shadow
+    :width: 180px
 
-      Figure 2. Statistical tests perfomed for different types of analysis using LORALS
+    Figure 2. Statistical tests perfomed for different types of analysis using LORALS
+
 
 Further investigation of specific genes/snps    
 --------------------------------------------------------
