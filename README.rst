@@ -7,7 +7,7 @@ A Python package for allele-specific analyses in long-read data. Written by Dafn
 Dependencies
 ============
 
-LoRALS depends on Python 3, SAMTools, and Bedtools. All other dependencies are installed automatically by pip
+LORALS depends on Python 3, SAMTools, and Bedtools. All other dependencies are installed automatically by pip
 
 Installation
 ============
@@ -28,7 +28,7 @@ The method behind LORALS can be found in this preprint:
 
 Please cite this paper when using any part of this method.
 
-.. image:: ../images/lorals_pipeline.svg
+.. image:: ./images/lorals_pipeline.svg
       :class: with-shadow
       :width: 200px
 
@@ -91,21 +91,19 @@ It requires the user to have aligned the reads to the relevant transcriptome and
 
 .. code:: bash
 
-    process_ase
+    usage: process_asts -i asts.tsv [asts.tsv ...] -g genes.tsv [-o outdir]
+                    [-r min reads per gene] [-t min reads per transcript]
+                    [-v level]
 
-Assigns a gene to each transcript and adds up all the transcript counts per gene for the REF and the ALT allele and
-performs a binomial test per gene, followed by FDR correction. It currently selects the top variant per gene based
-on the total number of reads. If you want to disable this function you should use X flag
-
-.. code:: bash
-
-    process_asts
-
-Assigns a gene to each transcript and performs chi-square per gene followed by fdr correction. It currently selects the
-top variant per gene based on the total number of reads. If you want to disable this function you should use X flag.
+Assigns a gene to each transcript. It then (1) adds up all the transcript counts per gene for the REF and the ALT allele and
+performs a binomial test per gene, followed by FDR correction. This is the ASE final file. (2) It performs chi-square per gene
+across the transripts, followed by fdr correction. This is the ASTS quant final file.
 
 Note that chi-square test statistic is not reliable with low counts, we therefore set the default min. number of reads
-for a transcript to 10.
+for a transcript (-t) to 10.
+
+It currently selects the top variant per gene based on the total number of reads.
+    _If you want to disable this function you should use X flag.
 
 .. code:: bash
 
@@ -113,14 +111,15 @@ for a transcript to 10.
               [-w window] [-t threhsold] [-c coverage] [--raw-lengths]
               [-a allelic coverage] [-q mapping quality] [-v level]
 
-In case the exact transcriptome is not readily available we provide this alternative ASTS analysis. Here all the
+In case the exact transcriptome is not readily available we provide this alternative ASTS analysis. Here the
 distribution of the reads overlapping the REF allele are compared to the distribution of the reads overlapping the ALT
 allele.
 
 The user can either get a summary result where Kolmorogov-Smirnov test is performed or get the
 lengths per variant to carry the test of their choice by. using the --raw-lengths option.
 
-.. image:: ../images/pipeline_analysis.svg
+
+.. image:: images/pipeline_analysis.svg
       :class: with-shadow
       :width: 200px
 
