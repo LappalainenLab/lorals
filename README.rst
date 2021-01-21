@@ -28,12 +28,12 @@ The method behind LORALS can be found in this preprint:
 
 Please cite this paper when using any part of this method.
 
-.. image:: ../images/lorals_pipeline.svg
-      :class: with-shadow
-      :width: 200px
+.. figure:: images/lorals_pipeline.png
+    :class: with-shadow
+    :width: 200px
 
-      Figure 1. Suggested pipeline of allelic read analysis using LORALS
-      
+    Figure 1. Suggested pipeline of allelic read analysis using LORALS
+
 
 The pipeline of analysis provided by LORALS is outlined on Figure 1. It is not necessary to run these steps in succession, as LORALS is modular and each step can accept different types of inputs. Please see specific functions for more information.
 
@@ -66,7 +66,7 @@ Annotates the output of calc_ase based on five criteria and assigns it a gene. M
 file that does not contain introns if you want to avoid multiple genes assigned to a variant.
 
 1. indel-threshold: Ratio of reads containing indels within the variant used for ASE to the total number of reads. If you don't want to use this flag you can set it to 0. The default is 0.2.
-2. other-threshold: Ratio of REF and ALT containing reads to the total number of reads covering the variant site used for ASE.  If you don't want to use this flag you can set it to 0. The default is 0.8. 
+2. other-threshold: Ratio of REF and ALT containing reads to the total number of reads covering the variant site used for ASE.  If you don't want to use this flag you can set it to 0. The default is 0.8.
 3. blacklist (optional): The variant falls within the ENCODE blacklist region. The expected file is in BED format. For ease we provide one such file for hg38 which you can replace with any other file you like
 4. mapping (optional): The variant falls  within a multi-mapping region. The expected file is in BED format. For ease we provide one such file for hg38 which you can replace with any other file you like
 5. genotype (optional): The variant falls within a region that is potentially wrongly assumed to be heterozygous or where the imputed genotype is ambiguous. The expected file is in BED format.
@@ -126,7 +126,7 @@ lengths per variant to carry the test of their choice by. using the --raw-length
 
       Figure 2. Statistical tests perfomed for different types of analysis using LORALS
 
-Further investigation of specific genes/snps    
+Further investigation of specific genes/snps
 --------------------------------------------------------
 
 .. code:: bash
