@@ -31,7 +31,7 @@ Please cite this paper when using any part of this method.
 
 .. figure:: images/lorals_pipeline.png
     :class: with-shadow
-    :width: 180px
+    :width: 150px
 
     Figure 1. Suggested pipeline of allelic read analysis using LORALS
       
@@ -122,7 +122,7 @@ lengths per variant to carry the test of their choice by. using the --raw-length
 
 .. figure:: images/pipeline_analysis.png
     :class: with-shadow
-    :width: 180px
+    :width: 150px
 
     Figure 2. Statistical tests perfomed for different types of analysis using LORALS
 
