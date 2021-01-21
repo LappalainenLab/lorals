@@ -7,7 +7,7 @@ A Python package for allele-specific analyses in long-read data. Written by Dafn
 Dependencies
 ============
 
-LoRALS depends on Python 3, SAMTools, and Bedtools. All other dependencies are installed automatically by pip
+LORALS depends on Python 3, SAMTools, and Bedtools. All other dependencies are installed automatically by pip
 
 Installation
 ============

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Install LoRALS"""
+"""Install LORALS"""
 
 import os
 import sys
@@ -20,7 +20,7 @@ from setuptools import find_packages
 from setuptools.command.install import install
 
 #   Some basic information
-NAME: str = "LoRALS"
+NAME: str = "LORALS"
 AUTHOR: str = "Dafni Glinos"
 AUTHOR_EMAIL: str = "dglinos@nygenome.org"
 LICENSE: str = ""

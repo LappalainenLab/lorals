@@ -23,7 +23,7 @@ sys.path.insert(0, basedir)
 
 # -- Project information -----------------------------------------------------
 
-project = 'LoRALS'
+project = 'LORALS'
 copyright = '2020, Dafni Glinos, Paul Hoffman'
 author = 'Dafni Glinos, Paul Hoffman'
 
