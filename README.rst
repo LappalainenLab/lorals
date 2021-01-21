@@ -28,7 +28,7 @@ The method behind LORALS can be found in this preprint:
 
 Please cite this paper when using any part of this method.
 
-.. image:: ./images/lorals_pipeline.svg
+figure:: images/lorals_pipeline.png
       :class: with-shadow
       :width: 200px
 
@@ -119,7 +119,7 @@ The user can either get a summary result where Kolmorogov-Smirnov test is perfor
 lengths per variant to carry the test of their choice by. using the --raw-lengths option.
 
 
-.. image:: images/pipeline_analysis.svg
+image:: images/pipeline_analysis.png
       :class: with-shadow
       :width: 200px
 
