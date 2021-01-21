@@ -120,11 +120,12 @@ allele.
 The user can either get a summary result where Kolmorogov-Smirnov test is performed or get the
 lengths per variant to carry the test of their choice by. using the --raw-lengths option.
 
-.. image:: ../images/pipeline_analysis.svg
+.. figure:: images/pipeline_analysis.svg
       :class: with-shadow
       :width: 200px
 
       Figure 2. Statistical tests perfomed for different types of analysis using LORALS
+
 
 Further investigation of specific genes/snps
 --------------------------------------------------------
