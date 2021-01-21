@@ -7,7 +7,7 @@ A Python package for allele-specific analyses in long-read data. Written by Dafn
 Dependencies
 ============
 
-LoRALS depends on Python 3, SAMTools, and Bedtools. All other dependencies are installed automatically by pip
+LORALS depends on Python 3, SAMTools, and Bedtools. All other dependencies are installed automatically by pip
 
 Installation
 ============
@@ -28,7 +28,7 @@ The method behind LORALS can be found in this preprint:
 
 Please cite this paper when using any part of this method.
 
-.. image:: ../images/lorals_pipeline.svg
+.. image:: ./images/lorals_pipeline.svg
       :class: with-shadow
       :width: 200px
 
@@ -102,7 +102,8 @@ across the transripts, followed by fdr correction. This is the ASTS quant final 
 Note that chi-square test statistic is not reliable with low counts, we therefore set the default min. number of reads
 for a transcript (-t) to 10.
 
-It currently selects the top variant per gene based on the total number of reads. If you want to disable this function you should use X flag.
+It currently selects the top variant per gene based on the total number of reads.
+    _If you want to disable this function you should use X flag.
 
 .. code:: bash
 
@@ -117,7 +118,8 @@ allele.
 The user can either get a summary result where Kolmorogov-Smirnov test is performed or get the
 lengths per variant to carry the test of their choice by. using the --raw-lengths option.
 
-.. image:: ../images/pipeline_analysis.svg
+
+.. image:: images/pipeline_analysis.svg
       :class: with-shadow
       :width: 200px
 
