@@ -108,7 +108,7 @@ def _process_asts(genes_df, file_list, min_reads=10):
             real_counts = [[hap_count_subset['refCount']], [hap_count_subset['altCount']]]
             # chi2, p_value_real, dof, expected = chi2_contingency(real_counts)
             chi2, p_value_real, _, _ = chi2_contingency(real_counts)
-            cohen = round(numpy.sqrt(chi2 / number_of_isoforms), 8)
+            cohen = round(numpy.sqrt(chi2 / total_coverage), 8)
             data.append([gene_id, var_id, total_coverage, number_of_isoforms, cohen, p_value_real])
             output_power = pandas.DataFrame({
                 'gene_id': [item[0] for item in data], 'variant_id': [item[1] for item in data],
