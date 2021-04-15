@@ -118,11 +118,11 @@ echo "Processing sample" ${NAME} >> ${NAME}_hap_aware.log
 (set -x; join -1 1 -2 1 ${NAME}_mapq_hap1.txt ${NAME}_mapq_hap2.txt -e 0 > ${NAME}_mapq_hap.txt)
 
 (set -x; awk '$2 > $3' ${NAME}_mapq_hap.txt | cut -f1 -d' ' > ${NAME}_reads_from_hap1.txt)
-echo "Reads from hap1" $(wc -l ${NAME}_reads_from_hap1.txt | cut -f1 -d' ') >> ${NAME}_hap_aware.log
+echo "Hap1 reads" $(wc -l ${NAME}_reads_from_hap1.txt | cut -f1 -d' ') >> ../${NAME}_hap_aware.log
 (set -x; awk '$2 < $3' ${NAME}_mapq_hap.txt | cut -f1 -d' ' > ${NAME}_reads_from_hap2.txt)
-echo "Reads from hap2" $(wc -l ${NAME}_reads_from_hap2.txt | cut -f1 -d' ') >> ${NAME}_hap_aware.log
+echo "Hap2 reads" $(wc -l ${NAME}_reads_from_hap2.txt | cut -f1 -d' ') >> ../${NAME}_hap_aware.log
 (set -x; awk '$2 == $3' ${NAME}_mapq_hap.txt | cut -f1 -d' ' > ${NAME}_reads_equal.txt)
-echo "Reads equal" $(wc -l ${NAME}_reads_equal.txt | cut -f1 -d' ') >> ${NAME}_hap_aware.log
+echo "Equal reads" $(wc -l ${NAME}_reads_equal.txt | cut -f1 -d' ') >> ../${NAME}_hap_aware.log
 
 (set -x; sort -R ${NAME}_reads_equal.txt > ${NAME}_temp.txt)
 (set -x; head -n $(($(wc -l ${NAME}_reads_equal.txt | cut -f1 -d' ') / 2)) ${NAME}_reads_equal.txt >> ${NAME}_reads_from_hap1.txt)
