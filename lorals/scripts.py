@@ -374,6 +374,7 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         __LORALS_ANNOTATED__
     except NameError:
         args['filter'] = False
+    import code; code.interact(local=locals()); sys.exit()
     if isinstance(args['filter'], list):
         if not args['filter']:
             args['filter'] = tuple(filters)
@@ -382,7 +383,7 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         for f in args['filter']:
             logging.info("Filtering based on %s", filters[f])
             ase_stats: Tuple[annotate.AnnotatedStat, ...] = tuple(filter(
-                lambda x: getattr(x, filters[f]),
+                lambda x: not getattr(x, filters[f]),
                 ase_stats
             ))
         logging.debug("Filtering took %s seconds", fancy_logging.fmttime(start=filter_start))
