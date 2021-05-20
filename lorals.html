@@ -3,11 +3,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>lorals package &#8212; LORALS  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -119,297 +120,297 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="lorals-package">
+  <section id="lorals-package">
 <h1>lorals package<a class="headerlink" href="#lorals-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
+<section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-lorals.annotate">
+</section>
+<section id="module-lorals.annotate">
 <span id="lorals-annotate-module"></span><h2>lorals.annotate module<a class="headerlink" href="#module-lorals.annotate" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="lorals.annotate.AnnotatedStat">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></code><code class="sig-name descname"><span class="pre">AnnotatedStat</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.annotate.AnnotatedStat" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></span><span class="sig-name descname"><span class="pre">AnnotatedStat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.annotate.AnnotatedStat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><code class="xref py py-class docutils literal notranslate"><span class="pre">lorals.ase.AllelicStat</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">lorals.features.GenoVar</span></code></p>
 <dl class="py attribute">
-<dt id="lorals.annotate.AnnotatedStat.HEADER">
-<code class="sig-name descname"><span class="pre">HEADER</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">('contig',</span> <span class="pre">'position',</span> <span class="pre">'variantID',</span> <span class="pre">'refAllele',</span> <span class="pre">'altAllele',</span> <span class="pre">'refCount',</span> <span class="pre">'altCount',</span> <span class="pre">'totalCount',</span> <span class="pre">'refIndelCount',</span> <span class="pre">'altIndelCount',</span> <span class="pre">'otherBases',</span> <span class="pre">'rawDepth',</span> <span class="pre">'GENOTYPE',</span> <span class="pre">'GENE_ID',</span> <span class="pre">'GENOTYPE_WARNING',</span> <span class="pre">'BLACKLIST',</span> <span class="pre">'MULTI_MAPPING',</span> <span class="pre">'OTHER_ALLELE_WARNING',</span> <span class="pre">'HIGH_INDEL_WARNING',</span> <span class="pre">'NULL_RATIO',</span> <span class="pre">'BINOM_P',</span> <span class="pre">'BINOM_P_ADJUSTED')</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.HEADER" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.HEADER">
+<span class="sig-name descname"><span class="pre">HEADER</span></span><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">('contig',</span> <span class="pre">'position',</span> <span class="pre">'variantID',</span> <span class="pre">'refAllele',</span> <span class="pre">'altAllele',</span> <span class="pre">'refCount',</span> <span class="pre">'altCount',</span> <span class="pre">'totalCount',</span> <span class="pre">'refIndelCount',</span> <span class="pre">'altIndelCount',</span> <span class="pre">'otherBases',</span> <span class="pre">'rawDepth',</span> <span class="pre">'GENOTYPE',</span> <span class="pre">'GENE_ID',</span> <span class="pre">'GENOTYPE_WARNING',</span> <span class="pre">'BLACKLIST',</span> <span class="pre">'MULTI_MAPPING',</span> <span class="pre">'OTHER_ALLELE_WARNING',</span> <span class="pre">'HIGH_INDEL_WARNING',</span> <span class="pre">'NULL_RATIO',</span> <span class="pre">'BINOM_P',</span> <span class="pre">'BINOM_P_ADJUSTED')</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.HEADER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="lorals.annotate.AnnotatedStat.other_threshold">
-<code class="sig-name descname"><span class="pre">other_threshold</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">0.8</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.other_threshold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.other_threshold">
+<span class="sig-name descname"><span class="pre">other_threshold</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">0.8</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.other_threshold" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="lorals.annotate.AnnotatedStat.indel_threshold">
-<code class="sig-name descname"><span class="pre">indel_threshold</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.indel_threshold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.indel_threshold">
+<span class="sig-name descname"><span class="pre">indel_threshold</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.indel_threshold" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.gene">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">gene</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.gene" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.gene">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">gene</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gene name for this annotated stat</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.blacklisted">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">blacklisted</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.blacklisted" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.blacklisted">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">blacklisted</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.blacklisted" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.warning">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">warning</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.warning" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.warning">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">warning</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.warning" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.multi_mapping">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">multi_mapping</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.multi_mapping" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.multi_mapping">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">multi_mapping</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.multi_mapping" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.null_ratio">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">null_ratio</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.null_ratio" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.null_ratio">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">null_ratio</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.null_ratio" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.pvalue">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.pvalue" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.pvalue">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">pvalue</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.pvalue" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.qvalue">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">qvalue</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.qvalue" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.qvalue">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">qvalue</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#lorals.annotate.AnnotatedStat.qvalue" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.ref_ratio">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ref_ratio</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.ref_ratio" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.ref_ratio">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">ref_ratio</span></span><a class="headerlink" href="#lorals.annotate.AnnotatedStat.ref_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reference Ratio</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.all_ratio">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">all_ratio</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.all_ratio" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.all_ratio">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">all_ratio</span></span><a class="headerlink" href="#lorals.annotate.AnnotatedStat.all_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>All ratio</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.indel_ratio">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">indel_ratio</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.indel_ratio" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.indel_ratio">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">indel_ratio</span></span><a class="headerlink" href="#lorals.annotate.AnnotatedStat.indel_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indel ratio</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.other_warning">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">other_warning</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.other_warning" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.other_warning">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">other_warning</span></span><a class="headerlink" href="#lorals.annotate.AnnotatedStat.other_warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Other allele warning</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.annotate.AnnotatedStat.indel_warning">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">indel_warning</span></code><a class="headerlink" href="#lorals.annotate.AnnotatedStat.indel_warning" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.annotate.AnnotatedStat.indel_warning">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">indel_warning</span></span><a class="headerlink" href="#lorals.annotate.AnnotatedStat.indel_warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>High indel warning</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.annotate.annotate_bed">
-<code class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></code><code class="sig-name descname"><span class="pre">annotate_bed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bedfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.annotate_bed" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.annotate_bed">
+<span class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></span><span class="sig-name descname"><span class="pre">annotate_bed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bedfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.annotate_bed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="lorals.annotate.annotate_genes">
-<code class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></code><code class="sig-name descname"><span class="pre">annotate_genes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bedfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.annotate_genes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.annotate_genes">
+<span class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></span><span class="sig-name descname"><span class="pre">annotate_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bedfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.annotate_genes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="lorals.annotate.annotate_genotypes">
-<code class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></code><code class="sig-name descname"><span class="pre">annotate_genotypes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vcffile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.annotate_genotypes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.annotate_genotypes">
+<span class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></span><span class="sig-name descname"><span class="pre">annotate_genotypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vcffile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.annotate_genotypes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="lorals.annotate.bias_stats">
-<code class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></code><code class="sig-name descname"><span class="pre">bias_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.bias_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.annotate.bias_stats">
+<span class="sig-prename descclassname"><span class="pre">lorals.annotate.</span></span><span class="sig-name descname"><span class="pre">bias_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.annotate.AnnotatedStat" title="lorals.annotate.AnnotatedStat"><span class="pre">lorals.annotate.AnnotatedStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.annotate.bias_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-lorals.ase">
+</section>
+<section id="module-lorals.ase">
 <span id="lorals-ase-module"></span><h2>lorals.ase module<a class="headerlink" href="#module-lorals.ase" title="Permalink to this headline">¶</a></h2>
 <p>ASE-specific utilties</p>
 <dl class="py class">
-<dt id="lorals.ase.AllelicStat">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lorals.ase.</span></code><code class="sig-name descname"><span class="pre">AllelicStat</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.ase.AllelicStat" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">lorals.ase.</span></span><span class="sig-name descname"><span class="pre">AllelicStat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.ase.AllelicStat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><code class="xref py py-class docutils literal notranslate"><span class="pre">lorals.features.Bpileup</span></code></a></p>
 <dl class="py attribute">
-<dt id="lorals.ase.AllelicStat.HEADER">
-<code class="sig-name descname"><span class="pre">HEADER</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">('contig',</span> <span class="pre">'position',</span> <span class="pre">'variantID',</span> <span class="pre">'refAllele',</span> <span class="pre">'altAllele',</span> <span class="pre">'refCount',</span> <span class="pre">'altCount',</span> <span class="pre">'totalCount',</span> <span class="pre">'refIndelCount',</span> <span class="pre">'altIndelCount',</span> <span class="pre">'otherBases',</span> <span class="pre">'rawDepth')</span></em><a class="headerlink" href="#lorals.ase.AllelicStat.HEADER" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.HEADER">
+<span class="sig-name descname"><span class="pre">HEADER</span></span><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">('contig',</span> <span class="pre">'position',</span> <span class="pre">'variantID',</span> <span class="pre">'refAllele',</span> <span class="pre">'altAllele',</span> <span class="pre">'refCount',</span> <span class="pre">'altCount',</span> <span class="pre">'totalCount',</span> <span class="pre">'refIndelCount',</span> <span class="pre">'altIndelCount',</span> <span class="pre">'otherBases',</span> <span class="pre">'rawDepth')</span></em><a class="headerlink" href="#lorals.ase.AllelicStat.HEADER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="lorals.ase.AllelicStat.fromstring">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">fromstring</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'\t'</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><a class="headerlink" href="#lorals.ase.AllelicStat.fromstring" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.fromstring">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">fromstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'\t'</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><a class="headerlink" href="#lorals.ase.AllelicStat.fromstring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="lorals.ase.AllelicStat.frombpileup">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">frombpileup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><a class="headerlink" href="#lorals.ase.AllelicStat.frombpileup" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.frombpileup">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">frombpileup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><a class="headerlink" href="#lorals.ase.AllelicStat.frombpileup" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="lorals.ase.AllelicStat.print_bpileup">
-<code class="sig-name descname"><span class="pre">print_bpileup</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.ase.AllelicStat.print_bpileup" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.print_bpileup">
+<span class="sig-name descname"><span class="pre">print_bpileup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.ase.AllelicStat.print_bpileup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print this AllelicStat as if it was a Bpileup</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.ase.AllelicStat.ref_count">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ref_count</span></code><a class="headerlink" href="#lorals.ase.AllelicStat.ref_count" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.ref_count">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">ref_count</span></span><a class="headerlink" href="#lorals.ase.AllelicStat.ref_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Counts for reference allele</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.ase.AllelicStat.alt_count">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">alt_count</span></code><a class="headerlink" href="#lorals.ase.AllelicStat.alt_count" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.alt_count">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">alt_count</span></span><a class="headerlink" href="#lorals.ase.AllelicStat.alt_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Counts for alternate allele</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.ase.AllelicStat.other_count">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">other_count</span></code><a class="headerlink" href="#lorals.ase.AllelicStat.other_count" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.other_count">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">other_count</span></span><a class="headerlink" href="#lorals.ase.AllelicStat.other_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Counts for other alleles</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.ase.AllelicStat.ref_indel">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ref_indel</span></code><a class="headerlink" href="#lorals.ase.AllelicStat.ref_indel" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.ref_indel">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">ref_indel</span></span><a class="headerlink" href="#lorals.ase.AllelicStat.ref_indel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reference indel counts</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.ase.AllelicStat.alt_indel">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">alt_indel</span></code><a class="headerlink" href="#lorals.ase.AllelicStat.alt_indel" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.alt_indel">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">alt_indel</span></span><a class="headerlink" href="#lorals.ase.AllelicStat.alt_indel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alternate indel counts</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.ase.AllelicStat.total_count">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">total_count</span></code><a class="headerlink" href="#lorals.ase.AllelicStat.total_count" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.total_count">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">total_count</span></span><a class="headerlink" href="#lorals.ase.AllelicStat.total_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Total counts</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.ase.AllelicStat.depth">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">depth</span></code><a class="headerlink" href="#lorals.ase.AllelicStat.depth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.ase.AllelicStat.depth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">depth</span></span><a class="headerlink" href="#lorals.ase.AllelicStat.depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Total depth</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.ase.allelic_stats">
-<code class="sig-prename descclassname"><span class="pre">lorals.ase.</span></code><code class="sig-name descname"><span class="pre">allelic_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bamfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_threshold</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><a class="headerlink" href="#lorals.ase.allelic_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.ase.allelic_stats">
+<span class="sig-prename descclassname"><span class="pre">lorals.ase.</span></span><span class="sig-name descname"><span class="pre">allelic_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bamfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_threshold</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><a class="headerlink" href="#lorals.ase.allelic_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>…</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.ase.filter_stats">
-<code class="sig-prename descclassname"><span class="pre">lorals.ase.</span></code><code class="sig-name descname"><span class="pre">filter_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_coverage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allelic_coverage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proportion_match</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proportion_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.8</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.ase.filter_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.ase.filter_stats">
+<span class="sig-prename descclassname"><span class="pre">lorals.ase.</span></span><span class="sig-name descname"><span class="pre">filter_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_coverage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allelic_coverage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proportion_match</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proportion_indel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.8</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.ase.AllelicStat" title="lorals.ase.AllelicStat"><span class="pre">lorals.ase.AllelicStat</span></a><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.ase.filter_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter ase stats</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-lorals.asts">
+</section>
+<section id="module-lorals.asts">
 <span id="lorals-asts-module"></span><h2>lorals.asts module<a class="headerlink" href="#module-lorals.asts" title="Permalink to this headline">¶</a></h2>
 <p>ASTS-specific utilities</p>
 <dl class="py function">
-<dt id="lorals.asts.bam_to_bed">
-<code class="sig-prename descclassname"><span class="pre">lorals.asts.</span></code><code class="sig-name descname"><span class="pre">bam_to_bed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bamfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pybedtools.bedtool.BedTool</span><a class="headerlink" href="#lorals.asts.bam_to_bed" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.asts.bam_to_bed">
+<span class="sig-prename descclassname"><span class="pre">lorals.asts.</span></span><span class="sig-name descname"><span class="pre">bam_to_bed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bamfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pybedtools.bedtool.BedTool</span><a class="headerlink" href="#lorals.asts.bam_to_bed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a BAM file to a BED file</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.asts.bed_intersect">
-<code class="sig-prename descclassname"><span class="pre">lorals.asts.</span></code><code class="sig-name descname"><span class="pre">bed_intersect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">afile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ofile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pybedtools.bedtool.BedTool</span><a class="headerlink" href="#lorals.asts.bed_intersect" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.asts.bed_intersect">
+<span class="sig-prename descclassname"><span class="pre">lorals.asts.</span></span><span class="sig-name descname"><span class="pre">bed_intersect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">afile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ofile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pybedtools.bedtool.BedTool</span><a class="headerlink" href="#lorals.asts.bed_intersect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Intersect two bedfiles</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.asts.deduplicate_bpileup">
-<code class="sig-prename descclassname"><span class="pre">lorals.asts.</span></code><code class="sig-name descname"><span class="pre">deduplicate_bpileup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpileup</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#lorals.asts.deduplicate_bpileup" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.asts.deduplicate_bpileup">
+<span class="sig-prename descclassname"><span class="pre">lorals.asts.</span></span><span class="sig-name descname"><span class="pre">deduplicate_bpileup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpileup</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#lorals.asts.deduplicate_bpileup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deduplicate a BED file</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.asts.vcf_bpileup">
-<code class="sig-prename descclassname"><span class="pre">lorals.asts.</span></code><code class="sig-name descname"><span class="pre">vcf_bpileup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vcffile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pileup</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.asts.vcf_bpileup" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.asts.vcf_bpileup">
+<span class="sig-prename descclassname"><span class="pre">lorals.asts.</span></span><span class="sig-name descname"><span class="pre">vcf_bpileup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vcffile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pileup</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.asts.vcf_bpileup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a BED-like pileup from a VCF file</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-lorals.cigar">
+</section>
+<section id="module-lorals.cigar">
 <span id="lorals-cigar-module"></span><h2>lorals.cigar module<a class="headerlink" href="#module-lorals.cigar" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="lorals.cigar.Cigar">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lorals.cigar.</span></code><code class="sig-name descname"><span class="pre">Cigar</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tuples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.cigar.Cigar" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.cigar.Cigar">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">lorals.cigar.</span></span><span class="sig-name descname"><span class="pre">Cigar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tuples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.cigar.Cigar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>blah</p>
 <dl class="py attribute">
-<dt id="lorals.cigar.Cigar.oper_map">
-<code class="sig-name descname"><span class="pre">oper_map</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">{0:</span> <span class="pre">'M',</span> <span class="pre">1:</span> <span class="pre">'I',</span> <span class="pre">2:</span> <span class="pre">'D',</span> <span class="pre">3:</span> <span class="pre">'N',</span> <span class="pre">4:</span> <span class="pre">'S',</span> <span class="pre">5:</span> <span class="pre">'H',</span> <span class="pre">6:</span> <span class="pre">'P',</span> <span class="pre">7:</span> <span class="pre">'=',</span> <span class="pre">8:</span> <span class="pre">'X',</span> <span class="pre">9:</span> <span class="pre">'B'}</span></em><a class="headerlink" href="#lorals.cigar.Cigar.oper_map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.cigar.Cigar.oper_map">
+<span class="sig-name descname"><span class="pre">oper_map</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">{0:</span> <span class="pre">'M',</span> <span class="pre">1:</span> <span class="pre">'I',</span> <span class="pre">2:</span> <span class="pre">'D',</span> <span class="pre">3:</span> <span class="pre">'N',</span> <span class="pre">4:</span> <span class="pre">'S',</span> <span class="pre">5:</span> <span class="pre">'H',</span> <span class="pre">6:</span> <span class="pre">'P',</span> <span class="pre">7:</span> <span class="pre">'=',</span> <span class="pre">8:</span> <span class="pre">'X',</span> <span class="pre">9:</span> <span class="pre">'B'}</span></em><a class="headerlink" href="#lorals.cigar.Cigar.oper_map" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-lorals.fancy_logging">
+</section>
+<section id="module-lorals.fancy_logging">
 <span id="lorals-fancy-logging-module"></span><h2>lorals.fancy_logging module<a class="headerlink" href="#module-lorals.fancy_logging" title="Permalink to this headline">¶</a></h2>
 <p>Make logging fancy again</p>
 <dl class="py class">
-<dt id="lorals.fancy_logging.StrippedFormatter">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lorals.fancy_logging.</span></code><code class="sig-name descname"><span class="pre">StrippedFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.fancy_logging.StrippedFormatter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.fancy_logging.StrippedFormatter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">lorals.fancy_logging.</span></span><span class="sig-name descname"><span class="pre">StrippedFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.fancy_logging.StrippedFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></p>
 <p>A formatter where all ANSI formatting is removed</p>
 <dl class="py method">
-<dt id="lorals.fancy_logging.StrippedFormatter.format">
-<code class="sig-name descname"><span class="pre">format</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">logging.LogRecord</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.fancy_logging.StrippedFormatter.format" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.fancy_logging.StrippedFormatter.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">logging.LogRecord</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.fancy_logging.StrippedFormatter.format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Strip ANSI formatting from log messages</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="lorals.fancy_logging.ColoredFormatter">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lorals.fancy_logging.</span></code><code class="sig-name descname"><span class="pre">ColoredFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.fancy_logging.ColoredFormatter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.fancy_logging.ColoredFormatter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">lorals.fancy_logging.</span></span><span class="sig-name descname"><span class="pre">ColoredFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.fancy_logging.ColoredFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></p>
 <p>A colorized formatter for logging</p>
 <dl class="py method">
-<dt id="lorals.fancy_logging.ColoredFormatter.format">
-<code class="sig-name descname"><span class="pre">format</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">logging.LogRecord</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.fancy_logging.ColoredFormatter.format" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.fancy_logging.ColoredFormatter.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">logging.LogRecord</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.fancy_logging.ColoredFormatter.format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Colorize log messages</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.fancy_logging.fmttime">
-<code class="sig-prename descclassname"><span class="pre">lorals.fancy_logging.</span></code><code class="sig-name descname"><span class="pre">fmttime</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#lorals.fancy_logging.fmttime" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.fancy_logging.fmttime">
+<span class="sig-prename descclassname"><span class="pre">lorals.fancy_logging.</span></span><span class="sig-name descname"><span class="pre">fmttime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#lorals.fancy_logging.fmttime" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-lorals.features">
+</section>
+<section id="module-lorals.features">
 <span id="lorals-features-module"></span><h2>lorals.features module<a class="headerlink" href="#module-lorals.features" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="lorals.features.Bpileup">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lorals.features.</span></code><code class="sig-name descname"><span class="pre">Bpileup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.features.Bpileup" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.features.Bpileup">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">lorals.features.</span></span><span class="sig-name descname"><span class="pre">Bpileup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lorals.features.Bpileup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A BED-like pileup</p>
 <p>The BED-like pileup stores variant information that also allows
 easy translation to a BED-like file. This allows variants to be
 worked on via genomic arithmetic</p>
 <dl class="py method">
-<dt id="lorals.features.Bpileup.default_id">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">default_id</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.features.Bpileup.default_id" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.features.Bpileup.default_id">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">default_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chrom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.features.Bpileup.default_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a default variant ID</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -430,14 +431,14 @@ worked on via genomic arithmetic</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="lorals.features.Bpileup.frominterval">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">frominterval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pybedtools.cbedtools.Interval</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a><a class="headerlink" href="#lorals.features.Bpileup.frominterval" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.features.Bpileup.frominterval">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">frominterval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pybedtools.cbedtools.Interval</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a><a class="headerlink" href="#lorals.features.Bpileup.frominterval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Bpileup from an Interval</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="lorals.features.Bpileup.bed">
-<code class="sig-name descname"><span class="pre">bed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.features.Bpileup.bed" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.features.Bpileup.bed">
+<span class="sig-name descname"><span class="pre">bed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.features.Bpileup.bed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format this Bpileup to a bed4 format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -452,73 +453,73 @@ worked on via genomic arithmetic</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.chrom">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">chrom</span></code><a class="headerlink" href="#lorals.features.Bpileup.chrom" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.chrom">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">chrom</span></span><a class="headerlink" href="#lorals.features.Bpileup.chrom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Chromsome of this variant</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.position">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">position</span></code><a class="headerlink" href="#lorals.features.Bpileup.position" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.position">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#lorals.features.Bpileup.position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Position of this variant</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.dummy">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dummy</span></code><a class="headerlink" href="#lorals.features.Bpileup.dummy" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.dummy">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dummy</span></span><a class="headerlink" href="#lorals.features.Bpileup.dummy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dummy starting position</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.ref">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ref</span></code><a class="headerlink" href="#lorals.features.Bpileup.ref" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.ref">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">ref</span></span><a class="headerlink" href="#lorals.features.Bpileup.ref" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reference allele</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.alt">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">alt</span></code><a class="headerlink" href="#lorals.features.Bpileup.alt" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.alt">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">alt</span></span><a class="headerlink" href="#lorals.features.Bpileup.alt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alternate variant(s)</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.alts">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">alts</span></code><a class="headerlink" href="#lorals.features.Bpileup.alts" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.alts">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">alts</span></span><a class="headerlink" href="#lorals.features.Bpileup.alts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alternate variant(s) as a string</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.name">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#lorals.features.Bpileup.name" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#lorals.features.Bpileup.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant name/ID</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="lorals.features.Bpileup.default">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">default</span></code><a class="headerlink" href="#lorals.features.Bpileup.default" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="lorals.features.Bpileup.default">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#lorals.features.Bpileup.default" title="Permalink to this definition">¶</a></dt>
 <dd><p>Standardized default ID</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.features.iter_var">
-<code class="sig-prename descclassname"><span class="pre">lorals.features.</span></code><code class="sig-name descname"><span class="pre">iter_var</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.features.iter_var" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.features.iter_var">
+<span class="sig-prename descclassname"><span class="pre">lorals.features.</span></span><span class="sig-name descname"><span class="pre">iter_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.features.iter_var" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield Bpileups from a data frame</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.features.write_bed">
-<code class="sig-prename descclassname"><span class="pre">lorals.features.</span></code><code class="sig-name descname"><span class="pre">write_bed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpileups</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ofile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.features.write_bed" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.features.write_bed">
+<span class="sig-prename descclassname"><span class="pre">lorals.features.</span></span><span class="sig-name descname"><span class="pre">write_bed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpileups</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lorals.features.Bpileup" title="lorals.features.Bpileup"><span class="pre">lorals.features.Bpileup</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ofile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.features.write_bed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-lorals.maths">
+</section>
+<section id="module-lorals.maths">
 <span id="lorals-maths-module"></span><h2>lorals.maths module<a class="headerlink" href="#module-lorals.maths" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="lorals.maths.median">
-<code class="sig-prename descclassname"><span class="pre">lorals.maths.</span></code><code class="sig-name descname"><span class="pre">median</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numbers.Real</span><a class="headerlink" href="#lorals.maths.median" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.maths.median">
+<span class="sig-prename descclassname"><span class="pre">lorals.maths.</span></span><span class="sig-name descname"><span class="pre">median</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numbers.Real</span><a class="headerlink" href="#lorals.maths.median" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the median
 &gt;&gt;&gt; median([1, 2, 3])
 2
@@ -527,8 +528,8 @@ worked on via genomic arithmetic</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.maths.percentile">
-<code class="sig-prename descclassname"><span class="pre">lorals.maths.</span></code><code class="sig-name descname"><span class="pre">percentile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">,</span> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.maths.percentile" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.maths.percentile">
+<span class="sig-prename descclassname"><span class="pre">lorals.maths.</span></span><span class="sig-name descname"><span class="pre">percentile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">,</span> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Real</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.maths.percentile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate a percentile
 &gt;&gt;&gt; percentile(x = (15, 20, 35, 40, 50), probs = 40)
 29.0
@@ -537,8 +538,8 @@ worked on via genomic arithmetic</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.maths.pvalue_adjust">
-<code class="sig-prename descclassname"><span class="pre">lorals.maths.</span></code><code class="sig-name descname"><span class="pre">pvalue_adjust</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pvalues</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.maths.pvalue_adjust" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.maths.pvalue_adjust">
+<span class="sig-prename descclassname"><span class="pre">lorals.maths.</span></span><span class="sig-name descname"><span class="pre">pvalue_adjust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pvalues</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lorals.maths.pvalue_adjust" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adjust p-values using the Benjamin-Hochberg method
 Basically, it’s like R’s p.adjust(method = ‘fdr’)
 &gt;&gt;&gt; x = tuple(map(lambda x: round(x, 1), tuple(x * 0.1 for x in range(0, 10))))
@@ -546,23 +547,23 @@ Basically, it’s like R’s p.adjust(method = ‘fdr’)
 (0.0, 0.5, 0.6666666666666667, 0.75, 0.8, 0.8333333333333334, 0.8571428571428571, 0.875, 0.888888888888889, 0.9)</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-lorals.scripts">
+</section>
+<section id="module-lorals.scripts">
 <span id="lorals-scripts-module"></span><h2>lorals.scripts module<a class="headerlink" href="#module-lorals.scripts" title="Permalink to this headline">¶</a></h2>
 <p>Command-line scripts included in LoRALS</p>
-</div>
-<div class="section" id="module-lorals.utils">
+</section>
+<section id="module-lorals.utils">
 <span id="lorals-utils-module"></span><h2>lorals.utils module<a class="headerlink" href="#module-lorals.utils" title="Permalink to this headline">¶</a></h2>
 <p>Some utility functions</p>
 <dl class="py function">
-<dt id="lorals.utils.dictsearch">
-<code class="sig-prename descclassname"><span class="pre">lorals.utils.</span></code><code class="sig-name descname"><span class="pre">dictsearch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Iterable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.utils.dictsearch" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.utils.dictsearch">
+<span class="sig-prename descclassname"><span class="pre">lorals.utils.</span></span><span class="sig-name descname"><span class="pre">dictsearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Iterable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.utils.dictsearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search a dictionary ‘d’ by value ‘query’</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.utils.find_open">
-<code class="sig-prename descclassname"><span class="pre">lorals.utils.</span></code><code class="sig-name descname"><span class="pre">find_open</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Callable</span><a class="headerlink" href="#lorals.utils.find_open" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.utils.find_open">
+<span class="sig-prename descclassname"><span class="pre">lorals.utils.</span></span><span class="sig-name descname"><span class="pre">find_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Callable</span><a class="headerlink" href="#lorals.utils.find_open" title="Permalink to this definition">¶</a></dt>
 <dd><p>Figure out which version of open (open vs gzip.open) to use</p>
 <p>Standard open cannot handle gzipped files easily. To get around this, this
 function will return either the <cite>gzip.open</cite> function if the filename ends in
@@ -581,33 +582,33 @@ function will return either the <cite>gzip.open</cite> function if the filename 
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.utils.fullpath">
-<code class="sig-prename descclassname"><span class="pre">lorals.utils.</span></code><code class="sig-name descname"><span class="pre">fullpath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.utils.fullpath" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.utils.fullpath">
+<span class="sig-prename descclassname"><span class="pre">lorals.utils.</span></span><span class="sig-name descname"><span class="pre">fullpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.utils.fullpath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the full path to a file or directory</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.utils.unpack">
-<code class="sig-prename descclassname"><span class="pre">lorals.utils.</span></code><code class="sig-name descname"><span class="pre">unpack</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><a class="headerlink" href="#lorals.utils.unpack" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.utils.unpack">
+<span class="sig-prename descclassname"><span class="pre">lorals.utils.</span></span><span class="sig-name descname"><span class="pre">unpack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><a class="headerlink" href="#lorals.utils.unpack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unpack a series of nested lists, sets, or tuples</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="lorals.utils.where">
-<code class="sig-prename descclassname"><span class="pre">lorals.utils.</span></code><code class="sig-name descname"><span class="pre">where</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.utils.where" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.utils.where">
+<span class="sig-prename descclassname"><span class="pre">lorals.utils.</span></span><span class="sig-name descname"><span class="pre">where</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#lorals.utils.where" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="lorals.utils.window">
-<code class="sig-prename descclassname"><span class="pre">lorals.utils.</span></code><code class="sig-name descname"><span class="pre">window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">slice</span><a class="headerlink" href="#lorals.utils.window" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="lorals.utils.window">
+<span class="sig-prename descclassname"><span class="pre">lorals.utils.</span></span><span class="sig-name descname"><span class="pre">window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">slice</span><a class="headerlink" href="#lorals.utils.window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a window slice</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-lorals">
+</section>
+<section id="module-lorals">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lorals" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -622,7 +623,7 @@ function will return either the <cite>gzip.open</cite> function if the filename 
     </p>
     <p>
         &copy; Copyright 2020, Dafni Glinos, Paul Hoffman.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.1.<br/>
     </p>
   </div>
 </footer>
