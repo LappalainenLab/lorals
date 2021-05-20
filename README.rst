@@ -25,8 +25,11 @@ or use virtualenv
 Background
 ============
 The method behind LORALS can be found in this preprint:
+Transcriptome variation in human tissues revealed by long-read sequencing
+Dafni A Glinos, Garrett Garborcauskas, Paul Hoffman, Nava Ehsan, Lihua Jiang, Alper Gokden, Xiaoguang Dai, Francois Aguet, Kathleen L. Brown, Kiran Garimella, Tera Bowers, Maura Costello, Kristin Ardlie, Ruiqi Jian, Nathan R Tucker, Patrick T Ellinor, Eoghan D Harrington, Hua Tang, Michael Snyder, Sissel Juul, Pejman Mohammadi, Daniel G MacArthur, Tuuli Lappalainen, Beryl Cummings
+bioRxiv 2021.01.22.427687; doi: https://doi.org/10.1101/2021.01.22.427687
 
-Please cite this paper when using any part of this method.
+Please cite this paper for now when using any part of this method.
 
 
 .. figure:: images/lorals_pipeline.png
@@ -117,7 +120,7 @@ distribution of the reads overlapping the REF allele are compared to the distrib
 allele.
 
 The user can either get a summary result where Kolmorogov-Smirnov test is performed or get the
-lengths per variant to carry the test of their choice by. using the --raw-lengths option.
+lengths per variant to carry the test of their choice by using the --raw-lengths option.
 
 
 .. figure:: images/pipeline_analysis.png
