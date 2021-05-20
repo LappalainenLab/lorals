@@ -105,7 +105,7 @@ def asts_length(var: Bpileup, bamfile: str, window: int=5, match_threshold: int=
     lengths: DefaultDict[str, List[int]] = defaultdict(list)
     bamfile: str = utils.fullpath(path=bamfile)
     bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalcalignment.AlignmentFile
-    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position): # type: pysam.libcalignedsegment.PileupColumn
+    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position, min_base_quality  = 0, max_depth = 100000): # type: pysam.libcalignedsegment.PileupColumn
         if pile.pos != var.dummy:
             continue
         for pile_read in pile.pileups: # type: pysam.libcalignedsegment.PileupRead
@@ -158,22 +158,18 @@ def asts_quant(
 ):
     """..."""
     logging.info("Getting read quants for %s", var.name)
-    reads_completed: Set[str] = set()
     flair_reads: DefaultDict[str, List[str]] = defaultdict(list)
     quants: List[QuantStat] = list()
     bamfile: str = utils.fullpath(path=bamfile)
     bamfh = pysam.AlignmentFile(bamfile)
     logging.debug("Building pileup on %s from %s to %s", var.chrom, var.dummy, var.position)
-    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position):
-        if pile.pos != var.dummy:
-            continue
-        logging.debug("Working with %s potential reads in the pileup", len(pile.pileups))
+    x = var.name
+    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position, min_base_quality  = 0, max_depth = 100000, truncate = True):
         for pile_read in pile.pileups: # type: pysam.libcalcalignedsegment.PileupRead
             qname: str = pile_read.alignment.query_name
-            if qname in reads_completed or not pile_read.query_position:
+            if pile.pos != var.dummy or not pile_read.query_position:
                 continue
             logging.info("Processing read %s", qname)
-            reads_completed.add(qname)
             pile_window: slice = utils.window(position=pile_read.query_position, size=window)
             count_m: int = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M')
             if pile_read.alignment.query_sequence[pile_read.query_position] == var.ref:
@@ -183,8 +179,15 @@ def asts_quant(
             else:
                 key: str = 'unknown'
             logging.debug("Read %s classified as %s", qname, key)
-            flair_reads[key].extend(reference for query, reference in trans_reads.items() if query == qname)
-    if len(flair_reads['ref']) >= min_reads and len(flair_reads['alt']) >= min_reads:
+            try:
+                trans_id = trans_reads[qname]
+            except KeyError:
+                continue  
+            if trans_reads[qname] == None or qname == None:
+                continue
+            else:
+                flair_reads[key].extend([trans_id])             
+    if len(flair_reads['ref']) >= min_reads or len(flair_reads['alt']) >= min_reads:
         logging.info("Assembling quant stats")
         counts: DefaultDict[str, Dict[str, int]] = defaultdict(dict)
         for key in ('ref', 'alt'):
@@ -205,7 +208,8 @@ def asts_quant(
         logging.warning("Too few transcripts for %s", repr(var))
         logging.debug("Ref transcripts: %s", len(flair_reads['ref']))
         logging.debug("Alt transcripts: %s", len(flair_reads['alt']))
-    return tuple(quants)
+
+    return (tuple(quants))
 
 
 def bam_to_bed(bamfile: str, save: bool=False) -> pybedtools.bedtool.BedTool:
@@ -282,18 +286,16 @@ def qnames(
     window: int=5,
     min_matches: int=8
 ) -> Tuple[Qname, ...]:
-    reads_completed: Set[str] = set()
     flair_reads: List[Qname] = list()
     bamfile: str = utils.fullpath(path=bamfile)
     bamfh = pysam.AlignmentFile(bamfile) # type: pysam.libcalcalignment.AlignmentFile
-    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position): # type: pysam.libcalignedsegment.PileupColumn
+    for pile in bamfh.pileup(region=var.chrom, start=var.dummy, end=var.position,min_base_quality  = 0, max_depth = 100000, truncate = True): # type: pysam.libcalignedsegment.PileupColumn
         if pile.pos != var.dummy:
             continue
         for pile_read in pile.pileups: # type: pysam.libcalignedsegment.PileupRead
             qname: str = pile_read.alignment.query_name
             if qname in reads_completed or not pile_read.query_position:
                 continue
-            reads_completed.add(qname)
             pile_window: slice = utils.window(position=pile_read.query_position, size=window)
             count_m: int = cigar.Cigar(tuples=pile_read.alignment.cigartuples)[pile_window].count('M')
             flairs: Tuple[str, ...] = tuple(ref for query, ref in trans_reads.items() if query == qname)
