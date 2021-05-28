@@ -150,7 +150,8 @@ Optional alignment steps
     process_vcf.sh
 
 We provide this script in order to obtain a per-individual VCF file, filtered to only
-include heterozygous SNP variants. This script will perform these actions:
+include heterozygous SNP variants. Make sure your VCF only contains 1 and 0 before
+running this or you might encounter problems further downstream. This script will perform these actions:
 
 1. Filter VCF to only contain biallelic variants
 2. Split a VCF containing records for multiple individuals into one VCF per individual and tabix the files
