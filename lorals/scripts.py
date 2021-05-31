@@ -790,7 +790,7 @@ def fetch_haplotype(*args: Optional[List[str]]) -> None:
     logging.info("Creating output BAM files")
     for read in bamfh.fetch(until_eof=True): # type: Any
         if read.query_name in combined_qnames:
-            outfh[read.query_name].write(read)
+            outfh[transcript].write(read)
     bamfh.close()
 
 
