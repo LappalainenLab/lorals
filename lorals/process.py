@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from code import interact
 import os
 import sys
 import logging
@@ -21,7 +22,7 @@ def _f(df):
     return df[df['total_coverage'] == numpy.max(df.total_coverage)]
 
 
-def _process_ase(genes_df, file_list, min_reads_gene=10):
+def _process_ase(genes_df, file_list, min_reads_gene=10, multiple_snps=False):
     # mypath = (data_dir)
     # files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
     # for file in files:
@@ -31,6 +32,7 @@ def _process_ase(genes_df, file_list, min_reads_gene=10):
         # print("Processing ", f)
         logging.info("Processing %s", f)
         hap_counts_tr = pandas.read_csv(f, sep='\t')  # files should be tab-delimited
+        # import code; code.interact(local=locals()); sys.exit()
         hap_counts_tr['transcript'] = hap_counts_tr['transcript'].astype(str)
         hap_counts_ge = hap_counts_tr.merge(genes_df, on=['transcript', 'transcript'])
         hap_counts_ge['combine'] = hap_counts_ge['gene'].map(str) + \
@@ -64,15 +66,18 @@ def _process_ase(genes_df, file_list, min_reads_gene=10):
                 'p_value': [item[4] for item in data]
             })
             # select the SNP with the highest sum count in case of multiple SNP for a gene
-            output_power_filtered = (output_power.groupby("gene_id").apply(_f))
-            output_power_filtered_indexed = output_power_filtered.set_index('gene_id')
+            if multiple_snps:
+                output_power_filtered_indexed = output_power
+            else:
+                output_power_filtered = (output_power.groupby("gene_id").apply(_f))
+                output_power_filtered_indexed = output_power_filtered.set_index('gene_id')
             # output_power_filtered_indexed['qvalue'] = fdr_adjust(output_power_filtered_indexed['p_value'].tolist())
             output_power_filtered_indexed['qvalue'] = pvalue_adjust(pvalues=output_power_filtered_indexed['p_value'].tolist())
             # output_power_filtered_indexed.to_csv(output_dir + "processed_ase_" + file, sep='\t')
             return output_power_filtered_indexed
 
 
-def _process_asts(genes_df, file_list, min_reads=10):
+def _process_asts(genes_df, file_list, min_reads=10, multiple_snps=False):
     for f in file_list:
         logging.info("Processing %s", f)
         hap_counts_tr = pandas.read_csv(f, sep='\t')  # files should be tab-delimited
@@ -116,8 +121,11 @@ def _process_asts(genes_df, file_list, min_reads=10):
                 'cohen': [item[4] for item in data], 'p_value': [item[5] for item in data]
             })
             # select the SNP with the highest sum count in case of multiple SNP for a gene
-            output_power_filtered = (output_power.groupby("gene_id").apply(_f))
-            output_power_filtered_indexed = output_power_filtered.set_index('gene_id')
+            if multiple_snps:
+                output_power_filtered_indexed = output_power
+            else:
+                output_power_filtered = (output_power.groupby("gene_id").apply(_f))
+                output_power_filtered_indexed = output_power_filtered.set_index('gene_id')
             # output_power_filtered_indexed['qvalue'] = fdr_adjust(output_power_filtered_indexed['p_value'].tolist())
             output_power_filtered_indexed['qvalue'] = pvalue_adjust(pvalues=output_power_filtered_indexed['p_value'].tolist())
             return output_power_filtered_indexed

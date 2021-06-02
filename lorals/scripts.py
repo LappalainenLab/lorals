@@ -867,6 +867,12 @@ def process_asts(*args: Optional[List[str]]) -> None:
         metavar='min reads per transcript',
         help="Minimum reads per transcript; defaults to %(default)s"
     )
+    filter_opts.add_argument( # Multiple SNPs
+        '--multiple-snps',
+        dest='multiple_snps',
+        action='store_true',
+        help="Allow multiple SNPs per gene to be selected"
+    )
     _common_opts(parser=parser, group='utility options', version=VERSION)
     if not sys.argv[1:]:
         parser.print_help(file=sys.stderr)
@@ -893,14 +899,16 @@ def process_asts(*args: Optional[List[str]]) -> None:
     processed_ase = process._process_ase(
         genes_df=genes_df,
         file_list=args['in_file'],
-        min_reads_gene=args['min_gene']
+        min_reads_gene=args['min_gene'],
+        multiple_snps=args['multiple_snps']
     )
     if isinstance(processed_ase, pandas.DataFrame):
         processed_ase.to_csv(os.path.join(args['outdir'], 'processed_ase.tsv'), sep='\t')
     processed_asts = process._process_asts(
         genes_df=genes_df,
         file_list=args['in_file'],
-        min_reads=args['min_tx']
+        min_reads=args['min_tx'],
+        multiple_snps=args['multiple_snps']
     )
     if isinstance(processed_asts, pandas.DataFrame):
         processed_asts.to_csv(os.path.join(args['outdir'], 'processed_asts.tsv'), sep='\t')
