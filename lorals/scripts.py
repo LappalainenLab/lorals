@@ -374,7 +374,6 @@ def calc_asts(*args: Optional[List[str]]) -> None:
         __LORALS_ANNOTATED__
     except NameError:
         args['filter'] = False
-    import code; code.interact(local=locals()); sys.exit()
     if isinstance(args['filter'], list):
         if not args['filter']:
             args['filter'] = tuple(filters)
