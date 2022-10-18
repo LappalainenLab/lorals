@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>lorals &#8212; LORALS  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -11,17 +11,19 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -51,7 +53,7 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+      aria-labelledby="dLabelGlobalToc"><p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cmds/index.html">Command-Line Programs Listing</a></li>
 </ul>
@@ -108,20 +110,116 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="lorals">
-<h1>lorals<a class="headerlink" href="#lorals" title="Permalink to this headline">¶</a></h1>
+<h1>lorals<a class="headerlink" href="#lorals" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lorals.html">lorals package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lorals.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.annotate">lorals.annotate module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.ase">lorals.ase module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.asts">lorals.asts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.cigar">lorals.cigar module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.fancy_logging">lorals.fancy_logging module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.features">lorals.features module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.maths">lorals.maths module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.annotate">lorals.annotate module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.HEADER"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.HEADER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.other_threshold"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.other_threshold</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.indel_threshold"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.indel_threshold</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.gene"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.gene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.blacklisted"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.blacklisted</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.warning"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.warning</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.multi_mapping"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.multi_mapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.null_ratio"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.null_ratio</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.pvalue"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.pvalue</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.qvalue"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.qvalue</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.ref_ratio"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.ref_ratio</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.all_ratio"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.all_ratio</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.indel_ratio"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.indel_ratio</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.other_warning"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.other_warning</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.annotate.AnnotatedStat.indel_warning"><code class="docutils literal notranslate"><span class="pre">AnnotatedStat.indel_warning</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.annotate.annotate_bed"><code class="docutils literal notranslate"><span class="pre">annotate_bed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.annotate.annotate_genes"><code class="docutils literal notranslate"><span class="pre">annotate_genes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.annotate.annotate_genotypes"><code class="docutils literal notranslate"><span class="pre">annotate_genotypes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.annotate.bias_stats"><code class="docutils literal notranslate"><span class="pre">bias_stats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.ase">lorals.ase module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat"><code class="docutils literal notranslate"><span class="pre">AllelicStat</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.HEADER"><code class="docutils literal notranslate"><span class="pre">AllelicStat.HEADER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.fromstring"><code class="docutils literal notranslate"><span class="pre">AllelicStat.fromstring()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.frombpileup"><code class="docutils literal notranslate"><span class="pre">AllelicStat.frombpileup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.print_bpileup"><code class="docutils literal notranslate"><span class="pre">AllelicStat.print_bpileup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.ref_count"><code class="docutils literal notranslate"><span class="pre">AllelicStat.ref_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.alt_count"><code class="docutils literal notranslate"><span class="pre">AllelicStat.alt_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.other_count"><code class="docutils literal notranslate"><span class="pre">AllelicStat.other_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.ref_indel"><code class="docutils literal notranslate"><span class="pre">AllelicStat.ref_indel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.alt_indel"><code class="docutils literal notranslate"><span class="pre">AllelicStat.alt_indel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.total_count"><code class="docutils literal notranslate"><span class="pre">AllelicStat.total_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.ase.AllelicStat.depth"><code class="docutils literal notranslate"><span class="pre">AllelicStat.depth</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.ase.allelic_stats"><code class="docutils literal notranslate"><span class="pre">allelic_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.ase.filter_stats"><code class="docutils literal notranslate"><span class="pre">filter_stats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.asts">lorals.asts module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.asts.bam_to_bed"><code class="docutils literal notranslate"><span class="pre">bam_to_bed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.asts.bed_intersect"><code class="docutils literal notranslate"><span class="pre">bed_intersect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.asts.deduplicate_bpileup"><code class="docutils literal notranslate"><span class="pre">deduplicate_bpileup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.asts.vcf_bpileup"><code class="docutils literal notranslate"><span class="pre">vcf_bpileup()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.cigar">lorals.cigar module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.cigar.Cigar"><code class="docutils literal notranslate"><span class="pre">Cigar</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.cigar.Cigar.oper_map"><code class="docutils literal notranslate"><span class="pre">Cigar.oper_map</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.fancy_logging">lorals.fancy_logging module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.fancy_logging.StrippedFormatter"><code class="docutils literal notranslate"><span class="pre">StrippedFormatter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.fancy_logging.StrippedFormatter.format"><code class="docutils literal notranslate"><span class="pre">StrippedFormatter.format()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.fancy_logging.ColoredFormatter"><code class="docutils literal notranslate"><span class="pre">ColoredFormatter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.fancy_logging.ColoredFormatter.format"><code class="docutils literal notranslate"><span class="pre">ColoredFormatter.format()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.fancy_logging.fmttime"><code class="docutils literal notranslate"><span class="pre">fmttime()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.features">lorals.features module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.features.Bpileup"><code class="docutils literal notranslate"><span class="pre">Bpileup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.default_id"><code class="docutils literal notranslate"><span class="pre">Bpileup.default_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.frominterval"><code class="docutils literal notranslate"><span class="pre">Bpileup.frominterval()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.bed"><code class="docutils literal notranslate"><span class="pre">Bpileup.bed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.chrom"><code class="docutils literal notranslate"><span class="pre">Bpileup.chrom</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.position"><code class="docutils literal notranslate"><span class="pre">Bpileup.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.dummy"><code class="docutils literal notranslate"><span class="pre">Bpileup.dummy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.ref"><code class="docutils literal notranslate"><span class="pre">Bpileup.ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.alt"><code class="docutils literal notranslate"><span class="pre">Bpileup.alt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.alts"><code class="docutils literal notranslate"><span class="pre">Bpileup.alts</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.name"><code class="docutils literal notranslate"><span class="pre">Bpileup.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorals.html#lorals.features.Bpileup.default"><code class="docutils literal notranslate"><span class="pre">Bpileup.default</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.features.iter_var"><code class="docutils literal notranslate"><span class="pre">iter_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.features.write_bed"><code class="docutils literal notranslate"><span class="pre">write_bed()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.maths">lorals.maths module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.maths.median"><code class="docutils literal notranslate"><span class="pre">median()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.maths.percentile"><code class="docutils literal notranslate"><span class="pre">percentile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.maths.pvalue_adjust"><code class="docutils literal notranslate"><span class="pre">pvalue_adjust()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.scripts">lorals.scripts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.utils">lorals.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals.utils">lorals.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.utils.dictsearch"><code class="docutils literal notranslate"><span class="pre">dictsearch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.utils.find_open"><code class="docutils literal notranslate"><span class="pre">find_open()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.utils.fullpath"><code class="docutils literal notranslate"><span class="pre">fullpath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.utils.unpack"><code class="docutils literal notranslate"><span class="pre">unpack()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.utils.where"><code class="docutils literal notranslate"><span class="pre">where()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lorals.html#lorals.utils.window"><code class="docutils literal notranslate"><span class="pre">window()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="lorals.html#module-lorals">Module contents</a></li>
 </ul>
 </li>
@@ -142,7 +240,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Dafni Glinos, Paul Hoffman.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>
 </footer>
