@@ -78,7 +78,7 @@ NAME="$(basename ${BAM} $(extension ${BAM}))"
 
 (set -x; HAPCUT2 --fragments ${NAME}.extractHairs.txt --VCF ${VCF} --output ${NAME}.hapcut.txt --nf 1)
 
-(set -x; python HapCUT22VCF.py ${NAME}.hapcut.txt ${NAME}.vcf ${VCF})
+(set -x; python HapCUT2VCF.py ${NAME}.hapcut.txt ${NAME}.vcf ${VCF})
 
 (set -x; bgzip -c ${NAME}.vcf > ${NAME}.vcf.gz)
 (set -x; tabix -p vcf ${NAME}.vcf.gz)
